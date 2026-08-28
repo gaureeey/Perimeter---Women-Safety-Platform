@@ -1,1 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PERIMETER — Community Safety Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0A0D14;
+      --card-bg: #121824;
+      --accent-red: #FF3B30;
+      --accent-teal: #00F2FE;
+      --accent-green: #34C759;
+      --accent-yellow: #FFCC00;
+      --text-main: #F2F5FC;
+      --text-sub: #8E9BAE;
+      --border-color: #1E293B;
+      --font-main: 'Inter', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-main); padding-bottom: 40px; }
+
+    /* ROLE SWITCHER TOOLBAR */
+    .role-bar {
+      background: #161F30;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .role-bar .title { font-weight: 800; font-size: 16px; color: var(--accent-teal); letter-spacing: 1px; }
+    .role-btn-group { display: flex; gap: 8px; }
+    .role-btn {
+      background: #1E293B;
+      border: 1px solid var(--border-color);
+      color: var(--text-sub);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .role-btn.active { background: var(--accent-teal); color: #000; border-color: var(--accent-teal); }
+
+    /* LAYOUT CONTAINER */
+    .app-container {
+      max-width: 1100px;
+      margin: 24px auto;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+      padding: 0 16px;
+    }
+
+    /* LEFT SIDEBAR: SOS & MAP & MATRIX */
+    .sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    /* SOS TRIGGER BOX */
+    .sos-box { text-align: center; background: linear-gradient(180deg, #1C1017 0%, var(--card-bg) 100%); border: 1px solid rgba(255, 59, 48, 0.3); }
+    .sos-btn {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #FF3B30 0%, #B30000 100%);
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      color: #FFF;
+      font-weight: 900;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 0 30px rgba(255, 59, 48, 0.5);
+      margin: 16px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s ease;
+    }
+    .sos-btn:active { transform: scale(0.95); }
+    .sensor-badge { font-family: var(--font-mono); font-size: 11px; color: var(--accent-yellow); background: rgba(255, 204, 0, 0.1); padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 8px; }
+
+    /* HEATMAP CANVAS SIMULATOR */
+    .heatmap-card canvas {
+      width: 100%;
+      height: 180px;
+      border-radius: 8px;
+      background: #0D131E;
+      margin-top: 12px;
+    }
+
+    /* RIGHT FEED CONTAINER */
+    .feed-container { display: flex; flex-direction: column; gap: 20px; }
+
+    /* STORIES STRIP */
+    .stories-strip {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    .story-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+    .story-ring {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      padding: 2px;
+      background: linear-gradient(45deg, var(--accent-teal), var(--accent-red));
+    }
+    .story-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #2A364F;
+      display: flex;
+      align-items: center;
+      justify-content: justify;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    /* FEED POST CARD */
+    .post-card { display: flex; flex-direction: column; gap: 14px; }
+    .post-header { display: flex; justify-content: space-between; align-items: center; }
+    .post-author { display: flex; align-items: center; gap: 10px; }
+    .avatar { width: 40px; height: 40px; border-radius: 50%; background: #2A364F; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    .author-info h4 { font-size: 14px; font-weight: 700; }
+    .author-info span { font-size: 11px; color: var(--text-sub); }
+
+    .role-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+    .badge-police { background: rgba(255, 59, 48, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
+    .badge-journalist { background: rgba(0, 242, 254, 0.2); color: var(--accent-teal); border: 1px solid var(--accent-teal); }
+    .badge-volunteer { background: rgba(52, 199, 89, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+
+    .post-media {
+      width: 100%;
+      height: 240px;
+      background: #1A2333;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-sub);
+      font-size: 14px;
+      border: 1px dashed var(--border-color);
+    }
+
+    /* TIMELINE WIDGET */
+    .timeline-widget { background: #0D131E; border-radius: 12px; padding: 12px; font-family: var(--font-mono); font-size: 11px; }
+    .timeline-item { margin-bottom: 8px; display: flex; gap: 8px; }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-time { color: var(--accent-teal); }
+
+    /* DYNAMIC DASHBOARD CONTROLS FOR ROLES */
+    .role-console { display: none; }
+    .role-console.active-console { display: block; }
+
+    @media (max-width: 800px) {
+      .app-container { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP PERSONA SWITCHER NAVBAR -->
+  <div class="role-bar">
+    <div class="title">🛡️ PERIMETER</div>
+    <div class="role-btn-group">
+      <button class="role-btn active" onclick="switchRole('user')">👩 User</button>
+      <button class="role-btn" onclick="switchRole('volunteer')">🙋 Volunteer</button>
+      <button class="role-btn" onclick="switchRole('journalist')">📰 Journalist</button>
+      <button class="role-btn" onclick="switchRole('police')">🚔 Police</button>
+    </div>
+  </div>
+
+  <div class="app-container">
+    
+    <!-- LEFT COLUMN: EMERGENCY & GEOSPATIAL -->
+    <div class="sidebar">
+      
+      <!-- SOS BUTTON -->
+      <div class="card sos-box">
+        <h3>EMERGENCY SOS</h3>
+        <button class="sos-btn" onclick="triggerSOS()">SOS</button>
+        <p style="font-size: 12px; color: var(--text-sub);">Hold button or Shake Device</p>
+        <div class="sensor-badge">📱 Motion Shake Sensor: ACTIVE</div>
+      </div>
+
+      <!-- SAFETY HEATMAP -->
+      <div class="card heatmap-card">
+        <h4 style="font-size: 14px;">🗺️ Safety Heatmap (5km Radius)</h4>
+        <canvas id="heatmapCanvas"></canvas>
+        <p style="font-size: 11px; color: var(--accent-green); margin-top: 8px;">● Safe Corridor Detected</p>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: COMMUNITY FEED & ROLE CONSOLES -->
+    <div class="feed-container">
+      
+      <!-- STORIES STRIP -->
+      <div class="stories-strip">
+        <div class="story-item"><div class="story-ring"><div class="story-img">Me</div></div><span>Your Story</span></div>
+        <div class="story-item"><div class="story-ring"><div class="story-img">🚔</div></div><span>Police</span></div>
+        <div class="story-item"><div class="story-ring"><div class="story-img">📰</div></div><span>Press</span></div>
+        <div class="story-item"><div class="story-ring"><div class="story-img">🙋</div></div><span>Volunteer</span></div>
+      </div>
+
+      <!-- ROLE-SPECIFIC CONSOLES -->
+      <div id="user-console" class="card role-console active-console">
+        <h3 style="color: var(--accent-teal); margin-bottom: 8px;">👩 Citizen Dashboard</h3>
+        <p style="font-size: 13px; color: var(--text-sub);">Report incidents, track walking corridors, and access private wellness logs.</p>
+      </div>
+
+      <div id="volunteer-console" class="card role-console">
+        <h3 style="color: var(--accent-green); margin-bottom: 8px;">🙋 Volunteer Dispatch Console</h3>
+        <p style="font-size: 13px; color: var(--text-sub);">Active 5km Radius Emergency Alerts: <strong>1 SOS Case Nearby</strong></p>
+        <button style="margin-top: 10px; background: var(--accent-green); color: #000; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer;">Accept & Route Trajectory</button>
+      </div>
+
+      <div id="journalist-console" class="card role-console">
+        <h3 style="color: var(--accent-teal); margin-bottom: 8px;">📰 Journalist Press Desk</h3>
+        <p style="font-size: 13px; color: var(--text-sub);">Attach verified updates directly to ongoing Incident Case IDs.</p>
+      </div>
+
+      <div id="police-console" class="card role-console">
+        <h3 style="color: var(--accent-red); margin-bottom: 8px;">🚔 Police Command Console</h3>
+        <p style="font-size: 13px; color: var(--text-sub);">Manage active SOS dispatches, issue notices, and officially resolve cases.</p>
+      </div>
+
+      <!-- INSTAGRAM-STYLE FEED POST -->
+      <div class="card post-card">
+        <div class="post-header">
+          <div class="post-author">
+            <div class="avatar">🚔</div>
+            <div class="author-info">
+              <h4>City Police Command <span class="role-badge badge-police">Police Verified</span></h4>
+              <span>Sector 4 • 12 mins ago</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="post-media">
+          📍 Safe Corridor Alert: Increased Patrols on Main Mg Road
+        </div>
+
+        <!-- UNIVERSAL CASE TIMELINE WIDGET -->
+        <div class="timeline-widget">
+          <div style="font-weight: bold; margin-bottom: 6px; color: var(--text-main);">📋 CASE #2026-881 TIMELINE LOG:</div>
+          <div class="timeline-item"><span class="timeline-time">[10:42 AM]</span> SOS Triggered via Shake Alert</div>
+          <div class="timeline-item"><span class="timeline-time">[10:43 AM]</span> FCM Push sent to 5km Volunteers</div>
+          <div class="timeline-item"><span class="timeline-time">[10:46 AM]</span> Police Patrol Unit #4 Dispatched</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // ROLE SWITCHER LOGIC
+    function switchRole(role) {
+      document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.querySelectorAll('.role-console').forEach(console => console.classList.remove('active-console'));
+      document.getElementById(`${role}-console`).classList.add('active-console');
+    }
+
+    function triggerSOS() {
+      alert("🚨 SOS EMERGENCY TRIGGERED!\nGeofenced FCM alerts dispatched to nearby volunteers and Police Command!");
+    }
+
+    // DRAW HEATMAP CANVAS SIMULATION
+    const canvas = document.getElementById('heatmapCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
+    ctx.fillStyle = '#0D131E';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Green safe corridor
+    ctx.strokeStyle = '#34C759';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(20, 140);
+    ctx.lineTo(120, 80);
+    ctx.lineTo(250, 40);
+    ctx.stroke();
+
+    // Red alert hotspot
+    ctx.fillStyle = 'rgba(255, 59, 48, 0.4)';
+    ctx.beginPath();
+    ctx.arc(180, 110, 35, 0, Math.PI * 2);
+    ctx.fill();
+  </script>
+</body>
+</html>
