@@ -1,4 +1,4 @@
-# 🛡️ PERIMETER — Women Safety & Community Response Platform
+# 🛡️ PERIMETER — Evolving PERIMETER-W (women-only) into PERIMETER — one platform for every gender and every age
 
 PERIMETER is a community-driven women's safety platform that combines an Instagram-style visual feed with an automated 5-tier emergency dispatch system. It connects Citizens, Verified Volunteers, Credentialed Journalists, and Police into a single, transparent safety network.
 
