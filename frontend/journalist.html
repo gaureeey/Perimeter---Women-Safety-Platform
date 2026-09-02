@@ -11,6 +11,44 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <style>
+        /* ── ONE-TIME REGISTRATION OVERLAY ── */
+        #regOverlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(4,10,12,0.93); backdrop-filter: blur(12px);
+            z-index: 9999; align-items: center; justify-content: center;
+        }
+        #regOverlay.show { display: flex; }
+        .reg-box {
+            background: #0B191B; border: 1px solid rgba(13,148,136,0.35);
+            border-radius: 24px; width: 100%; max-width: 440px;
+            padding: 40px 36px; box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+            animation: regSlide 0.4s cubic-bezier(.22,1,.36,1);
+        }
+        @keyframes regSlide { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }
+        .reg-logo  { font-size: 22px; font-weight: 800; color: #5EEAD4; letter-spacing: -0.5px; margin-bottom: 4px; }
+        .reg-sub   { font-size: 12.5px; color: #64748B; margin-bottom: 28px; }
+        .reg-title { font-size: 18px; font-weight: 700; color: #F1F5F9; margin-bottom: 6px; }
+        .reg-desc  { font-size: 12.5px; color: #64748B; margin-bottom: 22px; }
+        .reg-field { margin-bottom: 14px; }
+        .reg-label { display:block;font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px; }
+        .reg-input {
+            width:100%;padding:12px 14px;background:#15282B;border:1.5px solid #1E3A3D;
+            border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;
+            color:#F1F5F9;outline:none;transition:border-color 0.2s,box-shadow 0.2s;
+        }
+        .reg-input:focus { border-color:#0D9488; box-shadow:0 0 0 3px rgba(13,148,136,0.2); }
+        .reg-input::placeholder { color:#475569; }
+        .reg-btn {
+            width:100%;padding:13px;background:#0D9488;color:white;border:none;
+            border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;
+            transition:background 0.2s,transform 0.15s;font-family:'Inter',sans-serif;
+        }
+        .reg-btn:hover { background:#0F6E6E; transform:translateY(-1px); }
+        #regAlertBox {
+            display:none;background:#0A1A1A;border:1.5px solid #0D9488;
+            color:#5EEAD4;border-radius:8px;padding:10px 14px;
+            font-size:13px;font-weight:600;margin-bottom:12px;
+        }
         :root {
             --ink: #0D1B1E;
             --ink-surface: #15282B;
@@ -475,6 +513,38 @@
 
 <body>
 
+<!-- ══ ONE-TIME REGISTRATION: JOURNALIST ══ -->
+<div id="regOverlay">
+    <div class="reg-box">
+        <div class="reg-logo">📰 PERIMETER PRESS</div>
+        <div class="reg-sub">Journalist Press Desk — One-time Credential Setup</div>
+        <div id="regAlertBox"></div>
+        <div class="reg-title">Register Your Press Profile</div>
+        <div class="reg-desc">Enter your credentials once. You'll be recognised automatically every time you open this page.</div>
+
+        <div class="reg-field">
+            <label class="reg-label" for="regName">Full Name</label>
+            <input class="reg-input" type="text" id="regName" placeholder="e.g. Rhea Nair" autocomplete="name">
+        </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regPressId">Press ID / News Outlet</label>
+            <input class="reg-input" type="text" id="regPressId" placeholder="e.g. Deccan Herald · PID-2026-044">
+        </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regPass">Password</label>
+            <input class="reg-input" type="password" id="regPass" placeholder="At least 6 characters">
+        </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regConf">Confirm Password</label>
+            <input class="reg-input" type="password" id="regConf" placeholder="Re-enter password">
+        </div>
+
+        <button class="reg-btn" onclick="submitPressReg()">📰 Register & Enter Press Desk</button>
+    </div>
+</div>
+
+
+
     <!-- Topbar -->
     <div class="press-topbar">
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -655,23 +725,55 @@
     </div>
 
     <script>
-        // Session Initialization
-        let session = null;
-        try {
-            session = JSON.parse(localStorage.getItem('perimeter_session'));
-        } catch (e) { }
+        // ── ONE-TIME REGISTRATION: JOURNALIST ──
+        const PRESS_KEY = 'perimeter_press_profile';
 
-        const pressName = session && session.name ? session.name : 'Rhea Nair';
-        const pressAvatar = session && session.avatar ? session.avatar : 'RN';
+        function loadPressSession() {
+            try { return JSON.parse(localStorage.getItem(PRESS_KEY)); } catch(e) { return null; }
+        }
 
-        document.getElementById('topbarPressName').textContent = `${pressName} (Verified Journalist)`;
-        document.getElementById('navPressName').textContent = pressName.split(' ')[0] + ' (Press)';
-        document.getElementById('pressAvatar').textContent = pressAvatar;
+        function initPressApp(profile) {
+            const pName   = profile.name || 'Journalist';
+            const pAvatar = profile.name ? profile.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() : 'RN';
+            document.getElementById('topbarPressName').textContent = `${pName} (Verified Journalist)`;
+            document.getElementById('navPressName').textContent = pName.split(' ')[0] + ' (Press)';
+            document.getElementById('pressAvatar').textContent = pAvatar;
+        }
+
+        function submitPressReg() {
+            const name    = document.getElementById('regName').value.trim();
+            const pressId = document.getElementById('regPressId').value.trim();
+            const pass    = document.getElementById('regPass').value;
+            const conf    = document.getElementById('regConf').value;
+            if (!name)    { pressRegAlert('Please enter your full name.'); return; }
+            if (!pressId) { pressRegAlert('Please enter your Press ID / Outlet.'); return; }
+            if (pass.length < 6) { pressRegAlert('Password must be at least 6 characters.'); return; }
+            if (pass !== conf)   { pressRegAlert('Passwords do not match.'); return; }
+            const profile = { name, pressId, registeredAt: new Date().toISOString() };
+            localStorage.setItem(PRESS_KEY, JSON.stringify(profile));
+            document.getElementById('regOverlay').classList.remove('show');
+            initPressApp(profile);
+        }
+
+        function pressRegAlert(msg) {
+            const el = document.getElementById('regAlertBox');
+            el.textContent = msg; el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3500);
+        }
 
         function logout() {
-            localStorage.removeItem('perimeter_session');
-            window.location.href = 'login.html';
+            localStorage.removeItem(PRESS_KEY);
+            window.location.reload();
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const profile = loadPressSession();
+            if (profile && profile.name) {
+                initPressApp(profile);
+            } else {
+                document.getElementById('regOverlay').classList.add('show');
+            }
+        });
 
         // Timeline Sync
         function addTimelineEntry(title, desc) {

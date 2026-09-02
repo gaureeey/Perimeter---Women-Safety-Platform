@@ -11,6 +11,44 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <style>
+        /* ── ONE-TIME REGISTRATION OVERLAY ── */
+        #regOverlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(6,8,18,0.93); backdrop-filter: blur(12px);
+            z-index: 9999; align-items: center; justify-content: center;
+        }
+        #regOverlay.show { display: flex; }
+        .reg-box {
+            background: #111827; border: 1px solid rgba(245,158,11,0.35);
+            border-radius: 24px; width: 100%; max-width: 440px;
+            padding: 40px 36px; box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+            animation: regSlide 0.4s cubic-bezier(.22,1,.36,1);
+        }
+        @keyframes regSlide { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }
+        .reg-logo  { font-size: 22px; font-weight: 800; color: #FBBF24; letter-spacing: -0.5px; margin-bottom: 4px; }
+        .reg-sub   { font-size: 12.5px; color: #64748B; margin-bottom: 28px; }
+        .reg-title { font-size: 18px; font-weight: 700; color: #F1F5F9; margin-bottom: 6px; }
+        .reg-desc  { font-size: 12.5px; color: #64748B; margin-bottom: 22px; }
+        .reg-field { margin-bottom: 14px; }
+        .reg-label { display:block;font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px; }
+        .reg-input {
+            width:100%;padding:12px 14px;background:#1E293B;border:1.5px solid #334155;
+            border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;
+            color:#F1F5F9;outline:none;transition:border-color 0.2s,box-shadow 0.2s;
+        }
+        .reg-input:focus { border-color:#F59E0B; box-shadow:0 0 0 3px rgba(245,158,11,0.2); }
+        .reg-input::placeholder { color:#475569; }
+        .reg-btn {
+            width:100%;padding:13px;background:#D97706;color:white;border:none;
+            border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;
+            transition:background 0.2s,transform 0.15s;font-family:'Inter',sans-serif;
+        }
+        .reg-btn:hover { background:#B45309; transform:translateY(-1px); }
+        #regAlertBox {
+            display:none;background:#1E0E00;border:1.5px solid #F59E0B;
+            color:#FCD34D;border-radius:8px;padding:10px 14px;
+            font-size:13px;font-weight:600;margin-bottom:12px;
+        }
         :root {
             --ink: #0E1326;
             --ink-surface: #171D36;
@@ -604,6 +642,38 @@
 
 <body>
 
+<!-- ══ ONE-TIME REGISTRATION: VOLUNTEER ══ -->
+<div id="regOverlay">
+    <div class="reg-box">
+        <div class="reg-logo">🙋 PERIMETER VOLUNTEER</div>
+        <div class="reg-sub">Volunteer Dispatch Console — One-time Registration</div>
+        <div id="regAlertBox"></div>
+        <div class="reg-title">Register as a Volunteer</div>
+        <div class="reg-desc">Set up your profile once. The app will remember you on this device.</div>
+
+        <div class="reg-field">
+            <label class="reg-label" for="regName">Full Name</label>
+            <input class="reg-input" type="text" id="regName" placeholder="e.g. Priya Deshmukh" autocomplete="name">
+        </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regVolId">Volunteer ID / NGO Registration</label>
+            <input class="reg-input" type="text" id="regVolId" placeholder="e.g. VOL-MH-2026-089">
+        </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regPass">Password</label>
+            <input class="reg-input" type="password" id="regPass" placeholder="At least 6 characters">
+        </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regConf">Confirm Password</label>
+            <input class="reg-input" type="password" id="regConf" placeholder="Re-enter password">
+        </div>
+
+        <button class="reg-btn" onclick="submitVolReg()">🚀 Join as Verified Volunteer</button>
+    </div>
+</div>
+
+
+
     <!-- Topbar -->
     <div class="vol-topbar">
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -814,23 +884,55 @@
     </div>
 
     <script>
-        // Session Initialization
-        let session = null;
-        try {
-            session = JSON.parse(localStorage.getItem('perimeter_session'));
-        } catch (e) { }
+        // ── ONE-TIME REGISTRATION: VOLUNTEER ──
+        const VOL_KEY = 'perimeter_vol_profile';
 
-        const volName = session && session.name ? session.name : 'Priya Deshmukh';
-        const volAvatar = session && session.avatar ? session.avatar : 'PD';
+        function loadVolSession() {
+            try { return JSON.parse(localStorage.getItem(VOL_KEY)); } catch(e) { return null; }
+        }
 
-        document.getElementById('topbarVolName').textContent = `${volName} (Verified Volunteer)`;
-        document.getElementById('navVolName').textContent = volName.split(' ')[0] + ' (Vol)';
-        document.getElementById('volAvatar').textContent = volAvatar;
+        function initVolApp(profile) {
+            const vName   = profile.name || 'Volunteer';
+            const vAvatar = profile.name ? profile.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() : 'PD';
+            document.getElementById('topbarVolName').textContent = `${vName} (Verified Volunteer)`;
+            document.getElementById('navVolName').textContent = vName.split(' ')[0] + ' (Vol)';
+            document.getElementById('volAvatar').textContent = vAvatar;
+        }
+
+        function submitVolReg() {
+            const name  = document.getElementById('regName').value.trim();
+            const volId = document.getElementById('regVolId').value.trim();
+            const pass  = document.getElementById('regPass').value;
+            const conf  = document.getElementById('regConf').value;
+            if (!name)  { volRegAlert('Please enter your full name.'); return; }
+            if (!volId) { volRegAlert('Please enter your Volunteer ID.'); return; }
+            if (pass.length < 6) { volRegAlert('Password must be at least 6 characters.'); return; }
+            if (pass !== conf)   { volRegAlert('Passwords do not match.'); return; }
+            const profile = { name, volId, registeredAt: new Date().toISOString() };
+            localStorage.setItem(VOL_KEY, JSON.stringify(profile));
+            document.getElementById('regOverlay').classList.remove('show');
+            initVolApp(profile);
+        }
+
+        function volRegAlert(msg) {
+            const el = document.getElementById('regAlertBox');
+            el.textContent = msg; el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3500);
+        }
 
         function logout() {
-            localStorage.removeItem('perimeter_session');
-            window.location.href = 'login.html';
+            localStorage.removeItem(VOL_KEY);
+            window.location.reload();
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const profile = loadVolSession();
+            if (profile && profile.name) {
+                initVolApp(profile);
+            } else {
+                document.getElementById('regOverlay').classList.add('show');
+            }
+        });
 
         let isOnDuty = true;
         function toggleDuty() {

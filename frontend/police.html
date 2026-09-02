@@ -11,6 +11,53 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <style>
+        /* ── ONE-TIME REGISTRATION OVERLAY ── */
+        #regOverlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(6,9,22,0.92); backdrop-filter: blur(12px);
+            z-index: 9999; align-items: center; justify-content: center;
+        }
+        #regOverlay.show { display: flex; }
+        .reg-box {
+            background: #0F1825; border: 1px solid rgba(37,99,235,0.35);
+            border-radius: 24px; width: 100%; max-width: 440px;
+            padding: 40px 36px; box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+            animation: regSlide 0.4s cubic-bezier(.22,1,.36,1);
+        }
+        @keyframes regSlide {
+            from { opacity:0; transform: translateY(20px); }
+            to   { opacity:1; transform: translateY(0); }
+        }
+        .reg-logo  { font-size: 22px; font-weight: 800; color: #93C5FD; letter-spacing: -0.5px; margin-bottom: 4px; }
+        .reg-sub   { font-size: 12.5px; color: #64748B; margin-bottom: 28px; }
+        .reg-title { font-size: 18px; font-weight: 700; color: #F1F5F9; margin-bottom: 6px; }
+        .reg-desc  { font-size: 12.5px; color: #64748B; margin-bottom: 22px; }
+        .reg-field { margin-bottom: 14px; }
+        .reg-label {
+            display: block; font-size: 11px; font-weight: 700;
+            color: #94A3B8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px;
+        }
+        .reg-input {
+            width: 100%; padding: 12px 14px;
+            background: #1E293B; border: 1.5px solid #334155;
+            border-radius: 10px; font-size: 14px;
+            font-family: 'Inter', sans-serif; color: #F1F5F9; outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .reg-input:focus { border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,0.2); }
+        .reg-input::placeholder { color: #475569; }
+        .reg-btn {
+            width: 100%; padding: 13px; background: #2563EB;
+            color: white; border: none; border-radius: 10px;
+            font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 8px;
+            transition: background 0.2s, transform 0.15s; font-family: 'Inter', sans-serif;
+        }
+        .reg-btn:hover { background: #1D4ED8; transform: translateY(-1px); }
+        #regAlertBox {
+            display:none; background:#1E0E0E; border:1.5px solid #EF4444;
+            color:#FCA5A5; border-radius:8px; padding:10px 14px;
+            font-size:13px; font-weight:600; margin-bottom:12px;
+        }
         :root {
             --ink: #0A0E1A;
             --ink-surface: #111827;
@@ -564,6 +611,38 @@
 
 <body>
 
+<!-- ══ ONE-TIME REGISTRATION: POLICE ══ -->
+<div id="regOverlay">
+    <div class="reg-box">
+        <div class="reg-logo">🚔 PERIMETER POLICE</div>
+        <div class="reg-sub">Police Command & Control — One-time Officer Registration</div>
+        <div id="regAlertBox"></div>
+        <div class="reg-title">Register Your Officer Profile</div>
+        <div class="reg-desc">Your credentials are stored locally on this device. You will not need to register again.</div>
+
+        <div class="reg-field">
+            <label class="reg-label" for="regName">Full Name</label>
+            <input class="reg-input" type="text" id="regName" placeholder="e.g. Inspector K. Patil" autocomplete="name">
+        </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regBadge">Badge / Officer ID</label>
+            <input class="reg-input" type="text" id="regBadge" placeholder="e.g. MH-CID-4521">
+        </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regPass">Password</label>
+            <input class="reg-input" type="password" id="regPass" placeholder="At least 6 characters">
+        </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regConf">Confirm Password</label>
+            <input class="reg-input" type="password" id="regConf" placeholder="Re-enter password">
+        </div>
+
+        <button class="reg-btn" onclick="submitPoliceReg()">🛡️ Complete Registration & Enter Command</button>
+    </div>
+</div>
+
+
+
     <!-- Police Topbar -->
     <div class="police-topbar">
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -735,23 +814,55 @@
     </div>
 
     <script>
-        // Session Initialization
-        let session = null;
-        try {
-            session = JSON.parse(localStorage.getItem('perimeter_session'));
-        } catch (e) { }
+        // ── ONE-TIME REGISTRATION: POLICE ──
+        const POLICE_KEY = 'perimeter_police_profile';
 
-        const policeName = session && session.name ? session.name : 'Inspector K. Patil';
-        const policeAvatar = session && session.avatar ? session.avatar : 'IP';
+        function loadPoliceSession() {
+            try { return JSON.parse(localStorage.getItem(POLICE_KEY)); } catch(e) { return null; }
+        }
 
-        document.getElementById('topbarPoliceName').textContent = `${policeName} (City Police)`;
-        document.getElementById('navPoliceName').textContent = policeName.split(' ')[0] + ' (Police)';
-        document.getElementById('policeAvatar').textContent = policeAvatar;
+        function initPoliceApp(profile) {
+            const pName   = profile.name   || 'Officer';
+            const pAvatar = profile.name ? profile.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() : 'IP';
+            document.getElementById('topbarPoliceName').textContent = `${pName} (City Police)`;
+            document.getElementById('navPoliceName').textContent = pName.split(' ')[0] + ' (Police)';
+            document.getElementById('policeAvatar').textContent = pAvatar;
+        }
+
+        function submitPoliceReg() {
+            const name   = document.getElementById('regName').value.trim();
+            const badge  = document.getElementById('regBadge').value.trim();
+            const pass   = document.getElementById('regPass').value;
+            const conf   = document.getElementById('regConf').value;
+            if (!name)  { policeRegAlert('Please enter your full name.'); return; }
+            if (!badge) { policeRegAlert('Please enter your Badge / ID number.'); return; }
+            if (pass.length < 6) { policeRegAlert('Password must be at least 6 characters.'); return; }
+            if (pass !== conf)   { policeRegAlert('Passwords do not match.'); return; }
+            const profile = { name, badge, registeredAt: new Date().toISOString() };
+            localStorage.setItem(POLICE_KEY, JSON.stringify(profile));
+            document.getElementById('regOverlay').classList.remove('show');
+            initPoliceApp(profile);
+        }
+
+        function policeRegAlert(msg) {
+            const el = document.getElementById('regAlertBox');
+            el.textContent = msg; el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3500);
+        }
 
         function logout() {
-            localStorage.removeItem('perimeter_session');
-            window.location.href = 'login.html';
+            localStorage.removeItem(POLICE_KEY);
+            window.location.reload();
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const profile = loadPoliceSession();
+            if (profile && profile.name) {
+                initPoliceApp(profile);
+            } else {
+                document.getElementById('regOverlay').classList.add('show');
+            }
+        });
 
         // Tactical Canvas
         function renderPoliceMap() {

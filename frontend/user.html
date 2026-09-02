@@ -11,6 +11,148 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <style>
+        /* ── ONE-TIME REGISTRATION OVERLAY ── */
+        #regOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10,14,30,0.85);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        #regOverlay.show { display: flex; }
+        .reg-box {
+            background: #FFFFFF;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 480px;
+            padding: 40px 36px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+            animation: regSlideIn 0.4s cubic-bezier(.22,1,.36,1);
+        }
+        @keyframes regSlideIn {
+            from { opacity:0; transform:translateY(24px) scale(0.97); }
+            to   { opacity:1; transform:translateY(0)  scale(1); }
+        }
+        .reg-logo { font-size: 28px; font-weight: 800; color: #FF5A5F; letter-spacing: -1px; margin-bottom: 4px; }
+        .reg-sub  { font-size: 13px; color: #64748B; margin-bottom: 28px; }
+        .reg-step-indicator {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+        .reg-step-dot {
+            height: 4px;
+            flex: 1;
+            border-radius: 100px;
+            background: #E2E8F0;
+            transition: background 0.3s;
+        }
+        .reg-step-dot.active { background: #FF5A5F; }
+        .reg-step-title { font-size: 17px; font-weight: 700; color: #111528; margin-bottom: 6px; }
+        .reg-step-desc  { font-size: 12.5px; color: #64748B; margin-bottom: 22px; }
+        .reg-field {
+            margin-bottom: 16px;
+        }
+        .reg-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .reg-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: #111528;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .reg-input:focus {
+            border-color: #FF5A5F;
+            box-shadow: 0 0 0 3px rgba(255,90,95,0.15);
+        }
+        .reg-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #FF5A5F, #e0393e);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: opacity 0.2s, transform 0.15s;
+            font-family: 'Inter', sans-serif;
+        }
+        .reg-btn:hover { opacity:0.93; transform:translateY(-1px); }
+        .reg-btn:active { transform:translateY(0); }
+        .reg-btn.secondary {
+            background: #F1F5F9;
+            color: #475569;
+            margin-top: 10px;
+        }
+        /* Selfie */
+        #selfiePreview {
+            width: 100%;
+            height: 220px;
+            background: #0F172A;
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #selfiePreview video, #selfiePreview img {
+            width: 100%; height: 100%; object-fit: cover; border-radius: 14px;
+        }
+        #selfiePreview .cam-placeholder {
+            color: #475569; font-size: 13px; text-align: center; line-height: 1.6;
+        }
+        /* Aadhaar upload */
+        .aadhaar-drop {
+            border: 2px dashed #CBD5E1;
+            border-radius: 14px;
+            padding: 32px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            margin-bottom: 14px;
+        }
+        .aadhaar-drop:hover, .aadhaar-drop.dragover {
+            border-color: #FF5A5F;
+            background: rgba(255,90,95,0.04);
+        }
+        .aadhaar-drop .drop-icon { font-size: 32px; margin-bottom: 8px; }
+        .aadhaar-drop p { font-size: 13px; color: #64748B; }
+        .aadhaar-drop strong { color: #FF5A5F; }
+        #aadhaarFileInput { display: none; }
+        #aadhaarFileName { font-size: 12px; color: #10B981; font-weight: 600; margin-top: 6px; min-height: 18px; }
+        .reg-success-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #F0FDF4;
+            border: 1.5px solid #86EFAC;
+            color: #166534;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            width: 100%;
+        }
         :root {
             --ink: #111528;
             --ink-secondary: #2A304E;
@@ -1057,6 +1199,86 @@
 
 <body>
 
+<!-- ══════════════════════════════════════════════════ -->
+<!--        ONE-TIME REGISTRATION OVERLAY              -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="regOverlay">
+    <div class="reg-box">
+        <div class="reg-logo">⬡ PERIMETER</div>
+        <div class="reg-sub">Women Safety Platform — Citizen Registration</div>
+
+        <!-- Step progress dots -->
+        <div class="reg-step-indicator">
+            <div class="reg-step-dot active"></div>
+            <div class="reg-step-dot"></div>
+            <div class="reg-step-dot"></div>
+        </div>
+
+        <!-- Alert box -->
+        <div id="regAlertBox" style="display:none;background:#FEF2F2;border:1.5px solid #FECACA;color:#B91C1C;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:14px;"></div>
+
+        <!-- ── STEP 1: Credentials ── -->
+        <div class="reg-step-panel" id="regStep1">
+            <div class="reg-step-title">Create Your Account</div>
+            <div class="reg-step-desc">Set up your username and password. You will only need to do this once.</div>
+
+            <div class="reg-field">
+                <label class="reg-label" for="regUsername">Full Name / Username</label>
+                <input class="reg-input" type="text" id="regUsername" placeholder="e.g. Aarohi Sharma" autocomplete="name">
+            </div>
+            <div class="reg-field">
+                <label class="reg-label" for="regPassword">Password</label>
+                <input class="reg-input" type="password" id="regPassword" placeholder="At least 6 characters">
+            </div>
+            <div class="reg-field">
+                <label class="reg-label" for="regConfirm">Confirm Password</label>
+                <input class="reg-input" type="password" id="regConfirm" placeholder="Re-enter your password">
+            </div>
+
+            <button class="reg-btn" onclick="submitStep1()">Continue → Selfie Verification</button>
+        </div>
+
+        <!-- ── STEP 2: Selfie ── -->
+        <div class="reg-step-panel" id="regStep2" style="display:none">
+            <div class="reg-step-title">📸 Selfie Verification</div>
+            <div class="reg-step-desc">Take a live selfie so we can verify your identity. This keeps the platform safe.</div>
+
+            <div id="selfiePreview">
+                <video id="selfieVideo" autoplay playsinline style="display:none;width:100%;height:100%;object-fit:cover;border-radius:14px;"></video>
+                <img id="selfieCaptureThumbnail" alt="Selfie preview" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:14px;">
+                <div class="cam-placeholder" id="selfiePlaceholder">📷<br>Starting camera…</div>
+            </div>
+
+            <div id="selfieSuccessBadge" class="reg-success-badge" style="display:none">✅ Selfie captured successfully!</div>
+
+            <button class="reg-btn" id="captureSelfieBtn" onclick="captureSelfie()" disabled>📸 Capture Selfie</button>
+            <button class="reg-btn secondary" id="retakeSelfieBtn" onclick="retakeSelfie()" style="display:none">🔄 Retake</button>
+            <button class="reg-btn" onclick="submitStep2()" style="margin-top:12px;background:linear-gradient(135deg,#FF5A5F,#e0393e)">Continue → Aadhaar Upload</button>
+            <button class="reg-btn secondary" id="skipSelfieBtn" onclick="skipSelfie()" style="display:none">Skip selfie (not recommended)</button>
+        </div>
+
+        <!-- ── STEP 3: Aadhaar ── -->
+        <div class="reg-step-panel" id="regStep3" style="display:none">
+            <div class="reg-step-title">🪪 Aadhaar Verification</div>
+            <div class="reg-step-desc">Upload a photo or scan of your Aadhaar card to complete identity verification.</div>
+
+            <div class="aadhaar-drop" id="aadhaarDrop">
+                <div class="drop-icon">🪪</div>
+                <p><strong>Click to upload</strong> or drag & drop</p>
+                <p style="margin-top:4px;font-size:11.5px;">JPG, PNG, or PDF · Max 5 MB</p>
+            </div>
+            <input type="file" id="aadhaarFileInput" accept="image/*,.pdf">
+            <div id="aadhaarFileName"></div>
+
+            <div id="aadhaarSuccessBadge" class="reg-success-badge" style="display:none">✅ Aadhaar card uploaded successfully!</div>
+
+            <button class="reg-btn" onclick="submitStep3()" style="margin-top:8px">🎉 Complete Registration</button>
+            <button class="reg-btn secondary" onclick="skipAadhaar()">Skip Aadhaar (not recommended)</button>
+        </div>
+    </div>
+</div>
+
+
     <!-- Role Status Topbar -->
     <div class="user-topbar">
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1368,24 +1590,168 @@
     </div>
 
     <script>
-        // Session Initialization
-        let session = null;
-        try {
-            session = JSON.parse(localStorage.getItem('perimeter_session'));
-        } catch (e) { }
+        // ── ONE-TIME REGISTRATION LOGIC ──
+        const STORAGE_KEY = 'perimeter_user_profile';
+        let currentStep = 1;
+        let selfieDataURL = null;
+        let aadhaarFileName = null;
+        let selfieStream = null;
 
-        const userName = session && session.name ? session.name : 'Aarohi Sharma';
-        const userAvatar = session && session.avatar ? session.avatar : 'AS';
+        function loadSession() {
+            let profile = null;
+            try { profile = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e){}
+            return profile;
+        }
 
-        document.getElementById('topbarUserName').textContent = `${userName} (Citizen User)`;
-        document.getElementById('navUserName').textContent = userName.split(' ')[0];
-        document.getElementById('navAvatar').textContent = userAvatar;
-        document.getElementById('postBoxAvatar').textContent = userAvatar;
+        function initApp(profile) {
+            const userName  = profile.username || 'Citizen';
+            const userAvatar = (profile.username || 'U').slice(0,2).toUpperCase();
+            document.getElementById('topbarUserName').textContent = `${userName} (Citizen User)`;
+            document.getElementById('navUserName').textContent = userName.split(' ')[0];
+            document.getElementById('navAvatar').textContent = userAvatar;
+            document.getElementById('postBoxAvatar').textContent = userAvatar;
+        }
 
         function logout() {
-            localStorage.removeItem('perimeter_session');
-            window.location.href = 'login.html';
+            localStorage.removeItem(STORAGE_KEY);
+            window.location.reload();
         }
+
+        // ── Step navigation ──
+        function goToStep(n) {
+            currentStep = n;
+            document.querySelectorAll('.reg-step-panel').forEach(p => p.style.display = 'none');
+            document.getElementById('regStep' + n).style.display = 'block';
+            document.querySelectorAll('.reg-step-dot').forEach((d,i) => {
+                d.classList.toggle('active', i < n);
+            });
+        }
+
+        // ── Step 1: username + password ──
+        function submitStep1() {
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirm  = document.getElementById('regConfirm').value;
+            if (!username) { regAlert('Please enter a username.'); return; }
+            if (password.length < 6) { regAlert('Password must be at least 6 characters.'); return; }
+            if (password !== confirm) { regAlert('Passwords do not match.'); return; }
+            window._regData = { username, password };
+            goToStep(2);
+            startCamera();
+        }
+
+        // ── Step 2: Selfie ──
+        async function startCamera() {
+            try {
+                selfieStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode:'user' } });
+                const video = document.getElementById('selfieVideo');
+                video.srcObject = selfieStream;
+                video.style.display = 'block';
+                document.getElementById('selfiePlaceholder').style.display = 'none';
+                document.getElementById('captureSelfieBtn').disabled = false;
+            } catch(e) {
+                document.getElementById('selfiePlaceholder').innerHTML = '📷<br>Camera access denied.<br><small>Grant permission or skip selfie.</small>';
+                document.getElementById('skipSelfieBtn').style.display = 'block';
+            }
+        }
+
+        function captureSelfie() {
+            const video = document.getElementById('selfieVideo');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth || 320;
+            canvas.height = video.videoHeight || 240;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            selfieDataURL = canvas.toDataURL('image/jpeg', 0.7);
+            // stop stream
+            if (selfieStream) selfieStream.getTracks().forEach(t => t.stop());
+            // show preview thumbnail
+            const img = document.getElementById('selfieCaptureThumbnail');
+            img.src = selfieDataURL;
+            img.style.display = 'block';
+            video.style.display = 'none';
+            document.getElementById('captureSelfieBtn').style.display = 'none';
+            document.getElementById('retakeSelfieBtn').style.display = 'inline-block';
+            document.getElementById('selfieSuccessBadge').style.display = 'flex';
+        }
+
+        function retakeSelfie() {
+            selfieDataURL = null;
+            document.getElementById('selfieCaptureThumbnail').style.display = 'none';
+            document.getElementById('selfieSuccessBadge').style.display = 'none';
+            document.getElementById('retakeSelfieBtn').style.display = 'none';
+            document.getElementById('captureSelfieBtn').style.display = 'inline-block';
+            startCamera();
+        }
+
+        function submitStep2() {
+            if (!selfieDataURL) { regAlert('Please capture your selfie first.'); return; }
+            goToStep(3);
+        }
+
+        function skipSelfie() { selfieDataURL = 'skipped'; goToStep(3); }
+
+        // ── Step 3: Aadhaar upload ──
+        const aadhaarDrop = document.getElementById && document.getElementById('aadhaarDrop');
+
+        function setupAadhaarDrop() {
+            const drop = document.getElementById('aadhaarDrop');
+            const input = document.getElementById('aadhaarFileInput');
+            if (!drop) return;
+            drop.addEventListener('click', () => input.click());
+            drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
+            drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+            drop.addEventListener('drop', e => {
+                e.preventDefault(); drop.classList.remove('dragover');
+                handleAadhaarFile(e.dataTransfer.files[0]);
+            });
+            input.addEventListener('change', () => handleAadhaarFile(input.files[0]));
+        }
+
+        function handleAadhaarFile(file) {
+            if (!file) return;
+            aadhaarFileName = file.name;
+            document.getElementById('aadhaarFileName').textContent = '✅ ' + file.name;
+            document.getElementById('aadhaarSuccessBadge').style.display = 'flex';
+        }
+
+        function submitStep3() {
+            if (!aadhaarFileName) { regAlert('Please upload your Aadhaar card image.'); return; }
+            completeRegistration();
+        }
+
+        function skipAadhaar() { aadhaarFileName = 'skipped'; completeRegistration(); }
+
+        function completeRegistration() {
+            const profile = {
+                username: window._regData.username,
+                password: window._regData.password,
+                selfieVerified: selfieDataURL !== 'skipped' && !!selfieDataURL,
+                aadhaarVerified: aadhaarFileName !== 'skipped' && !!aadhaarFileName,
+                registeredAt: new Date().toISOString()
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+            document.getElementById('regOverlay').classList.remove('show');
+            initApp(profile);
+        }
+
+        function regAlert(msg) {
+            const el = document.getElementById('regAlertBox');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3500);
+        }
+
+        // ── Bootstrap ──
+        window.addEventListener('DOMContentLoaded', () => {
+            const profile = loadSession();
+            if (profile && profile.username) {
+                initApp(profile);
+            } else {
+                document.getElementById('regOverlay').classList.add('show');
+                goToStep(1);
+                setupAadhaarDrop();
+            }
+        });
 
         // Post Visuals Canvas Rendering
         function renderPostVisuals() {
