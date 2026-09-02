@@ -1,1 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Dispatch Console — PERIMETER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0E1326;
+            --ink-surface: #171D36;
+            --paper: #F8FAFC;
+            --paper-2: #EEF2F6;
+            --gold: #D97706;
+            --gold-bright: #F59E0B;
+            --gold-glow: rgba(245, 158, 11, 0.25);
+            --gold-dim: #FEF3C7;
+            --coral: #FF5A5F;
+            --teal: #0F6E6E;
+            --teal-dim: #E0F2F1;
+            --police-blue: #2563EB;
+            --gray: #64748B;
+            --line: #E2E8F0;
+            --line-dark: rgba(255, 255, 255, 0.1);
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+            --shadow-subtle: 0 4px 20px -2px rgba(17, 21, 40, 0.06);
+            --shadow-elevation: 0 16px 40px -8px rgba(14, 19, 38, 0.2);
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Topbar */
+        .vol-topbar {
+            background: #111827;
+            color: white;
+            padding: 8px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12.5px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .vol-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.5);
+            color: #FBBF24;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .duty-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 4px 12px;
+            border-radius: 100px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .duty-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10B981;
+            box-shadow: 0 0 8px #10B981;
+        }
+
+        .vol-topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .vol-topbar-right a {
+            color: #94A3B8;
+            transition: color 0.15s;
+        }
+
+        .vol-topbar-right a:hover {
+            color: #FFFFFF;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 37px;
+            z-index: 90;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 22px;
+            color: var(--ink);
+            letter-spacing: -0.03em;
+        }
+
+        .logo span {
+            color: var(--gold-bright);
+        }
+
+        .vol-stats-bar {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+        }
+
+        .vol-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gray);
+        }
+
+        .vol-stat b {
+            color: var(--ink);
+            font-family: var(--mono);
+        }
+
+        .user-nav-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px 4px 6px;
+            background: var(--gold-dim);
+            border-radius: 100px;
+            border: 1px solid rgba(217, 119, 6, 0.3);
+            cursor: pointer;
+        }
+
+        .avatar-sm {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 24px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        /* Tactical 5km Radar Card */
+        .radar-card {
+            background: #0B0E1B;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            color: #FFFFFF;
+            box-shadow: var(--shadow-elevation);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .radar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .radar-title {
+            font-size: 16px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radar-live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 100px;
+            font-size: 10.5px;
+            font-family: var(--mono);
+            color: #FBBF24;
+        }
+
+        .radar-canvas-box {
+            width: 100%;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: #060810;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 16px;
+        }
+
+        .radar-canvas-box canvas {
+            width: 100%;
+            height: auto;
+        }
+
+        .radar-meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #94A3B8;
+            font-family: var(--mono);
+        }
+
+        /* Dispatch Feed Column */
+        .section-heading {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--ink);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .badge-count {
+            background: var(--coral);
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-weight: 700;
+        }
+
+        .dispatch-card {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-subtle);
+            border-left: 4px solid var(--gold);
+            transition: all 0.2s;
+        }
+
+        .dispatch-card.urgent {
+            border-left-color: var(--coral);
+            background: #FFFBFB;
+        }
+
+        .dispatch-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -4px rgba(17, 21, 40, 0.1);
+        }
+
+        .dispatch-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .dispatch-tag {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: var(--mono);
+        }
+
+        .dispatch-tag.sos {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .dispatch-tag.escort {
+            background: var(--gold-dim);
+            color: #B45309;
+        }
+
+        .dispatch-tag.accident {
+            background: #FFEDD5;
+            color: #C2410C;
+        }
+
+        .dispatch-distance {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gray);
+            font-family: var(--mono);
+        }
+
+        .dispatch-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+
+        .dispatch-desc {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .dispatch-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 14px;
+            border-top: 1px solid var(--line);
+        }
+
+        .dispatch-caller {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .btn-accept-dispatch {
+            background: var(--gold);
+            color: white;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-accept-dispatch:hover {
+            background: #B45309;
+            transform: scale(1.02);
+        }
+
+        .btn-accept-dispatch.accepted {
+            background: #10B981;
+            cursor: default;
+        }
+
+        /* Right Column: Timeline & Broadcast */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .widget-card {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .widget-card h3 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--ink);
+            margin-bottom: 12px;
+        }
+
+        .vol-broadcast-input {
+            width: 100%;
+            border: 1px solid var(--line);
+            background: var(--paper-2);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 13px;
+            font-family: var(--sans);
+            outline: none;
+            color: var(--ink);
+            resize: none;
+            height: 75px;
+            margin-bottom: 12px;
+        }
+
+        .vol-broadcast-input:focus {
+            background: #FFFFFF;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-glow);
+        }
+
+        .btn-broadcast {
+            width: 100%;
+            background: #111827;
+            color: #FFFFFF;
+            border: none;
+            padding: 11px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-broadcast:hover {
+            background: var(--gold);
+            color: white;
+        }
+
+        /* Timeline Items */
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 380px;
+            overflow-y: auto;
+        }
+
+        .timeline-item {
+            padding: 10px 12px;
+            background: var(--paper-2);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--gold);
+            font-size: 12px;
+        }
+
+        .timeline-time {
+            font-size: 10.5px;
+            font-weight: 700;
+            font-family: var(--mono);
+            color: var(--gray);
+            margin-bottom: 2px;
+        }
+
+        /* Escort Navigation HUD Modal */
+        .hud-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 14, 27, 0.88);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .hud-overlay.open {
+            display: flex;
+        }
+
+        .hud-box {
+            background: #111827;
+            color: white;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 520px;
+            padding: 28px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+        }
+
+        .hud-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .hud-eta {
+            font-size: 32px;
+            font-weight: 800;
+            font-family: var(--mono);
+            color: #FBBF24;
+        }
+
+        .hud-map-canvas {
+            width: 100%;
+            border-radius: 12px;
+            background: #000000;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hud-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .hud-btn {
+            padding: 12px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+        }
+
+        .hud-btn.arrive {
+            background: #10B981;
+            color: white;
+        }
+
+        .hud-btn.close {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--ink);
+            color: #FFFFFF;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 960px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .vol-stats-bar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Topbar -->
+    <div class="vol-topbar">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span>Logged in as</span>
+            <span class="vol-badge-pill">🙋 <span id="topbarVolName">Priya Deshmukh (Volunteer)</span></span>
+        </div>
+        <div class="vol-topbar-right">
+            <div class="duty-toggle" onclick="toggleDuty()">
+                <span class="duty-dot" id="dutyDot"></span>
+                <span id="dutyText">Active on Duty</span>
+            </div>
+            <a href="login.html" onclick="logout(); return false;">Logout →</a>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav class="nav">
+            <div class="logo">PERIMETER <span>.</span> <span style="font-size: 13px; color: var(--gold); font-weight: 600; margin-left: 4px;">VOLUNTEER DESK</span></div>
+
+            <div class="vol-stats-bar">
+                <div class="vol-stat">Dispatches: <b id="statDispatches">18</b></div>
+                <div class="vol-stat">Avg ETA: <b>3.4 mins</b></div>
+                <div class="vol-stat">Radius: <b>5.0 km</b></div>
+                <div class="vol-stat">Rating: <b>4.9 ★</b></div>
+            </div>
+
+            <div class="user-nav-profile" onclick="toast('Volunteer Badge #VOL-9022 (Verified Level 3)', '🎖️')">
+                <div class="avatar-sm" id="volAvatar">PD</div>
+                <span style="font-size: 12.5px; font-weight: 700;" id="navVolName">Priya D.</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+
+        <!-- Left Column: Tactical Radar & Active Dispatch List -->
+        <section>
+
+            <!-- 5km Radar Box -->
+            <div class="radar-card">
+                <div class="radar-header">
+                    <div class="radar-title">
+                        <span>📡 5 km Geofence Emergency Radar</span>
+                    </div>
+                    <div class="radar-live-badge">
+                        <span style="width: 6px; height: 6px; background: #FBBF24; border-radius: 50%; display: inline-block;"></span>
+                        SCANNING SECTOR 4
+                    </div>
+                </div>
+
+                <div class="radar-canvas-box">
+                    <canvas id="radarCanvas" width="600" height="260"></canvas>
+                </div>
+
+                <div class="radar-meta-row">
+                    <span>GPS: 12.9716° N, 77.5946° E</span>
+                    <span>3 ACTIVE DISTRESS SIGNALS WITHIN RADIUS</span>
+                </div>
+            </div>
+
+            <!-- Active Dispatches -->
+            <div class="section-heading">
+                <span>⚡ Active Nearby Dispatches (5 km)</span>
+                <span class="badge-count" id="activeIncidentCount">3 Pending</span>
+            </div>
+
+            <div id="dispatchList">
+
+                <!-- Incident 1: Urgent Shake SOS -->
+                <div class="dispatch-card urgent" id="card-inc-1">
+                    <div class="dispatch-top">
+                        <span class="dispatch-tag sos">🚨 SOS Distress (High Priority)</span>
+                        <span class="dispatch-distance">0.8 km away · 3 mins ETA</span>
+                    </div>
+                    <div class="dispatch-title">Distress Beacon Triggered (Motion Shake x3)</div>
+                    <div class="dispatch-desc">
+                        Citizen user Aarohi Sharma triggered automated emergency beacon near <b>Sector 4 Metro Station</b>. Unlit alley reported.
+                    </div>
+                    <div class="dispatch-footer">
+                        <div class="dispatch-caller">
+                            <span>👩 Aarohi S.</span>
+                            <span>· GPS Accuracy: ±4m</span>
+                        </div>
+                        <button class="btn-accept-dispatch" id="btn-inc-1" onclick="acceptDispatch('inc-1', 'Aarohi Sharma', 'Sector 4 Metro Station', '0.8 km')">
+                            Accept & Share Live Route →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Incident 2: Safe Escort Request -->
+                <div class="dispatch-card" id="card-inc-2">
+                    <div class="dispatch-top">
+                        <span class="dispatch-tag escort">🚶 Safe Escort Request</span>
+                        <span class="dispatch-distance">1.4 km away · 5 mins ETA</span>
+                    </div>
+                    <div class="dispatch-title">Late Night Walking Escort Required</div>
+                    <div class="dispatch-desc">
+                        Citizen requested verified volunteer accompaniment from <b>Koramangala 4th Block Park</b> to 80ft Road bus stop.
+                    </div>
+                    <div class="dispatch-footer">
+                        <div class="dispatch-caller">
+                            <span>👩 Meera R.</span>
+                            <span>· Tagged safe corridor route</span>
+                        </div>
+                        <button class="btn-accept-dispatch" id="btn-inc-2" onclick="acceptDispatch('inc-2', 'Meera R.', 'Koramangala 4th Block', '1.4 km')">
+                            Accept Escort →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Incident 3: Traffic Accident Assistance -->
+                <div class="dispatch-card" id="card-inc-3">
+                    <div class="dispatch-top">
+                        <span class="dispatch-tag accident">🚗 Vehicle Accident Support</span>
+                        <span class="dispatch-distance">2.2 km away · 7 mins ETA</span>
+                    </div>
+                    <div class="dispatch-title">Two-Wheeler Skid · First Aid Support</div>
+                    <div class="dispatch-desc">
+                        Citizen reported road skid on <b>MG Road Flyover Down-ramp</b>. Traffic Police & Ambulance notified; volunteer crowd control requested.
+                    </div>
+                    <div class="dispatch-footer">
+                        <div class="dispatch-caller">
+                            <span>🚗 Community Alert</span>
+                            <span>· First responder unit dispatched</span>
+                        </div>
+                        <button class="btn-accept-dispatch" id="btn-inc-3" onclick="acceptDispatch('inc-3', 'Traffic Marshall', 'MG Road Flyover', '2.2 km')">
+                            Assist On Scene →
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Right Column: Broadcast & Live Case Timeline -->
+        <aside class="right-column">
+
+            <!-- Broadcast Caution Box -->
+            <div class="widget-card">
+                <h3>📢 Broadcast Volunteer Caution Notice</h3>
+                <p style="font-size: 12px; color: var(--gray); margin-bottom: 12px;">Send an official verified safety warning to citizens within your 5 km perimeter.</p>
+                <textarea class="vol-broadcast-input" id="broadcastInput" placeholder="e.g. Unlit path near 4th block park. Night volunteer team standing by for escorts..."></textarea>
+                <button class="btn-broadcast" onclick="publishVolunteerNotice()">Publish Verified Volunteer Notice</button>
+            </div>
+
+            <!-- Universal Case Timeline -->
+            <div class="widget-card">
+                <h3>⚡ Universal Incident Timeline (Live Sync)</h3>
+                <p style="font-size: 11.5px; color: var(--gray); margin-bottom: 12px;">Real-time dispatch log across Volunteers, Police, and Citizens.</p>
+                <div class="timeline-container" id="timelineContainer">
+                    <div class="timeline-item">
+                        <div class="timeline-time">10:42 AM · CITIZEN TRIGGER</div>
+                        <div><b>Motion SOS:</b> Distress beacon activated in Sector 4 (0.8km away).</div>
+                    </div>
+                    <div class="timeline-item" style="border-left-color: var(--police-blue);">
+                        <div class="timeline-time">10:40 AM · POLICE COMMAND</div>
+                        <div><b>Patrol Alert:</b> Unit #4 assigned to standby on MG Road corridor.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Volunteer Credentials -->
+            <div class="widget-card" style="background: var(--gold-dim); border-color: rgba(217, 119, 6, 0.3);">
+                <div style="font-size: 13px; font-weight: 800; color: #92400E; margin-bottom: 4px;">🎖️ Responder Accreditation</div>
+                <div style="font-size: 12px; color: #B45309; line-height: 1.5;">
+                    Badge ID: <b>PERIMETER-VOL-9022</b><br>
+                    Background Check: <b>Verified by City Police</b><br>
+                    Emergency Medical: <b>CPR & First Aid Certified</b>
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- LIVE ESCORT NAVIGATION HUD MODAL -->
+    <div class="hud-overlay" id="hudModal">
+        <div class="hud-box">
+            <div class="hud-header">
+                <div>
+                    <div style="font-size: 12px; color: #FBBF24; font-family: var(--mono); text-transform: uppercase;">● DISPATCH ACCEPTED & ROUTING</div>
+                    <h3 style="font-size: 18px; font-weight: 800;" id="hudTargetTitle">Navigating to Aarohi S.</h3>
+                </div>
+                <div class="hud-eta" id="hudEta">3 MIN</div>
+            </div>
+
+            <canvas id="hudCanvas" class="hud-map-canvas" width="460" height="200"></canvas>
+
+            <div style="font-size: 12px; color: #94A3B8; margin-bottom: 16px;">
+                📍 Destination: <b style="color: white;" id="hudLocation">Sector 4 Metro Station</b><br>
+                📡 Live GPS trajectory is being shared with City Police Command and the Citizen.
+            </div>
+
+            <div class="hud-actions">
+                <button class="hud-btn arrive" onclick="markArrivedOnScene()">✔ Mark Arrived On Scene</button>
+                <button class="hud-btn close" onclick="closeHud()">Minimize HUD</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✨</span>
+        <span id="toastMsg">Notification message</span>
+    </div>
+
+    <script>
+        // Session Initialization
+        let session = null;
+        try {
+            session = JSON.parse(localStorage.getItem('perimeter_session'));
+        } catch (e) { }
+
+        const volName = session && session.name ? session.name : 'Priya Deshmukh';
+        const volAvatar = session && session.avatar ? session.avatar : 'PD';
+
+        document.getElementById('topbarVolName').textContent = `${volName} (Verified Volunteer)`;
+        document.getElementById('navVolName').textContent = volName.split(' ')[0] + ' (Vol)';
+        document.getElementById('volAvatar').textContent = volAvatar;
+
+        function logout() {
+            localStorage.removeItem('perimeter_session');
+            window.location.href = 'login.html';
+        }
+
+        let isOnDuty = true;
+        function toggleDuty() {
+            isOnDuty = !isOnDuty;
+            const dot = document.getElementById('dutyDot');
+            const txt = document.getElementById('dutyText');
+            if (isOnDuty) {
+                dot.style.background = '#10B981';
+                dot.style.boxShadow = '0 0 8px #10B981';
+                txt.textContent = 'Active on Duty';
+                toast('Status: Online & receiving 5km dispatch alerts', '🟢');
+            } else {
+                dot.style.background = '#94A3B8';
+                dot.style.boxShadow = 'none';
+                txt.textContent = 'Standby (Offline)';
+                toast('Status: Standby (Radar paused)', '⚪');
+            }
+        }
+
+        // Radar Canvas Simulation
+        let radarAngle = 0;
+        function drawRadar() {
+            const c = document.getElementById('radarCanvas');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            const w = c.width;
+            const h = c.height;
+            const cx = w / 2;
+            const cy = h / 2;
+
+            ctx.fillStyle = '#070A14';
+            ctx.fillRect(0, 0, w, h);
+
+            // Concentric range rings (1km, 2.5km, 5km)
+            ctx.strokeStyle = 'rgba(245, 158, 11, 0.2)';
+            ctx.lineWidth = 1;
+            [35, 75, 115].forEach(r => {
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.stroke();
+            });
+
+            // Crosshairs
+            ctx.beginPath(); ctx.moveTo(cx - 120, cy); ctx.lineTo(cx + 120, cy); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx, cy - 120); ctx.lineTo(cx, cy + 120); ctx.stroke();
+
+            // Radar sweep line
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(radarAngle);
+            const sweepGrad = ctx.createLinearGradient(0, 0, 115, 0);
+            sweepGrad.addColorStop(0, 'rgba(245, 158, 11, 0.6)');
+            sweepGrad.addColorStop(1, 'rgba(245, 158, 11, 0)');
+            ctx.strokeStyle = sweepGrad;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(115, 0);
+            ctx.stroke();
+            ctx.restore();
+
+            // Volunteer Center Pin
+            ctx.fillStyle = '#F59E0B';
+            ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2); ctx.fill();
+
+            // Incident Blips
+            // Blip 1: Sector 4 (0.8km)
+            ctx.fillStyle = '#FF5A5F';
+            ctx.beginPath(); ctx.arc(cx + 30, cy - 25, 5, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#FFFFFF'; ctx.font = '10px IBM Plex Mono'; ctx.fillText('🚨 0.8km', cx + 38, cy - 22);
+
+            // Blip 2: Koramangala (1.4km)
+            ctx.fillStyle = '#FBBF24';
+            ctx.beginPath(); ctx.arc(cx - 50, cy + 30, 4, 0, Math.PI * 2); ctx.fill();
+
+            // Blip 3: MG Road (2.2km)
+            ctx.fillStyle = '#EA580C';
+            ctx.beginPath(); ctx.arc(cx + 70, cy + 45, 4, 0, Math.PI * 2); ctx.fill();
+
+            if (isOnDuty) radarAngle += 0.035;
+            requestAnimationFrame(drawRadar);
+        }
+
+        // Timeline Sync
+        function addTimelineEntry(title, desc) {
+            const container = document.getElementById('timelineContainer');
+            const item = document.createElement('div');
+            item.className = 'timeline-item';
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            item.innerHTML = `
+                <div class="timeline-time">${timeStr} · VOLUNTEER ACTION</div>
+                <div><b>${title}:</b> ${desc}</div>
+            `;
+            container.insertBefore(item, container.firstChild);
+        }
+
+        // Accept Dispatch Action
+        let activeDispatchTarget = '';
+        function acceptDispatch(id, person, loc, dist) {
+            const btn = document.getElementById('btn-' + id);
+            btn.classList.add('accepted');
+            btn.innerHTML = '✔ Dispatch Active · En Route';
+
+            activeDispatchTarget = person;
+            addTimelineEntry('Volunteer Dispatch Accepted', `${volName} accepted emergency request for ${person} at ${loc} (${dist}).`);
+
+            // Open HUD
+            document.getElementById('hudTargetTitle').textContent = `Navigating to ${person}`;
+            document.getElementById('hudLocation').textContent = loc;
+            document.getElementById('hudModal').classList.add('open');
+            drawHudRoute();
+
+            toast(`Dispatch accepted! Live trajectory sharing activated.`, '🚀');
+        }
+
+        function drawHudRoute() {
+            const c = document.getElementById('hudCanvas');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            ctx.fillStyle = '#0A0D18'; ctx.fillRect(0, 0, 460, 200);
+
+            // Draw route polyline
+            ctx.strokeStyle = '#F59E0B'; ctx.lineWidth = 4; ctx.setLineDash([8, 4]);
+            ctx.beginPath(); ctx.moveTo(50, 150); ctx.lineTo(180, 70); ctx.lineTo(340, 110); ctx.lineTo(410, 40); ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Start & End markers
+            ctx.fillStyle = '#10B981'; ctx.beginPath(); ctx.arc(50, 150, 8, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 11px Inter'; ctx.fillText('You (Vol)', 40, 175);
+
+            ctx.fillStyle = '#FF5A5F'; ctx.beginPath(); ctx.arc(410, 40, 9, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#FFFFFF'; ctx.fillText('Target (0.8km)', 350, 30);
+        }
+
+        function markArrivedOnScene() {
+            addTimelineEntry('Arrived On Scene', `${volName} arrived on location with ${activeDispatchTarget}. Citizen secured.`);
+            document.getElementById('hudModal').classList.remove('open');
+            toast('✔ Arrival logged to Universal Case Timeline & Police Desk!', '🛡️');
+            let d = parseInt(document.getElementById('statDispatches').textContent) + 1;
+            document.getElementById('statDispatches').textContent = d;
+        }
+
+        function closeHud() {
+            document.getElementById('hudModal').classList.remove('open');
+        }
+
+        function publishVolunteerNotice() {
+            const input = document.getElementById('broadcastInput');
+            const txt = input.value.trim();
+            if (!txt) { toast('Please type a safety notice to publish.', '⚠️'); return; }
+
+            addTimelineEntry('Volunteer Notice Broadcast', `${volName}: ${txt}`);
+            input.value = '';
+            toast('Verified Volunteer Notice published to 5km community feed!', '📢');
+        }
+
+        function toast(msg, icon = '✨') {
+            const el = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            document.getElementById('toastIcon').textContent = icon;
+            el.classList.add('show');
+            setTimeout(() => { el.classList.remove('show'); }, 3000);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            drawRadar();
+        });
+    </script>
+</body>
+
+</html>

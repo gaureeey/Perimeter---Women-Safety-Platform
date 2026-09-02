@@ -1,1 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Dashboard — PERIMETER Women Safety</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #111528;
+            --ink-secondary: #2A304E;
+            --paper: #F8FAFC;
+            --paper-2: #EEF2F6;
+            --coral: #FF5A5F;
+            --coral-glow: rgba(255, 90, 95, 0.25);
+            --coral-dim: #FFE4E6;
+            --teal: #0F6E6E;
+            --teal-dim: #E0F2F1;
+            --gold: #D97706;
+            --gold-dim: #FEF3C7;
+            --police-blue: #2563EB;
+            --police-dim: #DBEAFE;
+            --gray: #64748B;
+            --line: #E2E8F0;
+            --white: #FFFFFF;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+            --shadow-subtle: 0 4px 20px -2px rgba(17, 21, 40, 0.06);
+            --shadow-card: 0 10px 30px -4px rgba(17, 21, 40, 0.08);
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img,
+        svg,
+        canvas {
+            display: block;
+            max-width: 100%;
+        }
+
+        /* Top Role Banner */
+        .user-topbar {
+            background: var(--ink);
+            color: white;
+            padding: 8px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12.5px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .user-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 90, 95, 0.2);
+            border: 1px solid rgba(255, 90, 95, 0.4);
+            color: #FF8084;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .user-topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-topbar-right a {
+            color: #94A3B8;
+            transition: color 0.15s;
+        }
+
+        .user-topbar-right a:hover {
+            color: #FFFFFF;
+        }
+
+        /* Navigation Header */
+        header {
+            position: sticky;
+            top: 37px;
+            z-index: 90;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            max-width: 1160px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 22px;
+            color: var(--ink);
+            letter-spacing: -0.03em;
+        }
+
+        .logo span {
+            color: var(--coral);
+        }
+
+        .search-bar {
+            background: var(--paper-2);
+            border: 1px solid var(--line);
+            border-radius: 100px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 280px;
+            font-size: 13px;
+            color: var(--gray);
+            transition: all 0.2s;
+        }
+
+        .search-bar:focus-within {
+            background: #FFFFFF;
+            border-color: var(--ink);
+            box-shadow: 0 0 0 3px rgba(17, 21, 40, 0.06);
+            width: 320px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: none;
+            outline: none;
+            width: 100%;
+            font-size: 13px;
+            color: var(--ink);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .nav-btn:hover {
+            background: var(--paper-2);
+        }
+
+        .btn-accident {
+            background: var(--gold-dim);
+            color: #92400E;
+            border: 1px solid rgba(217, 119, 6, 0.3);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-accident:hover {
+            background: #FDE68A;
+            transform: translateY(-1px);
+        }
+
+        .btn-sos {
+            background: var(--coral);
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 15px var(--coral-glow);
+            transition: all 0.2s;
+            animation: pulse-sos 3s infinite;
+        }
+
+        @keyframes pulse-sos {
+            0%, 100% { box-shadow: 0 4px 15px var(--coral-glow); }
+            50% { box-shadow: 0 4px 25px rgba(255, 90, 95, 0.55); }
+        }
+
+        .btn-sos:hover {
+            background: #E02424;
+            transform: translateY(-1px);
+        }
+
+        .btn-sos:active {
+            transform: scale(0.96);
+        }
+
+        /* User Profile Pill in Header */
+        .user-nav-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px 4px 6px;
+            background: var(--paper-2);
+            border-radius: 100px;
+            border: 1px solid var(--line);
+            cursor: pointer;
+        }
+
+        .avatar-sm {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--coral);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Layout Grid */
+        .container {
+            max-width: 1160px;
+            margin: 24px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 28px;
+            align-items: start;
+        }
+
+        /* Stories Row */
+        .stories-card {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .stories-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray);
+            margin-bottom: 12px;
+        }
+
+        .stories-list {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .stories-list::-webkit-scrollbar {
+            height: 4px;
+        }
+        .stories-list::-webkit-scrollbar-thumb {
+            background: var(--line);
+            border-radius: 10px;
+        }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .story-ring {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            padding: 2.5px;
+            background: linear-gradient(45deg, #FF5A5F, #F59E0B, #0F6E6E);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .story-ring.verified {
+            background: linear-gradient(45deg, #0F6E6E, #2DD4BF);
+        }
+
+        .story-ring.police {
+            background: linear-gradient(45deg, #2563EB, #60A5FA);
+        }
+
+        .story-item:hover .story-ring {
+            transform: scale(1.06);
+        }
+
+        .story-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--ink);
+            border: 2px solid white;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .story-name {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--ink);
+            max-width: 64px;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Post Creation Box */
+        .create-post-card {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .create-input-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .create-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--coral);
+            color: white;
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .create-input {
+            flex: 1;
+            background: var(--paper-2);
+            border: 1px solid var(--line);
+            border-radius: 100px;
+            padding: 12px 20px;
+            font-size: 13.5px;
+            font-family: var(--sans);
+            outline: none;
+            color: var(--ink);
+            transition: all 0.2s;
+        }
+
+        .create-input:focus {
+            background: #FFFFFF;
+            border-color: var(--coral);
+            box-shadow: 0 0 0 3px var(--coral-glow);
+        }
+
+        .create-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 14px;
+            border-top: 1px solid var(--line);
+        }
+
+        .act-btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .act-btn {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }
+
+        .act-btn:hover {
+            background: var(--paper-2);
+            color: var(--ink);
+        }
+
+        .btn-publish {
+            background: var(--coral);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-publish:hover {
+            background: #E02424;
+            transform: translateY(-1px);
+        }
+
+        /* Safety Feed Posts */
+        .post-card {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .post-card:hover {
+            border-color: #CBD5E1;
+        }
+
+        .post-header {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--ink);
+            color: white;
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .post-user-info .name {
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge {
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 100px;
+            text-transform: uppercase;
+        }
+
+        .badge.verified {
+            background: var(--teal-dim);
+            color: var(--teal);
+        }
+
+        .badge.volunteer {
+            background: var(--gold-dim);
+            color: #B45309;
+        }
+
+        .badge.police {
+            background: var(--police-dim);
+            color: var(--police-blue);
+        }
+
+        .badge.accident {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .badge.user {
+            background: #F1F5F9;
+            color: var(--gray);
+        }
+
+        .post-user-info .meta {
+            font-size: 11.5px;
+            color: var(--gray);
+        }
+
+        .post-media {
+            width: 100%;
+            background: #0B0E1B;
+            position: relative;
+        }
+
+        .post-media canvas {
+            width: 100%;
+            height: auto;
+        }
+
+        .post-body {
+            padding: 16px 20px;
+        }
+
+        .dispatch-strip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #FFF1F2;
+            border: 1px solid #FFE4E6;
+            color: #E11D48;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            width: 100%;
+        }
+
+        .dispatch-strip .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #E11D48;
+            box-shadow: 0 0 8px #E11D48;
+            animation: pulse 1.5s infinite;
+        }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .left-acts {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .act-icon {
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.15s;
+            user-select: none;
+        }
+
+        .act-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .act-icon.liked {
+            transform: scale(1.2);
+            filter: drop-shadow(0 2px 6px rgba(255, 90, 95, 0.4));
+        }
+
+        .likes-count {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .post-caption {
+            font-size: 13.5px;
+            line-height: 1.5;
+            color: #1E293B;
+            margin-bottom: 8px;
+        }
+
+        .comments-link {
+            font-size: 12px;
+            color: var(--gray);
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .comments-link:hover {
+            color: var(--ink);
+            text-decoration: underline;
+        }
+
+        /* Sidebar Widgets */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .sidebar-widget {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .widget-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--ink);
+            margin-bottom: 14px;
+        }
+
+        .widget-title a {
+            font-size: 12px;
+            color: var(--coral);
+            font-weight: 600;
+        }
+
+        .map-box {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--line);
+            margin-bottom: 12px;
+        }
+
+        .map-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+
+        .btn-simulate {
+            background: var(--paper-2);
+            border: 1px solid var(--line);
+            padding: 5px 12px;
+            border-radius: 100px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-simulate:hover {
+            background: var(--coral);
+            color: white;
+            border-color: var(--coral);
+        }
+
+        /* Timeline Items */
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .timeline-item {
+            padding: 10px 12px;
+            background: var(--paper-2);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--gray);
+            font-size: 12px;
+        }
+
+        .timeline-item.user { border-left-color: var(--coral); }
+        .timeline-item.volunteer { border-left-color: var(--gold); }
+        .timeline-item.police { border-left-color: var(--police-blue); }
+        .timeline-item.journalist { border-left-color: var(--teal); }
+
+        .timeline-time {
+            font-size: 10.5px;
+            font-weight: 700;
+            font-family: var(--mono);
+            color: var(--gray);
+            margin-bottom: 2px;
+        }
+
+        .timeline-text {
+            color: var(--ink);
+            line-height: 1.4;
+        }
+
+        /* Friend Connect Row */
+        .friend-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .friend-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-add {
+            background: var(--paper-2);
+            border: 1px solid var(--line);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-add:hover {
+            background: var(--ink);
+            color: white;
+        }
+
+        /* Wellness Box */
+        .wellness-box {
+            background: #FDF2F8;
+            border: 1px solid #FCE7F3;
+            border-radius: var(--radius-md);
+            padding: 14px;
+            font-size: 12.5px;
+        }
+
+        /* SOS Shake / Trigger Modal */
+        .sos-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 21, 40, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .sos-modal-overlay.open {
+            display: flex;
+        }
+
+        .sos-modal-box {
+            background: #FFFFFF;
+            border-radius: 28px;
+            width: 100%;
+            max-width: 440px;
+            padding: 32px 28px;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+            animation: zoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.85); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .sos-pulse-ring {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: var(--coral-dim);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            position: relative;
+        }
+
+        .sos-pulse-ring::before {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            border: 2px solid var(--coral);
+            animation: pulse-ring 1.8s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+
+        .sos-countdown {
+            font-size: 48px;
+            font-weight: 800;
+            font-family: var(--mono);
+            color: var(--coral);
+            margin: 10px 0;
+        }
+
+        .sos-btn-cancel {
+            width: 100%;
+            padding: 14px;
+            background: var(--paper-2);
+            color: var(--ink);
+            border: 1px solid var(--line);
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 18px;
+            transition: all 0.15s;
+        }
+
+        .sos-btn-cancel:hover {
+            background: var(--ink);
+            color: white;
+        }
+
+        /* Accident Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 21, 40, 0.65);
+            backdrop-filter: blur(4px);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 440px;
+            padding: 24px;
+            box-shadow: var(--shadow-elevation);
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .modal-head h3 {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-sub {
+            font-size: 12.5px;
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+
+        .modal-loc {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--teal);
+            background: var(--teal-dim);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .field-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin: 12px 0 6px;
+        }
+
+        .field-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            border: 1px solid var(--line);
+            background: var(--paper-2);
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--ink);
+            transition: all 0.15s;
+        }
+
+        .chip.active {
+            background: var(--ink);
+            color: white;
+            border-color: var(--ink);
+        }
+
+        .chip.sev-active {
+            background: var(--coral);
+            color: white;
+            border-color: var(--coral);
+        }
+
+        .modal-input,
+        .modal-textarea {
+            width: 100%;
+            border: 1px solid var(--line);
+            background: var(--paper-2);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 13px;
+            font-family: var(--sans);
+            outline: none;
+            color: var(--ink);
+        }
+
+        .modal-textarea {
+            resize: none;
+            height: 64px;
+        }
+
+        .btn-submit-accident {
+            width: 100%;
+            margin-top: 18px;
+            background: var(--coral);
+            color: white;
+            border: none;
+            border-radius: 100px;
+            padding: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-submit-accident:hover {
+            background: #E02424;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--ink);
+            color: #FFFFFF;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .search-bar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Role Status Topbar -->
+    <div class="user-topbar">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span>Logged in as</span>
+            <span class="user-badge-pill">👩 <span id="topbarUserName">Aarohi Sharma (Citizen)</span></span>
+        </div>
+        <div class="user-topbar-right">
+            <span style="color: #94A3B8; font-family: var(--mono); font-size: 11px;">GEOFENCE: 5KM ACTIVE</span>
+            <a href="login.html" onclick="logout(); return false;">Switch Persona / Logout →</a>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <header>
+        <nav class="nav">
+            <div class="logo">PERIMETER <span>.</span></div>
+
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Search friends, safe corridors, alerts...">
+            </div>
+
+            <div class="nav-actions">
+                <button class="nav-btn" onclick="scrollToFeed()">🏠 Feed</button>
+                <button class="btn-accident" onclick="openAccidentModal()">🚗 Report Accident</button>
+                <button class="btn-sos" onclick="triggerSmartSOS()">🚨 Smart SOS</button>
+
+                <div class="user-nav-profile" onclick="toast('Citizen Profile: Verified Safe Citizen ID #8849', '🛡️')">
+                    <div class="avatar-sm" id="navAvatar">AS</div>
+                    <span style="font-size: 12.5px; font-weight: 700;" id="navUserName">Aarohi</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container">
+
+        <!-- Left Column: Stories, Post Box & Feed -->
+        <section class="feed-column">
+
+            <!-- Stories Row -->
+            <div class="stories-card">
+                <div class="stories-title">Live Safety Stories & Safe Routes</div>
+                <div class="stories-list">
+                    <div class="story-item" onclick="openStory('Your Safety Status')">
+                        <div class="story-ring">
+                            <div class="story-avatar" style="background: var(--coral);">+</div>
+                        </div>
+                        <div class="story-name">Add Story</div>
+                    </div>
+                    <div class="story-item" onclick="openStory('Rhea Nair (Press)')">
+                        <div class="story-ring verified">
+                            <div class="story-avatar" style="background: var(--teal);">RN</div>
+                        </div>
+                        <div class="story-name">Rhea (Press)</div>
+                    </div>
+                    <div class="story-item" onclick="openStory('Priya D. (Volunteer)')">
+                        <div class="story-ring">
+                            <div class="story-avatar" style="background: var(--gold);">PD</div>
+                        </div>
+                        <div class="story-name">Priya (Vol)</div>
+                    </div>
+                    <div class="story-item" onclick="openStory('Inspector Patil (Police)')">
+                        <div class="story-ring police">
+                            <div class="story-avatar" style="background: var(--police-blue);">IP</div>
+                        </div>
+                        <div class="story-name">Police Unit</div>
+                    </div>
+                    <div class="story-item" onclick="openStory('Safe Corridor MG Road')">
+                        <div class="story-ring verified">
+                            <div class="story-avatar" style="background: #0D9488;">📍</div>
+                        </div>
+                        <div class="story-name">MG Route</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Post Card -->
+            <div class="create-post-card">
+                <div class="create-input-row">
+                    <div class="create-avatar" id="postBoxAvatar">AS</div>
+                    <input type="text" class="create-input" id="postInput"
+                        placeholder="Share a safety update, incident alert, or ask for help...">
+                </div>
+                <div class="create-actions">
+                    <div class="act-btn-group">
+                        <button class="act-btn" onclick="toast('Photo & video attachment modal opened', '📷')">📷 Photo / Video</button>
+                        <button class="act-btn" onclick="tagSafeLocation()">📍 Tag Safe Location</button>
+                        <button class="act-btn" onclick="openAccidentModal()">🚗 Accident</button>
+                    </div>
+                    <button class="btn-publish" onclick="publishCitizenPost()">Publish Post</button>
+                </div>
+            </div>
+
+            <!-- Feed List -->
+            <div id="feedList">
+
+                <!-- Post 1: Journalist Verified Safe Corridor -->
+                <article class="post-card">
+                    <div class="post-header">
+                        <div class="post-user">
+                            <div class="post-avatar" style="background: var(--teal);">RN</div>
+                            <div class="post-user-info">
+                                <div class="name">Rhea Nair <span class="badge verified">Verified Reporter</span></div>
+                                <div class="meta">MG Road Sector · 12 mins ago</div>
+                            </div>
+                        </div>
+                        <div style="cursor: pointer; color: var(--gray);" onclick="toast('Options: Report, Save or Copy Link', '•••')">•••</div>
+                    </div>
+
+                    <div class="post-media">
+                        <canvas id="mediaCanvas1" width="600" height="300"></canvas>
+                    </div>
+
+                    <div class="post-body">
+                        <div class="post-actions">
+                            <div class="left-acts">
+                                <span class="act-icon" onclick="toggleLike(this, 342)">❤️</span>
+                                <span class="act-icon" onclick="toast('Opening verified discussion thread...', '💬')">💬</span>
+                                <span class="act-icon" onclick="toast('Safe route link copied to clipboard!', '↗️')">↗️</span>
+                            </div>
+                            <span class="act-icon" onclick="toggleBookmark(this)">🔖</span>
+                        </div>
+                        <div class="likes-count"><span class="like-number">342</span> likes</div>
+                        <div class="post-caption">
+                            <b>Rhea Nair</b> Verified safe corridor established near MG Road metro station. Volunteer night patrols active until 2 AM. Walk safely!
+                        </div>
+                        <div class="comments-link" onclick="toast('Loaded 48 citizen safety comments', '💬')">View all 48 comments</div>
+                    </div>
+                </article>
+
+                <!-- Post 2: Volunteer Warning -->
+                <article class="post-card">
+                    <div class="post-header">
+                        <div class="post-user">
+                            <div class="post-avatar" style="background: var(--gold);">PD</div>
+                            <div class="post-user-info">
+                                <div class="name">Priya Deshmukh <span class="badge volunteer">Verified Volunteer</span></div>
+                                <div class="meta">Koramangala 4th Block · 45 mins ago</div>
+                            </div>
+                        </div>
+                        <div style="cursor: pointer; color: var(--gray);" onclick="toast('Options: Report, Save or Copy Link', '•••')">•••</div>
+                    </div>
+
+                    <div class="post-media">
+                        <canvas id="mediaCanvas2" width="600" height="300"></canvas>
+                    </div>
+
+                    <div class="post-body">
+                        <div class="post-actions">
+                            <div class="left-acts">
+                                <span class="act-icon" onclick="toggleLike(this, 512)">❤️</span>
+                                <span class="act-icon" onclick="toast('Opening discussion thread...', '💬')">💬</span>
+                                <span class="act-icon" onclick="toast('Warning link copied to clipboard!', '↗️')">↗️</span>
+                            </div>
+                            <span class="act-icon" onclick="toggleBookmark(this)">🔖</span>
+                        </div>
+                        <div class="likes-count"><span class="like-number">512</span> likes</div>
+                        <div class="post-caption">
+                            <b>Priya Deshmukh</b> ⚠️ Unlit street stretch near the 4th block park. Avoid walking alone post 9 PM. Volunteer escorts available nearby—send an alert if needed!
+                        </div>
+                        <div class="comments-link" onclick="toast('Loaded 89 responses', '💬')">View all 89 comments</div>
+                    </div>
+                </article>
+
+            </div>
+
+        </section>
+
+        <!-- Right Sidebar: Safety Heatmap, Unified Timeline, Guardians & Wellness -->
+        <aside class="sidebar">
+
+            <!-- Heatmap Mini-Widget -->
+            <div class="sidebar-widget">
+                <div class="widget-title">
+                    <span>📍 Safety Heatmap & Zones</span>
+                    <a href="#" onclick="toast('Full screen GIS Heatmap view opening...', '🗺️'); return false;">Expand</a>
+                </div>
+                <div class="map-box">
+                    <canvas id="miniMapCanvas" width="300" height="180"></canvas>
+                </div>
+                <div class="map-info">
+                    <span>Zone: <b style="color: var(--teal);" id="zoneStatusText">Safe Corridor</b></span>
+                    <button class="btn-simulate" onclick="simulateUnsafeMovement()">Simulate Risk</button>
+                </div>
+            </div>
+
+            <!-- Unified Timeline Widget -->
+            <div class="sidebar-widget">
+                <div class="widget-title">
+                    <span>⚡ Unified Incident Timeline</span>
+                </div>
+                <p style="font-size: 11.5px; color: var(--gray); margin-bottom: 12px;">Real-time synchronized updates across Volunteers, Police, and Press.</p>
+                <div class="timeline-container" id="timelineContainer">
+                    <div class="timeline-item user">
+                        <div class="timeline-time">10:42 AM · Citizen SOS</div>
+                        <div class="timeline-text">Motion SOS triggered in Sector 4. Coordinates routed to 5km responders.</div>
+                    </div>
+                    <div class="timeline-item volunteer">
+                        <div class="timeline-time">10:43 AM · Volunteer</div>
+                        <div class="timeline-text">Volunteer Priya D. accepted dispatch. Trajectory logged.</div>
+                    </div>
+                    <div class="timeline-item police">
+                        <div class="timeline-time">10:45 AM · Police</div>
+                        <div class="timeline-text">Patrol Unit #4 arrived on scene. User secured safely.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connect Helpers -->
+            <div class="sidebar-widget">
+                <div class="widget-title">
+                    <span>👥 Trusted Guardians Nearby</span>
+                </div>
+                <div class="friend-row">
+                    <div class="friend-info">
+                        <div class="post-avatar" style="width: 32px; height: 32px; font-size: 11px; background: var(--coral);">SK</div>
+                        <div>
+                            <div style="font-size: 13px; font-weight: 700;">Sneha Kapoor</div>
+                            <div style="font-size: 11px; color: var(--gray);">Verified Volunteer · 0.8km</div>
+                        </div>
+                    </div>
+                    <button class="btn-add" onclick="addGuardian(this)">+ Add</button>
+                </div>
+                <div class="friend-row">
+                    <div class="friend-info">
+                        <div class="post-avatar" style="width: 32px; height: 32px; font-size: 11px; background: var(--teal);">AR</div>
+                        <div>
+                            <div style="font-size: 13px; font-weight: 700;">Ananya Rao</div>
+                            <div style="font-size: 11px; color: var(--gray);">Community Guardian · 1.2km</div>
+                        </div>
+                    </div>
+                    <button class="btn-add" onclick="addGuardian(this)">+ Add</button>
+                </div>
+            </div>
+
+            <!-- Wellness Journal -->
+            <div class="sidebar-widget">
+                <div class="widget-title">
+                    <span>🌸 Women Wellness</span>
+                </div>
+                <p style="font-size: 12px; color: var(--gray); margin-bottom: 8px;">Private safety check-ins and cycle tracking.</p>
+                <div class="wellness-box">
+                    <div>Status: <b>Day 18 (Luteal Phase)</b></div>
+                    <div style="color: var(--teal); margin-top: 4px; font-size: 11.5px; font-weight: 600;">✔ Private Safety Journal Encrypted</div>
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- SMART SOS COUNTDOWN MODAL -->
+    <div class="sos-modal-overlay" id="sosModal">
+        <div class="sos-modal-box">
+            <div class="sos-pulse-ring">🚨</div>
+            <h2 style="font-size: 22px; font-weight: 800; color: var(--ink);">EMERGENCY SOS TRIGGERED</h2>
+            <p style="font-size: 13px; color: var(--gray); margin-top: 6px;">
+                Broadcasting your live GPS to 5km radius verified responders and City Police.
+            </p>
+            <div class="sos-countdown" id="sosTimer">3</div>
+            <p style="font-size: 11px; color: var(--gray);">Siren, audio recording & dispatch will activate when countdown hits 0.</p>
+            <button class="sos-btn-cancel" onclick="cancelSOS()">✕ Cancel False Alarm</button>
+        </div>
+    </div>
+
+    <!-- ACCIDENT REPORT MODAL -->
+    <div class="modal-overlay" id="accidentModal">
+        <div class="modal-box">
+            <div class="modal-head">
+                <h3>🚗 Report Vehicle Accident</h3>
+                <button class="modal-close" onclick="closeAccidentModal()">✕</button>
+            </div>
+            <div class="modal-sub">Directly alerts Traffic Police, Ambulance dispatch & nearby volunteers.</div>
+
+            <div class="modal-loc">📍 Auto-tagged GPS: MG Road Junction, Bengaluru</div>
+
+            <div class="field-label">Vehicle Type Involved</div>
+            <div class="field-row" id="vehicleChips">
+                <div class="chip" onclick="selectChip(this, 'vehicleChips')">🚗 Car</div>
+                <div class="chip" onclick="selectChip(this, 'vehicleChips')">🏍️ Two-wheeler</div>
+                <div class="chip" onclick="selectChip(this, 'vehicleChips')">🚌 Bus</div>
+                <div class="chip" onclick="selectChip(this, 'vehicleChips')">🚚 Truck</div>
+                <div class="chip" onclick="selectChip(this, 'vehicleChips')">🚶 Pedestrian</div>
+            </div>
+
+            <div class="field-label">Severity Level</div>
+            <div class="field-row" id="severityChips">
+                <div class="chip" onclick="selectSeverity(this, 'Minor')">Minor</div>
+                <div class="chip" onclick="selectSeverity(this, 'Injuries Reported')">Injuries Reported</div>
+                <div class="chip" onclick="selectSeverity(this, 'Critical / Trapped')">Critical / Trapped</div>
+            </div>
+
+            <div class="field-label">Vehicles / People Involved</div>
+            <input type="text" class="modal-input" id="accidentCount" placeholder="e.g. 2 cars, 3 passengers">
+
+            <div class="field-label">Description (Optional)</div>
+            <textarea class="modal-textarea" id="accidentDesc" placeholder="Road blocked, fuel leak, fire risk..."></textarea>
+
+            <button class="btn-submit-accident" onclick="submitAccidentReport()">Alert Emergency Services Now</button>
+        </div>
+    </div>
+
+    <!-- Global Toast -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✨</span>
+        <span id="toastMsg">Notification message</span>
+    </div>
+
+    <script>
+        // Session Initialization
+        let session = null;
+        try {
+            session = JSON.parse(localStorage.getItem('perimeter_session'));
+        } catch (e) { }
+
+        const userName = session && session.name ? session.name : 'Aarohi Sharma';
+        const userAvatar = session && session.avatar ? session.avatar : 'AS';
+
+        document.getElementById('topbarUserName').textContent = `${userName} (Citizen User)`;
+        document.getElementById('navUserName').textContent = userName.split(' ')[0];
+        document.getElementById('navAvatar').textContent = userAvatar;
+        document.getElementById('postBoxAvatar').textContent = userAvatar;
+
+        function logout() {
+            localStorage.removeItem('perimeter_session');
+            window.location.href = 'login.html';
+        }
+
+        // Post Visuals Canvas Rendering
+        function renderPostVisuals() {
+            const c1 = document.getElementById('mediaCanvas1');
+            if (c1) {
+                const ctx = c1.getContext('2d');
+                ctx.fillStyle = '#0F172A'; ctx.fillRect(0, 0, 600, 300);
+                ctx.strokeStyle = '#0F6E6E'; ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.moveTo(60, 240); ctx.lineTo(200, 100); ctx.lineTo(380, 160); ctx.lineTo(540, 50); ctx.stroke();
+                ctx.fillStyle = '#2DD4BF'; ctx.beginPath(); ctx.arc(540, 50, 10, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 15px Inter'; ctx.fillText('📍 VERIFIED SAFE PATROL ROUTE ACTIVE', 36, 36);
+            }
+
+            const c2 = document.getElementById('mediaCanvas2');
+            if (c2) {
+                const ctx = c2.getContext('2d');
+                ctx.fillStyle = '#1E1B2E'; ctx.fillRect(0, 0, 600, 300);
+                ctx.fillStyle = 'rgba(255, 90, 95, 0.35)'; ctx.beginPath(); ctx.arc(300, 150, 90, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#FF5A5F'; ctx.beginPath(); ctx.arc(300, 150, 18, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 15px Inter'; ctx.fillText('⚠️ CAUTION: UNLIT AREA REPORTED BY VOLUNTEERS', 36, 36);
+            }
+        }
+
+        // Mini Map Heatmap
+        let userGps = { x: 75, y: 110 };
+        function renderMiniMap() {
+            const c = document.getElementById('miniMapCanvas');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            ctx.fillStyle = '#0F172A'; ctx.fillRect(0, 0, 300, 180);
+            ctx.strokeStyle = '#1E293B'; ctx.lineWidth = 1;
+
+            for (let x = 0; x < 300; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 180); ctx.stroke(); }
+            for (let y = 0; y < 180; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(300, y); ctx.stroke(); }
+
+            // High risk glow
+            let grad = ctx.createRadialGradient(220, 70, 4, 220, 70, 50);
+            grad.addColorStop(0, 'rgba(255, 90, 95, 0.85)');
+            grad.addColorStop(1, 'rgba(255, 90, 95, 0)');
+            ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(220, 70, 50, 0, Math.PI * 2); ctx.fill();
+
+            // User location pin
+            ctx.fillStyle = '#38BDF8'; ctx.beginPath(); ctx.arc(userGps.x, userGps.y, 6, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#FFFFFF'; ctx.font = '10px Inter'; ctx.fillText(' You', userGps.x + 8, userGps.y + 3);
+        }
+
+        function simulateUnsafeMovement() {
+            userGps = { x: 215, y: 72 };
+            renderMiniMap();
+            document.getElementById('zoneStatusText').textContent = '⚠️ Elevated Risk Zone';
+            document.getElementById('zoneStatusText').style.color = 'var(--coral)';
+            toast('⚠️ Alert: You moved into a flagged unlit zone. Auto-sharing GPS with guardians.', '🚨');
+            addTimelineItem('user', 'Geofence Entry Alert', 'User entered flagged risk area near MG Road Backstreet.');
+        }
+
+        // Timeline Management
+        function addTimelineItem(roleClass, title, text) {
+            const container = document.getElementById('timelineContainer');
+            const item = document.createElement('div');
+            item.className = 'timeline-item ' + roleClass;
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            item.innerHTML = `
+                <div class="timeline-time">${timeStr} · ${roleClass.toUpperCase()}</div>
+                <div class="timeline-text"><b>${title}:</b> ${text}</div>
+            `;
+            container.insertBefore(item, container.firstChild);
+        }
+
+        // Smart SOS Feature
+        let sosCountdownInterval = null;
+        function triggerSmartSOS() {
+            const modal = document.getElementById('sosModal');
+            const timerEl = document.getElementById('sosTimer');
+            modal.classList.add('open');
+            let timeLeft = 3;
+            timerEl.textContent = timeLeft;
+
+            if (sosCountdownInterval) clearInterval(sosCountdownInterval);
+
+            sosCountdownInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft > 0) {
+                    timerEl.textContent = timeLeft;
+                } else {
+                    clearInterval(sosCountdownInterval);
+                    timerEl.textContent = 'DISPATCHED';
+                    modal.classList.remove('open');
+                    toast('🚨 SOS DISPATCH ACTIVATED! Responders & Police notified.', '🚨');
+                    addTimelineItem('user', 'Emergency SOS Broadcast', 'User triggered SOS. 5km perimeter responder ring activated.');
+                }
+            }, 1000);
+        }
+
+        function cancelSOS() {
+            if (sosCountdownInterval) clearInterval(sosCountdownInterval);
+            document.getElementById('sosModal').classList.remove('open');
+            toast('SOS Cancelled. False alarm logged.', '🛡️');
+        }
+
+        // Post Publishing
+        function publishCitizenPost() {
+            const input = document.getElementById('postInput');
+            const text = input.value.trim();
+            if (!text) { toast('Please write something to share.', '⚠️'); return; }
+
+            const feed = document.getElementById('feedList');
+            const card = document.createElement('article');
+            card.className = 'post-card';
+            card.innerHTML = `
+                <div class="post-header">
+                    <div class="post-user">
+                        <div class="post-avatar" style="background: var(--coral);">${userAvatar}</div>
+                        <div class="post-user-info">
+                            <div class="name">${userName} <span class="badge user">Citizen</span></div>
+                            <div class="meta">Just now · Verified GPS Tagged</div>
+                        </div>
+                    </div>
+                    <div style="cursor: pointer; color: var(--gray);" onclick="toast('Options menu', '•••')">•••</div>
+                </div>
+                <div class="post-body">
+                    <div class="post-actions">
+                        <div class="left-acts">
+                            <span class="act-icon" onclick="toggleLike(this, 0)">❤️</span>
+                            <span class="act-icon" onclick="toast('Opening comment thread...', '💬')">💬</span>
+                            <span class="act-icon" onclick="toast('Link copied!', '↗️')">↗️</span>
+                        </div>
+                        <span class="act-icon" onclick="toggleBookmark(this)">🔖</span>
+                    </div>
+                    <div class="likes-count"><span class="like-number">0</span> likes</div>
+                    <div class="post-caption"><b>${userName}</b> ${text}</div>
+                    <div class="comments-link">0 comments</div>
+                </div>
+            `;
+            feed.prepend(card);
+            input.value = '';
+            toast('Safety post published to community feed!', '✅');
+            addTimelineItem('user', 'Community Safety Update', `${userName} shared a safety alert.`);
+        }
+
+        // Accident Modal
+        let selectedVehicle = null;
+        let selectedSeverity = null;
+        let accidentCounter = 0;
+
+        function openAccidentModal() { document.getElementById('accidentModal').classList.add('open'); }
+        function closeAccidentModal() { document.getElementById('accidentModal').classList.remove('open'); }
+
+        function selectChip(el, group) {
+            document.querySelectorAll('#' + group + ' .chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            selectedVehicle = el.textContent.trim();
+        }
+
+        function selectSeverity(el, val) {
+            document.querySelectorAll('#severityChips .chip').forEach(c => c.classList.remove('sev-active'));
+            el.classList.add('sev-active');
+            selectedSeverity = val;
+        }
+
+        function submitAccidentReport() {
+            if (!selectedVehicle) { toast('Please choose vehicle type involved.', '⚠️'); return; }
+            if (!selectedSeverity) { toast('Please choose severity level.', '⚠️'); return; }
+
+            const count = document.getElementById('accidentCount').value.trim();
+            const desc = document.getElementById('accidentDesc').value.trim();
+            accidentCounter++;
+
+            const dispatchTargets = selectedSeverity === 'Critical / Trapped'
+                ? 'Traffic Police, Fire Response & Ambulance'
+                : 'Traffic Police and Volunteer Marshals';
+
+            addTimelineItem('user', 'Accident Dispatched', `${selectedVehicle} accident reported. Routed to ${dispatchTargets}.`);
+
+            const feed = document.getElementById('feedList');
+            const canvasId = 'accidentCanvas' + accidentCounter;
+            const card = document.createElement('article');
+            card.className = 'post-card';
+            card.innerHTML = `
+                <div class="post-header">
+                    <div class="post-user">
+                        <div class="post-avatar" style="background: #EA580C;">${userAvatar}</div>
+                        <div class="post-user-info">
+                            <div class="name">${userName} <span class="badge accident">Accident Report</span></div>
+                            <div class="meta">MG Road Junction · Just now</div>
+                        </div>
+                    </div>
+                    <div style="cursor: pointer; color: var(--gray);" onclick="toast('Options menu', '•••')">•••</div>
+                </div>
+                <div class="post-media"><canvas id="${canvasId}" width="600" height="280"></canvas></div>
+                <div class="post-body">
+                    <div class="dispatch-strip"><span class="dot"></span> Live dispatch active: ${dispatchTargets}</div>
+                    <div class="post-caption">
+                        <b>${userName}</b> ${selectedVehicle} incident — ${selectedSeverity}${count ? ' · ' + count : ''}.${desc ? ' ' + desc : ''}
+                    </div>
+                </div>
+            `;
+            feed.prepend(card);
+
+            // Render graphic on accident canvas
+            setTimeout(() => {
+                const ac = document.getElementById(canvasId);
+                if (ac) {
+                    const ctx = ac.getContext('2d');
+                    ctx.fillStyle = '#1C1917'; ctx.fillRect(0, 0, 600, 280);
+                    ctx.fillStyle = 'rgba(234, 88, 12, 0.35)'; ctx.beginPath(); ctx.arc(300, 140, 90, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#EA580C'; ctx.beginPath(); ctx.arc(300, 140, 14, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 15px Inter'; ctx.fillText('🚗 ACCIDENT REPORTED — RESPONDERS ROUTED', 32, 36);
+                }
+            }, 50);
+
+            closeAccidentModal();
+            toast('🚗 Accident report sent to emergency units!', '🚨');
+        }
+
+        // Helpers
+        function toggleLike(el, base) {
+            el.classList.toggle('liked');
+            const card = el.closest('.post-card');
+            const span = card.querySelector('.like-number');
+            let count = parseInt(span.textContent);
+            span.textContent = el.classList.contains('liked') ? count + 1 : count - 1;
+        }
+
+        function toggleBookmark(el) {
+            el.style.color = el.style.color === 'rgb(255, 90, 95)' ? '' : '#FF5A5F';
+            toast('Post saved to private safety vault.', '🔖');
+        }
+
+        function addGuardian(btn) {
+            btn.textContent = 'Requested';
+            btn.style.background = 'var(--teal)';
+            btn.style.color = 'white';
+            toast('Guardian connection request sent.', '👥');
+        }
+
+        function tagSafeLocation() {
+            toast('📍 Live Safe Location pinned: MG Road Metro Hub', '📍');
+        }
+
+        function openStory(name) {
+            toast(`Viewing story update from: ${name}`, '📷');
+        }
+
+        function scrollToFeed() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toast(msg, icon = '✨') {
+            const el = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            document.getElementById('toastIcon').textContent = icon;
+            el.classList.add('show');
+            setTimeout(() => { el.classList.remove('show'); }, 3000);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderPostVisuals();
+            renderMiniMap();
+        });
+    </script>
+</body>
+
+</html>

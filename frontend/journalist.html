@@ -1,1 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journalist Press Desk — PERIMETER Women Safety</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0D1B1E;
+            --ink-surface: #15282B;
+            --paper: #F7FAFA;
+            --paper-2: #EDF4F4;
+            --teal: #0F6E6E;
+            --teal-bright: #0D9488;
+            --teal-glow: rgba(13, 148, 136, 0.25);
+            --teal-dim: #D1FAE5;
+            --coral: #FF5A5F;
+            --gold: #D97706;
+            --police-blue: #2563EB;
+            --gray: #64748B;
+            --line: #E2E8F0;
+            --white: #FFFFFF;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+            --shadow-subtle: 0 4px 20px -2px rgba(13, 27, 30, 0.06);
+            --shadow-card: 0 10px 30px -4px rgba(13, 27, 30, 0.08);
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Topbar */
+        .press-topbar {
+            background: #0B191B;
+            color: white;
+            padding: 8px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12.5px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(13, 148, 136, 0.35);
+        }
+
+        .press-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(13, 148, 136, 0.25);
+            border: 1px solid rgba(13, 148, 136, 0.5);
+            color: #5EEAD4;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .press-topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .press-topbar-right a {
+            color: #94A3B8;
+            transition: color 0.15s;
+        }
+
+        .press-topbar-right a:hover {
+            color: #FFFFFF;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 37px;
+            z-index: 90;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 22px;
+            color: var(--ink);
+            letter-spacing: -0.03em;
+        }
+
+        .logo span {
+            color: var(--teal-bright);
+        }
+
+        .press-stats-bar {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+        }
+
+        .press-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gray);
+        }
+
+        .press-stat b {
+            color: var(--ink);
+            font-family: var(--mono);
+        }
+
+        .user-nav-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px 4px 6px;
+            background: var(--teal-dim);
+            border-radius: 100px;
+            border: 1px solid rgba(13, 148, 136, 0.3);
+            cursor: pointer;
+        }
+
+        .avatar-sm {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--teal);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 24px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        /* Editor & Case Suite Card */
+        .card {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-row {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--gray);
+            margin-bottom: 6px;
+        }
+
+        .press-input,
+        .press-select,
+        .press-textarea {
+            width: 100%;
+            border: 1px solid var(--line);
+            background: var(--paper-2);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            font-size: 13.5px;
+            font-family: var(--sans);
+            color: var(--ink);
+            outline: none;
+            transition: all 0.15s;
+        }
+
+        .press-input:focus,
+        .press-select:focus,
+        .press-textarea:focus {
+            background: #FFFFFF;
+            border-color: var(--teal-bright);
+            box-shadow: 0 0 0 3px var(--teal-glow);
+        }
+
+        .press-textarea {
+            height: 90px;
+            resize: none;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn-publish-press {
+            width: 100%;
+            background: var(--teal);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 6px 20px var(--teal-glow);
+        }
+
+        .btn-publish-press:hover {
+            background: #0B5757;
+            transform: translateY(-1px);
+        }
+
+        /* Case Linking Suite */
+        .case-card {
+            background: var(--paper-2);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 14px;
+            border-left: 4px solid var(--teal);
+            transition: all 0.2s;
+        }
+
+        .case-card:hover {
+            background: #FFFFFF;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .case-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .case-id {
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--teal);
+        }
+
+        .case-status {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 100px;
+            text-transform: uppercase;
+        }
+
+        .case-status.open {
+            background: #FEF3C7;
+            color: #B45309;
+        }
+
+        .case-status.resolved {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .case-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .case-meta {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+
+        .btn-attach-note {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            color: var(--teal);
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-attach-note:hover {
+            background: var(--teal);
+            color: white;
+            border-color: var(--teal);
+        }
+
+        /* Press Feed Items */
+        .press-feed-item {
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 14px;
+            background: #FFFFFF;
+        }
+
+        .press-feed-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .badge-verified {
+            background: var(--teal-dim);
+            color: var(--teal);
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 100px;
+            text-transform: uppercase;
+        }
+
+        .press-feed-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+
+        .press-feed-body {
+            font-size: 13px;
+            color: #334155;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .press-feed-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11.5px;
+            color: var(--gray);
+            border-top: 1px solid var(--line);
+            padding-top: 8px;
+        }
+
+        /* Timeline Container */
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 380px;
+            overflow-y: auto;
+        }
+
+        .timeline-item {
+            padding: 10px 12px;
+            background: var(--paper-2);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--teal);
+            font-size: 12px;
+        }
+
+        .timeline-time {
+            font-size: 10.5px;
+            font-weight: 700;
+            font-family: var(--mono);
+            color: var(--gray);
+            margin-bottom: 2px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--ink);
+            color: #FFFFFF;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 960px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .press-stats-bar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Topbar -->
+    <div class="press-topbar">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span>Logged in as</span>
+            <span class="press-badge-pill">📰 <span id="topbarPressName">Rhea Nair (Press Reporter)</span></span>
+        </div>
+        <div class="press-topbar-right">
+            <span style="color: #5EEAD4; font-family: var(--mono); font-size: 11px;">OUTLET: THE DECCAN HERALD</span>
+            <a href="login.html" onclick="logout(); return false;">Switch Persona / Logout →</a>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav class="nav">
+            <div class="logo">PERIMETER <span>.</span> <span style="font-size: 13px; color: var(--teal); font-weight: 600; margin-left: 4px;">PRESS DESK</span></div>
+
+            <div class="press-stats-bar">
+                <div class="press-stat">Articles: <b id="statArticles">34</b></div>
+                <div class="press-stat">Fact-Check: <b>99.8%</b></div>
+                <div class="press-stat">Cases Linked: <b>12</b></div>
+                <div class="press-stat">Citations: <b>420</b></div>
+            </div>
+
+            <div class="user-nav-profile" onclick="toast('Press Credential #PRESS-IND-4091 (Verified Media)', '📰')">
+                <div class="avatar-sm" id="pressAvatar">RN</div>
+                <span style="font-size: 12.5px; font-weight: 700;" id="navPressName">Rhea N.</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+
+        <!-- Left Column: Press Report Publishing & Active News Feed -->
+        <section>
+
+            <!-- Verified Article Publishing Suite -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>📰 Publish Verified Safety Bulletin / News</span>
+                    </div>
+                    <span class="badge-verified">Direct Community Dispatch</span>
+                </div>
+
+                <form onsubmit="handlePublishReport(event)">
+                    <div class="form-row">
+                        <label class="form-label">Report Headline</label>
+                        <input type="text" class="press-input" id="reportHeadline" placeholder="e.g. Verified Safe Night Corridor Established along MG Road Metro" required>
+                    </div>
+
+                    <div class="grid-2 form-row">
+                        <div>
+                            <label class="form-label">Target Sector / Location</label>
+                            <input type="text" class="press-input" id="reportLocation" placeholder="e.g. MG Road & Brigade Junction" required>
+                        </div>
+                        <div>
+                            <label class="form-label">Link Directly to Open Case</label>
+                            <select class="press-select" id="reportCaseSelect">
+                                <option value="">-- No Direct Case Link --</option>
+                                <option value="CASE-2026-089">Case #2026-089 (Sector 4 Alley SOS)</option>
+                                <option value="CASE-2026-092">Case #2026-092 (MG Road Corridor Patrol)</option>
+                                <option value="CASE-2026-095">Case #2026-095 (Koramangala 4th Block)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label">Investigation Summary & Safety Notice</label>
+                        <textarea class="press-textarea" id="reportContent" placeholder="Provide verified details, police confirmation, volunteer escorts active, or guidance for citizens..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-publish-press">
+                        <span>Publish Verified Safety Bulletin to Citizens</span>
+                        <span>→</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Published Press Feed -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>🗂️ Live Press Publications & Verified Bulletins</span>
+                    </div>
+                </div>
+
+                <div id="pressFeedList">
+
+                    <div class="press-feed-item">
+                        <div class="press-feed-header">
+                            <span class="badge-verified">Verified Press Bulletin</span>
+                            <span style="font-size: 11.5px; color: var(--gray);">Linked to Case #2026-092 · 12 mins ago</span>
+                        </div>
+                        <div class="press-feed-title">Verified Safe Corridor Established near MG Road Metro Station</div>
+                        <div class="press-feed-body">
+                            Following volunteer risk reports, city police and volunteer marshals have set up illuminated night patrol checkpoints active until 2:00 AM.
+                        </div>
+                        <div class="press-feed-footer">
+                            <span>Author: Rhea Nair (Deccan Herald)</span>
+                            <span style="color: var(--teal); font-weight: 600; cursor: pointer;" onclick="toast('Press link copied!', '↗️')">Share Article ↗️</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Right Column: Case Linking Suite & Universal Timeline -->
+        <aside>
+
+            <!-- Case Linking Suite -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>🔍 Active Incident Cases (Press Audit)</span>
+                    </div>
+                    <span style="font-size: 11.5px; color: var(--gray); font-family: var(--mono);">3 ACTIVE</span>
+                </div>
+
+                <!-- Case 1 -->
+                <div class="case-card">
+                    <div class="case-top">
+                        <span class="case-id">CASE-2026-089</span>
+                        <span class="case-status open">Under Police Investigation</span>
+                    </div>
+                    <div class="case-title">Motion SOS Beacon · Sector 4 Alleyway</div>
+                    <div class="case-meta">Triggered 10:42 AM · Volunteer Priya D. arrived on scene · Police Unit #4 secured.</div>
+                    <button class="btn-attach-note" onclick="attachNoteToCase('CASE-2026-089')">Attach Press Report Note →</button>
+                </div>
+
+                <!-- Case 2 -->
+                <div class="case-card">
+                    <div class="case-top">
+                        <span class="case-id">CASE-2026-092</span>
+                        <span class="case-status resolved">Safe Route Deployed</span>
+                    </div>
+                    <div class="case-title">MG Road Night Corridor Establishment</div>
+                    <div class="case-meta">Verified safe passage operational. 2 volunteer checkpoints confirmed.</div>
+                    <button class="btn-attach-note" onclick="attachNoteToCase('CASE-2026-092')">Attach Press Report Note →</button>
+                </div>
+            </div>
+
+            <!-- Universal Case Timeline -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>⚡ Universal Incident Timeline (Live Sync)</span>
+                    </div>
+                </div>
+                <p style="font-size: 11.5px; color: var(--gray); margin-bottom: 12px;">Real-time dispatch log across Citizens, Volunteers, Press, and Police.</p>
+                <div class="timeline-container" id="timelineContainer">
+                    <div class="timeline-item">
+                        <div class="timeline-time">10:52 AM · JOURNALIST ACTION</div>
+                        <div><b>Press Bulletin Linked:</b> Rhea Nair attached verified coverage to Case #2026-089.</div>
+                    </div>
+                    <div class="timeline-item" style="border-left-color: var(--coral);">
+                        <div class="timeline-time">10:45 AM · POLICE COMMAND</div>
+                        <div><b>On Scene:</b> Officer Patil secured Sector 4 distress area.</div>
+                    </div>
+                    <div class="timeline-item" style="border-left-color: var(--gold);">
+                        <div class="timeline-time">10:43 AM · VOLUNTEER ACTION</div>
+                        <div><b>Volunteer Priya D.</b> logged arrival and confirmed user well-being.</div>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✨</span>
+        <span id="toastMsg">Notification message</span>
+    </div>
+
+    <script>
+        // Session Initialization
+        let session = null;
+        try {
+            session = JSON.parse(localStorage.getItem('perimeter_session'));
+        } catch (e) { }
+
+        const pressName = session && session.name ? session.name : 'Rhea Nair';
+        const pressAvatar = session && session.avatar ? session.avatar : 'RN';
+
+        document.getElementById('topbarPressName').textContent = `${pressName} (Verified Journalist)`;
+        document.getElementById('navPressName').textContent = pressName.split(' ')[0] + ' (Press)';
+        document.getElementById('pressAvatar').textContent = pressAvatar;
+
+        function logout() {
+            localStorage.removeItem('perimeter_session');
+            window.location.href = 'login.html';
+        }
+
+        // Timeline Sync
+        function addTimelineEntry(title, desc) {
+            const container = document.getElementById('timelineContainer');
+            const item = document.createElement('div');
+            item.className = 'timeline-item';
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            item.innerHTML = `
+                <div class="timeline-time">${timeStr} · JOURNALIST REPORT</div>
+                <div><b>${title}:</b> ${desc}</div>
+            `;
+            container.insertBefore(item, container.firstChild);
+        }
+
+        // Handle Publishing
+        function handlePublishReport(event) {
+            event.preventDefault();
+            const headline = document.getElementById('reportHeadline').value.trim();
+            const location = document.getElementById('reportLocation').value.trim();
+            const caseId = document.getElementById('reportCaseSelect').value;
+            const content = document.getElementById('reportContent').value.trim();
+
+            const feed = document.getElementById('pressFeedList');
+            const item = document.createElement('div');
+            item.className = 'press-feed-item';
+            item.innerHTML = `
+                <div class="press-feed-header">
+                    <span class="badge-verified">Verified Press Bulletin</span>
+                    <span style="font-size: 11.5px; color: var(--gray);">${caseId ? 'Linked to ' + caseId + ' · ' : ''}Just now · ${location}</span>
+                </div>
+                <div class="press-feed-title">${headline}</div>
+                <div class="press-feed-body">${content}</div>
+                <div class="press-feed-footer">
+                    <span>Author: ${pressName} (Deccan Herald)</span>
+                    <span style="color: var(--teal); font-weight: 600; cursor: pointer;" onclick="toast('Press link copied!', '↗️')">Share Article ↗️</span>
+                </div>
+            `;
+            feed.prepend(item);
+
+            addTimelineEntry('Press Report Published', `${headline} (${location})${caseId ? ' attached to ' + caseId : ''}.`);
+            
+            // Increment stat
+            let count = parseInt(document.getElementById('statArticles').textContent) + 1;
+            document.getElementById('statArticles').textContent = count;
+
+            // Clear inputs
+            document.getElementById('reportHeadline').value = '';
+            document.getElementById('reportLocation').value = '';
+            document.getElementById('reportContent').value = '';
+            document.getElementById('reportCaseSelect').value = '';
+
+            toast('📰 Verified Safety Bulletin broadcast to all Citizen feeds & Case Timeline!', '🚀');
+        }
+
+        function attachNoteToCase(caseId) {
+            const note = prompt(`Enter press update or investigation note for ${caseId}:`, 'Press team verified local police patrol on site.');
+            if (note) {
+                addTimelineEntry(`Attached to ${caseId}`, `${pressName}: ${note}`);
+                toast(`Press note attached to ${caseId} timeline!`, '📎');
+            }
+        }
+
+        function toast(msg, icon = '✨') {
+            const el = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            document.getElementById('toastIcon').textContent = icon;
+            el.classList.add('show');
+            setTimeout(() => { el.classList.remove('show'); }, 3000);
+        }
+    </script>
+</body>
+
+</html>

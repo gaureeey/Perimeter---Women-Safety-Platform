@@ -1,1 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Command & Control — PERIMETER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0A0E1A;
+            --ink-surface: #111827;
+            --paper: #F8FAFC;
+            --paper-2: #F1F5F9;
+            --police-blue: #2563EB;
+            --police-glow: rgba(37, 99, 235, 0.3);
+            --police-dim: #DBEAFE;
+            --coral: #EF4444;
+            --coral-glow: rgba(239, 68, 68, 0.3);
+            --teal: #0F6E6E;
+            --gold: #D97706;
+            --gray: #64748B;
+            --line: #E2E8F0;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+            --shadow-subtle: 0 4px 20px -2px rgba(10, 14, 26, 0.08);
+            --shadow-elevation: 0 20px 50px -10px rgba(10, 14, 26, 0.25);
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Police Topbar */
+        .police-topbar {
+            background: #090D1A;
+            color: white;
+            padding: 8px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12.5px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(37, 99, 235, 0.4);
+        }
+
+        .police-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(37, 99, 235, 0.25);
+            border: 1px solid rgba(37, 99, 235, 0.6);
+            color: #93C5FD;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .police-topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .police-topbar-right a {
+            color: #94A3B8;
+            transition: color 0.15s;
+        }
+
+        .police-topbar-right a:hover {
+            color: #FFFFFF;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 37px;
+            z-index: 90;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 22px;
+            color: var(--ink);
+            letter-spacing: -0.03em;
+        }
+
+        .logo span {
+            color: var(--police-blue);
+        }
+
+        .police-metrics-bar {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+        }
+
+        .police-metric {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gray);
+        }
+
+        .police-metric b {
+            color: var(--ink);
+            font-family: var(--mono);
+        }
+
+        .user-nav-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px 4px 6px;
+            background: var(--police-dim);
+            border-radius: 100px;
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            cursor: pointer;
+        }
+
+        .avatar-sm {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--police-blue);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1240px;
+            margin: 24px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        /* Command Map Card */
+        .command-map-card {
+            background: #0A0E1A;
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            color: #FFFFFF;
+            box-shadow: var(--shadow-elevation);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .map-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .map-title {
+            font-size: 16px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-pulse-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            border-radius: 100px;
+            font-size: 10.5px;
+            font-family: var(--mono);
+            color: #F87171;
+        }
+
+        .command-canvas-box {
+            width: 100%;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: #05070D;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 14px;
+        }
+
+        .command-canvas-box canvas {
+            width: 100%;
+            height: auto;
+        }
+
+        .command-map-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #94A3B8;
+            font-family: var(--mono);
+        }
+
+        /* Priority Incident Queue */
+        .section-header {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--ink);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .badge-urgent {
+            background: var(--coral);
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-weight: 700;
+        }
+
+        .incident-card {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-subtle);
+            border-left: 4px solid var(--police-blue);
+            transition: all 0.2s;
+        }
+
+        .incident-card.critical {
+            border-left-color: var(--coral);
+            background: #FFFBFB;
+        }
+
+        .incident-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -4px rgba(10, 14, 26, 0.12);
+        }
+
+        .inc-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .inc-tag {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: var(--mono);
+        }
+
+        .inc-tag.red {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .inc-tag.accident {
+            background: #FEF3C7;
+            color: #B45309;
+        }
+
+        .inc-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+
+        .inc-desc {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .inc-actions {
+            display: flex;
+            gap: 10px;
+            padding-top: 14px;
+            border-top: 1px solid var(--line);
+        }
+
+        .btn-dispatch {
+            flex: 1;
+            background: var(--coral);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 100px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+        }
+
+        .btn-dispatch:hover {
+            background: #DC2626;
+        }
+
+        .btn-resolve {
+            flex: 1;
+            background: #111827;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 100px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+        }
+
+        .btn-resolve:hover {
+            background: #10B981;
+        }
+
+        /* Right Column: Case Log & Police Notice Broadcaster */
+        .card {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 24px;
+        }
+
+        .card h3 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--ink);
+            margin-bottom: 12px;
+        }
+
+        .police-input {
+            width: 100%;
+            border: 1px solid var(--line);
+            background: var(--paper-2);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 13px;
+            font-family: var(--sans);
+            outline: none;
+            color: var(--ink);
+            resize: none;
+            height: 75px;
+            margin-bottom: 12px;
+        }
+
+        .police-input:focus {
+            background: #FFFFFF;
+            border-color: var(--police-blue);
+            box-shadow: 0 0 0 3px var(--police-glow);
+        }
+
+        .btn-broadcast-police {
+            width: 100%;
+            background: var(--police-blue);
+            color: white;
+            border: none;
+            padding: 11px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-broadcast-police:hover {
+            background: #1D4ED8;
+        }
+
+        /* Universal Case Timeline */
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 380px;
+            overflow-y: auto;
+        }
+
+        .timeline-item {
+            padding: 10px 12px;
+            background: var(--paper-2);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--police-blue);
+            font-size: 12px;
+        }
+
+        .timeline-time {
+            font-size: 10.5px;
+            font-weight: 700;
+            font-family: var(--mono);
+            color: var(--gray);
+            margin-bottom: 2px;
+        }
+
+        /* Case Resolution Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #FFFFFF;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 480px;
+            padding: 28px;
+            box-shadow: var(--shadow-elevation);
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .modal-head h3 {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .modal-sub {
+            font-size: 12.5px;
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+
+        .modal-textarea {
+            width: 100%;
+            border: 1px solid var(--line);
+            background: var(--paper-2);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 13px;
+            font-family: var(--sans);
+            outline: none;
+            resize: none;
+            height: 80px;
+            margin-bottom: 16px;
+        }
+
+        .btn-confirm-resolve {
+            width: 100%;
+            background: #10B981;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 100px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-confirm-resolve:hover {
+            background: #059669;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--ink);
+            color: #FFFFFF;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 960px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .police-metrics-bar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Police Topbar -->
+    <div class="police-topbar">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span>Logged in as</span>
+            <span class="police-badge-pill">🚔 <span id="topbarPoliceName">Inspector K. Patil (City Police)</span></span>
+        </div>
+        <div class="police-topbar-right">
+            <span style="color: #93C5FD; font-family: var(--mono); font-size: 11px;">COMMAND ROOM: CENTRAL #01</span>
+            <a href="login.html" onclick="logout(); return false;">Switch Persona / Logout →</a>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav class="nav">
+            <div class="logo">PERIMETER <span>.</span> <span style="font-size: 13px; color: var(--police-blue); font-weight: 600; margin-left: 4px;">POLICE COMMAND</span></div>
+
+            <div class="police-metrics-bar">
+                <div class="police-metric">Active SOS: <b style="color: var(--coral);" id="statActiveSos">2</b></div>
+                <div class="police-metric">Patrols Deployed: <b>8 Units</b></div>
+                <div class="police-metric">Avg Response: <b>2.1 mins</b></div>
+                <div class="police-metric">Cases Closed: <b id="statCasesClosed">14</b></div>
+            </div>
+
+            <div class="user-nav-profile" onclick="toast('Police Service Badge #POL-BLR-004 (Active Command)', '🚔')">
+                <div class="avatar-sm" id="policeAvatar">IP</div>
+                <span style="font-size: 12.5px; font-weight: 700;" id="navPoliceName">Officer Patil</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+
+        <!-- Left Column: Tactical City Map & Priority Incident Queue -->
+        <section>
+
+            <!-- Command Tactical Map -->
+            <div class="command-map-card">
+                <div class="map-head">
+                    <div class="map-title">
+                        <span>🗺️ City Tactical Sector & Patrol Unit Map</span>
+                    </div>
+                    <div class="live-pulse-badge">
+                        <span style="width: 6px; height: 6px; background: #EF4444; border-radius: 50%; display: inline-block;"></span>
+                        2 HIGH-PRIORITY BEACONS
+                    </div>
+                </div>
+
+                <div class="command-canvas-box">
+                    <canvas id="policeMapCanvas" width="600" height="260"></canvas>
+                </div>
+
+                <div class="command-map-meta">
+                    <span>SECTOR 4 GRID · JURISDICTION: CENTRAL PRECINCT</span>
+                    <span>PATROL UNITS PCR-04, PCR-09, PCR-12 ACTIVE</span>
+                </div>
+            </div>
+
+            <!-- Priority Incident Queue -->
+            <div class="section-header">
+                <span>🚨 Active Emergency Incident Queue</span>
+                <span class="badge-urgent" id="incidentCount">2 Priority Calls</span>
+            </div>
+
+            <div id="incidentList">
+
+                <!-- Incident 1: SOS Beacon -->
+                <div class="incident-card critical" id="inc-card-1">
+                    <div class="inc-top">
+                        <span class="inc-tag red">🚨 SOS Distress · Case #2026-089</span>
+                        <span style="font-size: 12px; font-weight: 700; color: var(--gray); font-family: var(--mono);">Sector 4 Alleyway</span>
+                    </div>
+                    <div class="inc-title">Motion Sensor SOS (Shake x3) — Citizen Aarohi Sharma</div>
+                    <div class="inc-desc">
+                        Distress beacon active. Volunteer Priya D. arrived on scene. Immediate police presence requested to escort and secure perimeter.
+                    </div>
+                    <div class="inc-actions">
+                        <button class="btn-dispatch" id="btn-dispatch-1" onclick="dispatchPatrolUnit('CASE-2026-089', 'Patrol Unit #4', 'Sector 4 Alleyway')">
+                            🚔 Dispatch Patrol Unit #4 →
+                        </button>
+                        <button class="btn-resolve" onclick="openResolveModal('CASE-2026-089', 'Sector 4 Motion SOS')">
+                            ✔ Resolve & Archive Case
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Incident 2: Traffic Collision -->
+                <div class="incident-card" id="inc-card-2">
+                    <div class="inc-top">
+                        <span class="inc-tag accident">🚗 Vehicle Accident · Case #2026-094</span>
+                        <span style="font-size: 12px; font-weight: 700; color: var(--gray); font-family: var(--mono);">MG Road Junction</span>
+                    </div>
+                    <div class="inc-title">Accident Report: Two-Wheeler Collision & Traffic Jam</div>
+                    <div class="inc-desc">
+                        Citizen reported road blockage and minor injuries. Traffic patrol units and first responder ambulance required on site.
+                    </div>
+                    <div class="inc-actions">
+                        <button class="btn-dispatch" id="btn-dispatch-2" onclick="dispatchPatrolUnit('CASE-2026-094', 'Traffic Patrol #12', 'MG Road Junction')">
+                            🚔 Dispatch Traffic Unit #12 →
+                        </button>
+                        <button class="btn-resolve" onclick="openResolveModal('CASE-2026-094', 'MG Road Vehicle Accident')">
+                            ✔ Resolve & Archive Case
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Right Column: Police Broadcaster & Live Case Timeline -->
+        <aside>
+
+            <!-- Police Advisory Broadcaster -->
+            <div class="card">
+                <h3>📢 Broadcast Official Police Advisory</h3>
+                <p style="font-size: 12px; color: var(--gray); margin-bottom: 12px;">Publish an official verified police advisory to all citizens and volunteers within the city network.</p>
+                <textarea class="police-input" id="policeAdvisoryInput" placeholder="e.g. Increased police night patrols deployed across Koramangala & MG Road corridors until 3 AM..."></textarea>
+                <button class="btn-broadcast-police" onclick="publishPoliceAdvisory()">Broadcast Official Police Notice</button>
+            </div>
+
+            <!-- Universal Case Timeline -->
+            <div class="card">
+                <h3>⚡ Universal Incident Timeline (Live Sync)</h3>
+                <p style="font-size: 11.5px; color: var(--gray); margin-bottom: 12px;">Real-time synchronized log across Citizens, Volunteers, Press, and Police.</p>
+                <div class="timeline-container" id="timelineContainer">
+                    <div class="timeline-item">
+                        <div class="timeline-time">10:45 AM · POLICE ACTION</div>
+                        <div><b>Command Order:</b> Officer Patil deployed Patrol Unit #4 with sirens to Sector 4.</div>
+                    </div>
+                    <div class="timeline-item" style="border-left-color: var(--teal);">
+                        <div class="timeline-time">10:43 AM · VOLUNTEER ACTION</div>
+                        <div><b>Volunteer Priya D.</b> arrived on scene with citizen Aarohi S.</div>
+                    </div>
+                    <div class="timeline-item" style="border-left-color: var(--coral);">
+                        <div class="timeline-time">10:42 AM · CITIZEN SOS</div>
+                        <div><b>Motion SOS:</b> Distress beacon triggered in Sector 4.</div>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- CASE RESOLUTION MODAL -->
+    <div class="modal-overlay" id="resolveModal">
+        <div class="modal-box">
+            <div class="modal-head">
+                <h3 id="resolveModalTitle">Officially Resolve Case</h3>
+                <button style="background: none; border: none; font-size: 18px; cursor: pointer; color: var(--gray);" onclick="closeResolveModal()">✕</button>
+            </div>
+            <div class="modal-sub">
+                This will officially confirm citizen safety, archive the case record, and log the closure into the immutable audit timeline.
+            </div>
+
+            <label style="display: block; font-size: 11.5px; font-weight: 700; text-transform: uppercase; color: var(--gray); margin-bottom: 6px;">Case Resolution Findings</label>
+            <textarea class="modal-textarea" id="resolveNotes" placeholder="e.g. Police Unit arrived on scene, escorted citizen safely, no injuries reported. Area confirmed safe."></textarea>
+
+            <button class="btn-confirm-resolve" onclick="confirmResolveCase()">Confirm Case Closure & Archive</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✨</span>
+        <span id="toastMsg">Notification message</span>
+    </div>
+
+    <script>
+        // Session Initialization
+        let session = null;
+        try {
+            session = JSON.parse(localStorage.getItem('perimeter_session'));
+        } catch (e) { }
+
+        const policeName = session && session.name ? session.name : 'Inspector K. Patil';
+        const policeAvatar = session && session.avatar ? session.avatar : 'IP';
+
+        document.getElementById('topbarPoliceName').textContent = `${policeName} (City Police)`;
+        document.getElementById('navPoliceName').textContent = policeName.split(' ')[0] + ' (Police)';
+        document.getElementById('policeAvatar').textContent = policeAvatar;
+
+        function logout() {
+            localStorage.removeItem('perimeter_session');
+            window.location.href = 'login.html';
+        }
+
+        // Tactical Canvas
+        function renderPoliceMap() {
+            const c = document.getElementById('policeMapCanvas');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            const w = c.width;
+            const h = c.height;
+
+            ctx.fillStyle = '#060810';
+            ctx.fillRect(0, 0, w, h);
+
+            // Grid lines
+            ctx.strokeStyle = '#151D33';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < w; x += 35) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+            for (let y = 0; y < h; y += 35) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+
+            // Safe route corridors (Teal)
+            ctx.strokeStyle = '#0F6E6E';
+            ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(60, 220); ctx.lineTo(240, 100); ctx.lineTo(460, 150); ctx.stroke();
+
+            // Active Patrol Units (Blue)
+            ctx.fillStyle = '#3B82F6';
+            // Patrol 1
+            ctx.beginPath(); ctx.arc(140, 160, 8, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#FFFFFF'; ctx.font = '10px IBM Plex Mono'; ctx.fillText('🚔 PCR-04', 152, 164);
+
+            // Patrol 2
+            ctx.fillStyle = '#3B82F6';
+            ctx.beginPath(); ctx.arc(380, 80, 8, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#FFFFFF'; ctx.fillText('🚔 PCR-12', 392, 84);
+
+            // Distress Beacons (Red Glow)
+            let grad1 = ctx.createRadialGradient(280, 110, 2, 280, 110, 30);
+            grad1.addColorStop(0, 'rgba(239, 68, 68, 0.9)');
+            grad1.addColorStop(1, 'rgba(239, 68, 68, 0)');
+            ctx.fillStyle = grad1; ctx.beginPath(); ctx.arc(280, 110, 30, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#EF4444'; ctx.beginPath(); ctx.arc(280, 110, 6, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#FFFFFF'; ctx.fillText('🚨 SOS #089', 290, 114);
+        }
+
+        // Timeline Sync
+        function addTimelineEntry(title, desc) {
+            const container = document.getElementById('timelineContainer');
+            const item = document.createElement('div');
+            item.className = 'timeline-item';
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            item.innerHTML = `
+                <div class="timeline-time">${timeStr} · POLICE ACTION</div>
+                <div><b>${title}:</b> ${desc}</div>
+            `;
+            container.insertBefore(item, container.firstChild);
+        }
+
+        // Dispatch Patrol
+        function dispatchPatrolUnit(caseId, unit, loc) {
+            addTimelineEntry('Patrol Unit Dispatched', `${policeName} dispatched ${unit} to ${loc} with priority sirens.`);
+            toast(`🚔 ${unit} dispatched to ${caseId} with live sirens active!`, '🚨');
+        }
+
+        // Case Resolution Modal
+        let activeResolveCaseId = '';
+        function openResolveModal(caseId, title) {
+            activeResolveCaseId = caseId;
+            document.getElementById('resolveModalTitle').textContent = `Resolve ${caseId} — ${title}`;
+            document.getElementById('resolveNotes').value = 'Police units verified citizen safety on site. Area secured and resolved.';
+            document.getElementById('resolveModal').classList.add('open');
+        }
+
+        function closeResolveModal() {
+            document.getElementById('resolveModal').classList.remove('open');
+        }
+
+        function confirmResolveCase() {
+            const notes = document.getElementById('resolveNotes').value.trim();
+            addTimelineEntry('Case Resolved & Closed', `${policeName} confirmed closure for ${activeResolveCaseId}. Findings: ${notes}`);
+            closeResolveModal();
+            toast(`✅ ${activeResolveCaseId} officially resolved and archived!`, '🛡️');
+
+            // Increment stat
+            let c = parseInt(document.getElementById('statCasesClosed').textContent) + 1;
+            document.getElementById('statCasesClosed').textContent = c;
+        }
+
+        // Broadcast Police Advisory
+        function publishPoliceAdvisory() {
+            const input = document.getElementById('policeAdvisoryInput');
+            const txt = input.value.trim();
+            if (!txt) { toast('Please write an advisory message.', '⚠️'); return; }
+
+            addTimelineEntry('Official Police Advisory', `${policeName}: ${txt}`);
+            input.value = '';
+            toast('📢 Official Police Advisory broadcasted to all citizens & volunteers!', '👮');
+        }
+
+        function toast(msg, icon = '✨') {
+            const el = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            document.getElementById('toastIcon').textContent = icon;
+            el.classList.add('show');
+            setTimeout(() => { el.classList.remove('show'); }, 3000);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderPoliceMap();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,1 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — PERIMETER Women Safety & Community Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #111528;
+            --ink-secondary: #2A304E;
+            --paper: #F8FAFC;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --coral: #FF5A5F;
+            --coral-glow: rgba(255, 90, 95, 0.25);
+            --teal: #0F6E6E;
+            --teal-dim: #E0F2F1;
+            --gold: #D97706;
+            --gold-dim: #FEF3C7;
+            --police-blue: #2563EB;
+            --police-dim: #DBEAFE;
+            --gray: #64748B;
+            --line: #E2E8F0;
+            --radius-lg: 24px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+            --shadow-subtle: 0 10px 30px -10px rgba(17, 21, 40, 0.08);
+            --shadow-elevation: 0 25px 60px -15px rgba(17, 21, 40, 0.16);
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: #0B0E1B;
+            color: #F1F5F9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            position: relative;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient Glow & Grid Background */
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .glow-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.35;
+        }
+
+        .glow-1 {
+            width: 500px;
+            height: 500px;
+            background: #FF5A5F;
+            top: -120px;
+            left: -100px;
+        }
+
+        .glow-2 {
+            width: 600px;
+            height: 600px;
+            background: #0F6E6E;
+            bottom: -150px;
+            right: -150px;
+        }
+
+        .glow-3 {
+            width: 350px;
+            height: 350px;
+            background: #2563EB;
+            top: 40%;
+            left: 55%;
+            opacity: 0.2;
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+        }
+
+        /* Main Container */
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1060px;
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            background: rgba(17, 21, 40, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-elevation);
+        }
+
+        /* Left Side: Brand & Role Showcase */
+        .brand-panel {
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #FF5A5F, #E02424);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 8px 20px var(--coral-glow);
+        }
+
+        .brand-title {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #FFFFFF;
+        }
+
+        .brand-title span {
+            color: var(--coral);
+        }
+
+        .brand-hero {
+            margin: 36px 0;
+        }
+
+        .live-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(15, 110, 110, 0.25);
+            border: 1px solid rgba(15, 110, 110, 0.5);
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: var(--mono);
+            color: #5EEAD4;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .live-tag .pulse-dot {
+            width: 7px;
+            height: 7px;
+            background: #2DD4BF;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #2DD4BF;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .brand-hero h1 {
+            font-size: 32px;
+            line-height: 1.25;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #FFFFFF;
+            margin-bottom: 14px;
+        }
+
+        .brand-hero p {
+            color: #94A3B8;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Demo Quick-Login Persona Grid */
+        .persona-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #64748B;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .persona-section-title span.badge-tip {
+            font-size: 10px;
+            color: #38BDF8;
+            font-family: var(--mono);
+            text-transform: none;
+            background: rgba(56, 189, 248, 0.12);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .persona-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .persona-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .persona-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .persona-card.selected {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--coral);
+            box-shadow: 0 0 16px rgba(255, 90, 95, 0.2);
+        }
+
+        .persona-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .persona-info .p-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+
+        .persona-info .p-desc {
+            font-size: 11px;
+            color: #94A3B8;
+        }
+
+        /* Right Side: Authentication Form */
+        .auth-panel {
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #FFFFFF;
+            color: var(--ink);
+        }
+
+        .auth-header {
+            margin-bottom: 28px;
+        }
+
+        .auth-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+
+        .auth-header p {
+            color: var(--gray);
+            font-size: 13.5px;
+        }
+
+        /* Role Selector Pills */
+        .role-pill-group {
+            display: flex;
+            gap: 6px;
+            background: #F1F5F9;
+            padding: 4px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+        }
+
+        .role-pill {
+            flex: 1;
+            padding: 8px 4px;
+            border: none;
+            background: transparent;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray);
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .role-pill.active {
+            background: #FFFFFF;
+            color: var(--ink);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .role-pill.active[data-role="user"] { color: var(--coral); }
+        .role-pill.active[data-role="volunteer"] { color: var(--gold); }
+        .role-pill.active[data-role="journalist"] { color: var(--teal); }
+        .role-pill.active[data-role="police"] { color: var(--police-blue); }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            color: #94A3B8;
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            background: #F8FAFC;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            font-size: 13.5px;
+            font-family: var(--sans);
+            color: var(--ink);
+            outline: none;
+            transition: all 0.15s ease;
+        }
+
+        .form-input:focus {
+            background: #FFFFFF;
+            border-color: var(--ink);
+            box-shadow: 0 0 0 3px rgba(17, 21, 40, 0.08);
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12.5px;
+            margin-bottom: 24px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: var(--coral);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Submit Button */
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: var(--ink);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: var(--sans);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 8px 20px rgba(17, 21, 40, 0.2);
+        }
+
+        .btn-login:hover {
+            background: #252C50;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(17, 21, 40, 0.25);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        /* Security Notice */
+        .security-badge {
+            margin-top: 24px;
+            padding-top: 18px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 11.5px;
+            color: var(--gray);
+            font-family: var(--mono);
+        }
+
+        .security-badge span.sec-dot {
+            color: #10B981;
+        }
+
+        /* Alert Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #111528;
+            color: #FFFFFF;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 900px) {
+            .login-wrapper {
+                grid-template-columns: 1fr;
+                max-width: 480px;
+            }
+
+            .brand-panel {
+                padding: 32px 24px;
+            }
+
+            .auth-panel {
+                padding: 36px 24px;
+            }
+
+            .brand-hero {
+                margin: 20px 0;
+            }
+
+            .brand-hero h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ambient-bg">
+        <div class="glow-sphere glow-1"></div>
+        <div class="glow-sphere glow-2"></div>
+        <div class="glow-sphere glow-3"></div>
+        <div class="bg-grid"></div>
+    </div>
+
+    <main class="login-wrapper">
+
+        <!-- Left Showcase & Quick Persona Selection -->
+        <section class="brand-panel">
+            <div>
+                <header class="brand-header">
+                    <div class="brand-logo-icon">🛡️</div>
+                    <div class="brand-title">PERIMETER <span>.</span></div>
+                </header>
+
+                <div class="brand-hero">
+                    <div class="live-tag">
+                        <span class="pulse-dot"></span>
+                        5-Tier Safety Network Live
+                    </div>
+                    <h1>Unified Women Safety & Emergency Dispatch</h1>
+                    <p>Connecting Citizens, Verified Volunteers, Press Journalists, and City Police into a single transparent rapid response ecosystem.</p>
+                </div>
+            </div>
+
+            <!-- Demo Quick Personas -->
+            <div>
+                <div class="persona-section-title">
+                    <span>⚡ Quick Test Personas</span>
+                    <span class="badge-tip">1-Click Auto-Fill</span>
+                </div>
+                <div class="persona-grid">
+                    <div class="persona-card selected" onclick="selectPersona('user')" id="persona-user">
+                        <div class="persona-icon" style="background: rgba(255, 90, 95, 0.2); color: #FF5A5F;">👩</div>
+                        <div class="persona-info">
+                            <div class="p-name">Citizen User</div>
+                            <div class="p-desc">SOS & Safe Feed</div>
+                        </div>
+                    </div>
+
+                    <div class="persona-card" onclick="selectPersona('volunteer')" id="persona-volunteer">
+                        <div class="persona-icon" style="background: rgba(217, 119, 6, 0.2); color: #F59E0B;">🙋</div>
+                        <div class="persona-info">
+                            <div class="p-name">Volunteer</div>
+                            <div class="p-desc">5km Dispatch Radar</div>
+                        </div>
+                    </div>
+
+                    <div class="persona-card" onclick="selectPersona('journalist')" id="persona-journalist">
+                        <div class="persona-icon" style="background: rgba(15, 110, 110, 0.25); color: #2DD4BF;">📰</div>
+                        <div class="persona-info">
+                            <div class="p-name">Journalist</div>
+                            <div class="p-desc">Press Case Suite</div>
+                        </div>
+                    </div>
+
+                    <div class="persona-card" onclick="selectPersona('police')" id="persona-police">
+                        <div class="persona-icon" style="background: rgba(37, 99, 235, 0.2); color: #60A5FA;">🚔</div>
+                        <div class="persona-info">
+                            <div class="p-name">City Police</div>
+                            <div class="p-desc">Command & Control</div>
+                        </div>
+                    </div>
+
+                    <div class="persona-card" onclick="selectPersona('admin')" id="persona-admin" style="grid-column: span 2;">
+                        <div class="persona-icon" style="background: rgba(139, 92, 246, 0.2); color: #C4B5FD;">👑</div>
+                        <div class="persona-info">
+                            <div class="p-name">Super Administrator</div>
+                            <div class="p-desc">Full Platform Governance & Master Overrides</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Authentication Panel -->
+        <section class="auth-panel">
+            <div class="auth-header">
+                <h2 id="authRoleHeader">Sign in to PERIMETER</h2>
+                <p id="authRoleSub">Select your role or enter your credentials to access your dashboard.</p>
+            </div>
+
+            <!-- Role Selector Pills -->
+            <div class="role-pill-group">
+                <button type="button" class="role-pill active" data-role="user" onclick="switchTab('user')">Citizen</button>
+                <button type="button" class="role-pill" data-role="volunteer" onclick="switchTab('volunteer')">Volunteer</button>
+                <button type="button" class="role-pill" data-role="journalist" onclick="switchTab('journalist')">Journalist</button>
+                <button type="button" class="role-pill" data-role="police" onclick="switchTab('police')">Police</button>
+                <button type="button" class="role-pill" data-role="admin" onclick="switchTab('admin')">Admin</button>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="emailInput" id="identityLabel">Email or Mobile Number</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="emailInput" class="form-input" placeholder="user@perimeter.org" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="passwordInput">Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="passwordInput" class="form-input" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe" checked>
+                        <span>Stay authenticated</span>
+                    </label>
+                    <a href="#" class="forgot-link" onclick="toast('Reset link will be sent to registered ID'); return false;">Forgot ID?</a>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <span id="btnText">Access Dashboard</span>
+                    <span>→</span>
+                </button>
+            </form>
+
+            <div class="security-badge">
+                <span class="sec-dot">●</span> 256-BIT ENCRYPTED · RBAC AUDITED
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✨</span>
+        <span id="toastMsg">Notification message</span>
+    </div>
+
+    <script>
+        // Preset test accounts for seamless role demoing
+        const PRESET_ACCOUNTS = {
+            user: {
+                role: 'user',
+                email: 'aarohi.sharma@perimeter.org',
+                name: 'Aarohi Sharma',
+                badge: 'Citizen User',
+                avatar: 'AS',
+                targetUrl: 'user.html',
+                identityLabel: 'Email or Mobile Number',
+                headerText: 'Citizen Safety Sign In',
+                subText: 'Access social safety feed, Smart SOS, and verified incident alerts.'
+            },
+            volunteer: {
+                role: 'volunteer',
+                email: 'priya.deshmukh@volunteers.perimeter.org',
+                name: 'Priya Deshmukh',
+                badge: 'Verified Responder',
+                avatar: 'PD',
+                targetUrl: 'volunteer.html',
+                identityLabel: 'Volunteer Badge ID or Email',
+                headerText: 'Volunteer Dispatch Sign In',
+                subText: 'Access 5 km radius radar, emergency dispatch requests, and live trajectories.'
+            },
+            journalist: {
+                role: 'journalist',
+                email: 'rhea.nair@press.perimeter.org',
+                name: 'Rhea Nair',
+                badge: 'Press Reporter',
+                avatar: 'RN',
+                targetUrl: 'journalist.html',
+                identityLabel: 'Press Accreditation ID',
+                headerText: 'Journalist Press Desk Sign In',
+                subText: 'Access verified safety news suite, case linking tools, and editorial archives.'
+            },
+            police: {
+                role: 'police',
+                email: 'patil.k@police.gov.in',
+                name: 'Inspector K. Patil',
+                badge: 'City Police Command',
+                avatar: 'IP',
+                targetUrl: 'police.html',
+                identityLabel: 'Officer Service Number',
+                headerText: 'Police Command & Control Room',
+                subText: 'Access priority SOS dispatches, patrol unit routing, and case resolution suite.'
+            },
+            admin: {
+                role: 'admin',
+                email: 'admin.root@perimeter.org',
+                name: 'Platform Administrator',
+                badge: 'Super Administrator',
+                avatar: 'SA',
+                targetUrl: 'index.html',
+                identityLabel: 'Master Root Key / Admin Email',
+                headerText: 'Platform Governance & Master Control',
+                subText: 'Full system overwatch: user management, geofence tuning, and citywide emergency overrides.'
+            }
+        };
+
+        let currentRole = 'user';
+
+        function selectPersona(role) {
+            currentRole = role;
+            const data = PRESET_ACCOUNTS[role];
+
+            // Highlight persona card
+            document.querySelectorAll('.persona-card').forEach(card => card.classList.remove('selected'));
+            const selectedCard = document.getElementById('persona-' + role);
+            if (selectedCard) selectedCard.classList.add('selected');
+
+            // Switch tab pill
+            document.querySelectorAll('.role-pill').forEach(pill => {
+                pill.classList.toggle('active', pill.dataset.role === role);
+            });
+
+            // Update Form UI & inputs
+            updateFormState(data);
+            document.getElementById('emailInput').value = data.email;
+            document.getElementById('passwordInput').value = 'password123';
+            
+            toast(`Auto-filled credentials for ${data.name} (${data.badge})`, '🔑');
+        }
+
+        function switchTab(role) {
+            currentRole = role;
+            const data = PRESET_ACCOUNTS[role];
+
+            // Highlight pill
+            document.querySelectorAll('.role-pill').forEach(pill => {
+                pill.classList.toggle('active', pill.dataset.role === role);
+            });
+
+            // Highlight card
+            document.querySelectorAll('.persona-card').forEach(card => card.classList.remove('selected'));
+            const selectedCard = document.getElementById('persona-' + role);
+            if (selectedCard) selectedCard.classList.add('selected');
+
+            updateFormState(data);
+            document.getElementById('emailInput').value = data.email;
+            document.getElementById('passwordInput').value = 'password123';
+        }
+
+        function updateFormState(data) {
+            document.getElementById('authRoleHeader').textContent = data.headerText;
+            document.getElementById('authRoleSub').textContent = data.subText;
+            document.getElementById('identityLabel').textContent = data.identityLabel;
+            document.getElementById('emailInput').placeholder = data.email;
+            document.getElementById('btnText').textContent = `Enter as ${data.badge}`;
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const data = PRESET_ACCOUNTS[currentRole];
+
+            btn.disabled = true;
+            btn.innerHTML = `<span>Authenticating & routing...</span> <span style="animation: spin 1s infinite linear;">⏳</span>`;
+
+            // Save user session in localStorage
+            const sessionData = {
+                role: currentRole,
+                name: data.name,
+                email: document.getElementById('emailInput').value,
+                badge: data.badge,
+                avatar: data.avatar,
+                token: 'mock_jwt_token_' + Date.now(),
+                loginTime: new Date().toISOString()
+            };
+            localStorage.setItem('perimeter_session', JSON.stringify(sessionData));
+
+            toast(`Verified as ${data.name}! Redirecting to ${data.targetUrl}...`, '🚀');
+
+            setTimeout(() => {
+                window.location.href = data.targetUrl;
+            }, 800);
+        }
+
+        function toast(msg, icon = '✨') {
+            const el = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            document.getElementById('toastIcon').textContent = icon;
+            el.classList.add('show');
+            setTimeout(() => { el.classList.remove('show'); }, 3000);
+        }
+
+        // Initialize default persona on load
+        window.addEventListener('DOMContentLoaded', () => {
+            selectPersona('user');
+        });
+    </script>
+</body>
+
+</html>
