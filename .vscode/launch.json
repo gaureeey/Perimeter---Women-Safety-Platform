@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Frontend (Chrome)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:8080/login.html",
+            "webRoot": "${workspaceFolder}/frontend",
+            "preLaunchTask": "Start Frontend Server"
+        },
+        {
+            "name": "Launch Frontend (Edge)",
+            "type": "msedge",
+            "request": "launch",
+            "url": "http://localhost:8080/login.html",
+            "webRoot": "${workspaceFolder}/frontend",
+            "preLaunchTask": "Start Frontend Server"
+        },
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        }
+    ]
+}

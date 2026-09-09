@@ -653,6 +653,10 @@
                 </button>
             </form>
 
+            <div style="margin-top: 18px; text-align: center; font-size: 13px; color: var(--gray);">
+                First time here? <a href="register.html" id="registerLink" style="color: var(--coral); font-weight: 700; text-decoration: none;">Create Account (One-Time Setup) →</a>
+            </div>
+
             <div class="security-badge">
                 <span class="sec-dot">●</span> 256-BIT ENCRYPTED · RBAC AUDITED
             </div>
@@ -719,7 +723,7 @@
                 name: 'Platform Administrator',
                 badge: 'Super Administrator',
                 avatar: 'SA',
-                targetUrl: 'index.html',
+                targetUrl: 'admin.html',
                 identityLabel: 'Master Root Key / Admin Email',
                 headerText: 'Platform Governance & Master Control',
                 subText: 'Full system overwatch: user management, geofence tuning, and citywide emergency overrides.'
@@ -775,6 +779,8 @@
             document.getElementById('identityLabel').textContent = data.identityLabel;
             document.getElementById('emailInput').placeholder = data.email;
             document.getElementById('btnText').textContent = `Enter as ${data.badge}`;
+            const regLink = document.getElementById('registerLink');
+            if (regLink) regLink.href = `register.html?role=${currentRole}`;
         }
 
         function handleLogin(event) {

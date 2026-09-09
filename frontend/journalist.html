@@ -540,6 +540,10 @@
         </div>
 
         <button class="reg-btn" onclick="submitPressReg()">📰 Register & Enter Press Desk</button>
+
+        <div style="text-align:center;font-size:12px;color:#64748B;margin-top:16px;">
+            Already registered? <a href="login.html" style="color:#0F6E6E;font-weight:600;text-decoration:none;">Sign In</a> or <a href="register.html?role=journalist" style="color:#0F6E6E;font-weight:600;text-decoration:none;">Full Registration Page</a>
+        </div>
     </div>
 </div>
 
@@ -729,6 +733,14 @@
         const PRESS_KEY = 'perimeter_press_profile';
 
         function loadPressSession() {
+            // Check universal session
+            try {
+                const sess = JSON.parse(localStorage.getItem('perimeter_session'));
+                if (sess && sess.name && (sess.role === 'journalist' || !sess.role)) {
+                    return { name: sess.name, pressId: sess.dynamicField1 || 'PRESS-2026' };
+                }
+            } catch(e) {}
+
             try { return JSON.parse(localStorage.getItem(PRESS_KEY)); } catch(e) { return null; }
         }
 
@@ -749,21 +761,34 @@
             if (!pressId) { pressRegAlert('Please enter your Press ID / Outlet.'); return; }
             if (pass.length < 6) { pressRegAlert('Password must be at least 6 characters.'); return; }
             if (pass !== conf)   { pressRegAlert('Passwords do not match.'); return; }
+
             const profile = { name, pressId, registeredAt: new Date().toISOString() };
             localStorage.setItem(PRESS_KEY, JSON.stringify(profile));
+            localStorage.setItem('perimeter_session', JSON.stringify({
+                role: 'journalist',
+                name: name,
+                badge: 'Press Reporter',
+                avatar: name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() || 'J',
+                dynamicField1: pressId,
+                token: 'jwt_token_' + Date.now(),
+                loginTime: new Date().toISOString()
+            }));
+
             document.getElementById('regOverlay').classList.remove('show');
             initPressApp(profile);
+            toast(`Registered as ${name}! Welcome to Journalist Press Desk.`, '📰');
         }
 
         function pressRegAlert(msg) {
             const el = document.getElementById('regAlertBox');
             el.textContent = msg; el.style.display = 'block';
-            setTimeout(() => el.style.display = 'none', 3500);
+            setTimeout(() => { el.style.display = 'none'; }, 3500);
         }
 
         function logout() {
             localStorage.removeItem(PRESS_KEY);
-            window.location.reload();
+            localStorage.removeItem('perimeter_session');
+            window.location.href = 'login.html';
         }
 
         window.addEventListener('DOMContentLoaded', () => {

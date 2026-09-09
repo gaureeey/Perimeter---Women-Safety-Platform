@@ -1,0 +1,19 @@
+{
+  "name": "perimeter-women-safety-platform",
+  "version": "1.0.0",
+  "description": "Unified Women Safety & Emergency Dispatch Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "serve:py": "python serve.py"
+  },
+  "keywords": [
+    "women-safety",
+    "emergency-dispatch",
+    "sos",
+    "perimeter"
+  ],
+  "author": "",
+  "license": "MIT"
+}

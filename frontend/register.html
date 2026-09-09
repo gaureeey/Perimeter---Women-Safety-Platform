@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One-Time Registration — PERIMETER Safety Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #111528;
+            --ink-secondary: #2A304E;
+            --paper: #F8FAFC;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --coral: #FF5A5F;
+            --coral-glow: rgba(255, 90, 95, 0.25);
+            --teal: #0F6E6E;
+            --teal-dim: #E0F2F1;
+            --gold: #D97706;
+            --gold-dim: #FEF3C7;
+            --police-blue: #2563EB;
+            --police-dim: #DBEAFE;
+            --purple: #8B5CF6;
+            --purple-dim: #EDE9FE;
+            --gray: #64748B;
+            --line: #E2E8F0;
+            --radius-lg: 24px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+            --shadow-subtle: 0 10px 30px -10px rgba(17, 21, 40, 0.08);
+            --shadow-elevation: 0 25px 60px -15px rgba(17, 21, 40, 0.16);
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: #0B0E1B;
+            color: #F1F5F9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            position: relative;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient Glow & Grid Background */
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .glow-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.35;
+        }
+
+        .glow-1 {
+            width: 500px;
+            height: 500px;
+            background: #FF5A5F;
+            top: -120px;
+            left: -100px;
+        }
+
+        .glow-2 {
+            width: 600px;
+            height: 600px;
+            background: #0F6E6E;
+            bottom: -150px;
+            right: -150px;
+        }
+
+        .glow-3 {
+            width: 350px;
+            height: 350px;
+            background: #8B5CF6;
+            top: 30%;
+            left: 50%;
+            opacity: 0.2;
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+        }
+
+        /* Main Container */
+        .reg-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1080px;
+            display: grid;
+            grid-template-columns: 1.1fr 1.3fr;
+            background: rgba(17, 21, 40, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-elevation);
+        }
+
+        /* Left Side: Information & Trust Panel */
+        .brand-panel {
+            padding: 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #FF5A5F, #E02424);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 8px 20px var(--coral-glow);
+        }
+
+        .brand-title {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #FFFFFF;
+        }
+
+        .brand-title span {
+            color: var(--coral);
+        }
+
+        .brand-hero {
+            margin: 28px 0;
+        }
+
+        .live-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(15, 110, 110, 0.25);
+            border: 1px solid rgba(15, 110, 110, 0.5);
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: var(--mono);
+            color: #5EEAD4;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+
+        .live-tag .pulse-dot {
+            width: 7px;
+            height: 7px;
+            background: #2DD4BF;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #2DD4BF;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .brand-hero h1 {
+            font-size: 28px;
+            line-height: 1.25;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #FFFFFF;
+            margin-bottom: 12px;
+        }
+
+        .brand-hero p {
+            color: #94A3B8;
+            font-size: 13.5px;
+            line-height: 1.6;
+        }
+
+        /* Perks list */
+        .perks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .perk-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+        }
+
+        .perk-icon {
+            font-size: 18px;
+            line-height: 1;
+            margin-top: 2px;
+        }
+
+        .perk-content h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #F8FAFC;
+            margin-bottom: 2px;
+        }
+
+        .perk-content p {
+            font-size: 11.5px;
+            color: #94A3B8;
+            line-height: 1.4;
+        }
+
+        /* Left footer */
+        .brand-footer {
+            margin-top: 24px;
+            font-size: 12.5px;
+            color: #94A3B8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-footer a {
+            color: #5EEAD4;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .brand-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Right Side: Registration Form */
+        .form-panel {
+            padding: 44px;
+            background: #FFFFFF;
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-header {
+            margin-bottom: 20px;
+        }
+
+        .form-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .form-header p {
+            color: var(--gray);
+            font-size: 13px;
+        }
+
+        /* Role Selector Pills */
+        .role-pill-group {
+            display: flex;
+            gap: 5px;
+            background: #F1F5F9;
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .role-pill {
+            flex: 1;
+            padding: 8px 6px;
+            border: none;
+            background: transparent;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .role-pill.active {
+            background: #FFFFFF;
+            color: var(--ink);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .role-pill.active[data-role="user"] { color: var(--coral); }
+        .role-pill.active[data-role="volunteer"] { color: var(--gold); }
+        .role-pill.active[data-role="journalist"] { color: var(--teal); }
+        .role-pill.active[data-role="police"] { color: var(--police-blue); }
+        .role-pill.active[data-role="admin"] { color: var(--purple); }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #475569;
+            margin-bottom: 5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            color: #94A3B8;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 12px 10px 38px;
+            background: #F8FAFC;
+            border: 1.5px solid var(--line);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-family: var(--sans);
+            color: var(--ink);
+            outline: none;
+            transition: all 0.15s ease;
+        }
+
+        .form-input:focus, .form-select:focus {
+            background: #FFFFFF;
+            border-color: var(--coral);
+            box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.12);
+        }
+
+        /* Role Dynamic Info Banner */
+        .role-info-banner {
+            background: #F8FAFC;
+            border: 1px solid var(--line);
+            border-left: 4px solid var(--coral);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: 12px;
+            color: #475569;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        /* Submit Button */
+        .btn-register {
+            width: 100%;
+            padding: 13px;
+            background: var(--ink);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: var(--sans);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+            box-shadow: 0 8px 20px rgba(17, 21, 40, 0.2);
+        }
+
+        .btn-register:hover {
+            background: #252C50;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(17, 21, 40, 0.25);
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+        /* Footer Links */
+        .form-footer {
+            margin-top: 18px;
+            text-align: center;
+            font-size: 12.5px;
+            color: var(--gray);
+        }
+
+        .form-footer a {
+            color: var(--coral);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Alert Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #111528;
+            color: #FFFFFF;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 960px) {
+            .reg-wrapper {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+
+            .brand-panel {
+                display: none;
+            }
+
+            .form-panel {
+                padding: 32px 24px;
+                max-height: none;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ambient-bg">
+        <div class="glow-sphere glow-1"></div>
+        <div class="glow-sphere glow-2"></div>
+        <div class="glow-sphere glow-3"></div>
+        <div class="bg-grid"></div>
+    </div>
+
+    <main class="reg-wrapper">
+
+        <!-- Left Side: Brand & Feature Highlights -->
+        <section class="brand-panel">
+            <div>
+                <header class="brand-header">
+                    <div class="brand-logo-icon">🛡️</div>
+                    <div class="brand-title">PERIMETER <span>.</span></div>
+                </header>
+
+                <div class="brand-hero">
+                    <div class="live-tag">
+                        <span class="pulse-dot"></span>
+                        One-Time Instant Setup
+                    </div>
+                    <h1>Join the Multi-Tier Safety Network</h1>
+                    <p>Create your account once. Your profile and safety preferences are saved locally and synchronized across the platform with no biometric barriers.</p>
+                </div>
+
+                <div class="perks-list">
+                    <div class="perk-item">
+                        <div class="perk-icon">⚡</div>
+                        <div class="perk-content">
+                            <h4>Instant 1-Click Setup</h4>
+                            <p>No Aadhaar scan or facial camera needed. Simple credentials grant immediate access to your dashboard.</p>
+                        </div>
+                    </div>
+
+                    <div class="perk-item">
+                        <div class="perk-icon">🗺️</div>
+                        <div class="perk-content">
+                            <h4>5 km Geospatial Response Radar</h4>
+                            <p>Connect immediately to live neighborhood emergency dispatches, heatmaps, and verified alerts.</p>
+                        </div>
+                    </div>
+
+                    <div class="perk-item">
+                        <div class="perk-icon">🔒</div>
+                        <div class="perk-content">
+                            <h4>Privacy-First Safety</h4>
+                            <p>Encrypted local storage guarantees personal data integrity and persistent automatic login.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="brand-footer">
+                <span>Already registered?</span>
+                <a href="login.html">Sign In to Dashboard →</a>
+            </div>
+        </section>
+
+        <!-- Right Side: Unified Registration Form -->
+        <section class="form-panel">
+            <div class="form-header">
+                <h2 id="regTitle">One-Time Registration</h2>
+                <p id="regSub">Select your role and complete your profile to access your tailored suite.</p>
+            </div>
+
+            <!-- Role Selector -->
+            <div class="role-pill-group">
+                <button type="button" class="role-pill active" data-role="user" onclick="switchRole('user')">👩 Citizen</button>
+                <button type="button" class="role-pill" data-role="volunteer" onclick="switchRole('volunteer')">🙋 Volunteer</button>
+                <button type="button" class="role-pill" data-role="journalist" onclick="switchRole('journalist')">📰 Press</button>
+                <button type="button" class="role-pill" data-role="police" onclick="switchRole('police')">🚔 Police</button>
+                <button type="button" class="role-pill" data-role="admin" onclick="switchRole('admin')">👑 Admin</button>
+            </div>
+
+            <!-- Role Info Banner -->
+            <div class="role-info-banner" id="roleBanner">
+                <span style="font-size: 18px;" id="roleBannerIcon">👩</span>
+                <span id="roleBannerText">Citizen Account: Access Smart Shake SOS, neighborhood social safety feed, and geofenced hazard alerts.</span>
+            </div>
+
+            <form id="registerForm" onsubmit="handleRegistration(event)">
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label class="form-label" for="regFullName">Full Name / Identity</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">👤</span>
+                            <input type="text" id="regFullName" class="form-input" placeholder="e.g. Aarohi Sharma" required autocomplete="name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="regEmail">Email Address</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">✉️</span>
+                            <input type="email" id="regEmail" class="form-input" placeholder="user@domain.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="regPhone">Mobile Phone</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📱</span>
+                            <input type="tel" id="regPhone" class="form-input" placeholder="+91 98765 43210" required autocomplete="tel">
+                        </div>
+                    </div>
+
+                    <!-- Role Dynamic Field 1 -->
+                    <div class="form-group full" id="dynamicFieldGroup1">
+                        <label class="form-label" for="regDynamic1" id="labelDynamic1">Primary Emergency Contact</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon" id="iconDynamic1">📞</span>
+                            <input type="text" id="regDynamic1" class="form-input" placeholder="e.g. +91 98200 12345 (Family / Guardian)" required>
+                        </div>
+                    </div>
+
+                    <!-- Role Dynamic Field 2 -->
+                    <div class="form-group full" id="dynamicFieldGroup2">
+                        <label class="form-label" for="regDynamic2" id="labelDynamic2">Home Sector / Safe Zone</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon" id="iconDynamic2">📍</span>
+                            <input type="text" id="regDynamic2" class="form-input" placeholder="e.g. Bandra West, Mumbai" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="regPassword">Password</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="regPassword" class="form-input" placeholder="At least 6 chars" required minlength="6">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="regConfirmPassword">Confirm Password</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🔑</span>
+                            <input type="password" id="regConfirmPassword" class="form-input" placeholder="Re-enter password" required minlength="6">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-register" id="submitRegBtn">
+                    <span id="btnRegText">Complete Registration & Enter</span>
+                    <span>→</span>
+                </button>
+            </form>
+
+            <div class="form-footer">
+                Already registered on this device? <a href="login.html">Sign in here</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✨</span>
+        <span id="toastMsg">Notification message</span>
+    </div>
+
+    <script>
+        const ROLE_CONFIG = {
+            user: {
+                name: 'Citizen User',
+                badge: 'Citizen User',
+                targetUrl: 'user.html',
+                themeColor: '#FF5A5F',
+                bannerIcon: '👩',
+                bannerText: 'Citizen Account: Access Smart Shake SOS, neighborhood social safety feed, and geofenced hazard alerts.',
+                dynLabel1: 'Primary Emergency Contact (Phone)',
+                dynPlaceholder1: 'e.g. +91 98200 12345 (Family / Guardian)',
+                dynIcon1: '📞',
+                dynLabel2: 'Home Sector / City Area',
+                dynPlaceholder2: 'e.g. Bandra West, Mumbai',
+                dynIcon2: '📍',
+                btnText: 'Register as Citizen User'
+            },
+            volunteer: {
+                name: 'Verified Volunteer',
+                badge: 'Verified Responder',
+                targetUrl: 'volunteer.html',
+                themeColor: '#D97706',
+                bannerIcon: '🙋',
+                bannerText: 'Volunteer Console: Join the 5 km emergency radar, respond to citizen SOS dispatches, and broadcast live rescue status.',
+                dynLabel1: 'Volunteer Badge / NGO Registration ID',
+                dynPlaceholder1: 'e.g. VOL-MH-2026-089',
+                dynIcon1: '🪪',
+                dynLabel2: 'Assigned Patrol Sector / Area',
+                dynPlaceholder2: 'e.g. Sector 4 - Central Zone',
+                dynIcon2: '🗺️',
+                btnText: 'Register as Verified Volunteer'
+            },
+            journalist: {
+                name: 'Press Journalist',
+                badge: 'Press Reporter',
+                targetUrl: 'journalist.html',
+                themeColor: '#0F6E6E',
+                bannerIcon: '📰',
+                bannerText: 'Press Desk: Access verified community safety reports, publish official media updates, and link articles to incident IDs.',
+                dynLabel1: 'Press Accreditation ID / Media House',
+                dynPlaceholder1: 'e.g. Deccan Herald · PID-2026-044',
+                dynIcon1: '📰',
+                dynLabel2: 'Editorial Beat / Regional Bureau',
+                dynPlaceholder2: 'e.g. Urban Crime & Women Safety Bureau',
+                dynIcon2: '✍️',
+                btnText: 'Register as Press Reporter'
+            },
+            police: {
+                name: 'City Police Officer',
+                badge: 'City Police Command',
+                targetUrl: 'police.html',
+                themeColor: '#2563EB',
+                bannerIcon: '🚔',
+                bannerText: 'Police Command & Control: Receive high-priority SOS alerts, dispatch patrol squads, and oversee investigation timeline.',
+                dynLabel1: 'Officer Service / Badge Number',
+                dynPlaceholder1: 'e.g. MH-POL-7741',
+                dynIcon1: '🛡️',
+                dynLabel2: 'Jurisdiction Police Station',
+                dynPlaceholder2: 'e.g. Cyber & Women Safety Precinct #01',
+                dynIcon2: '🏢',
+                btnText: 'Register as Police Officer'
+            },
+            admin: {
+                name: 'Super Administrator',
+                badge: 'Super Administrator',
+                targetUrl: 'admin.html',
+                themeColor: '#8B5CF6',
+                bannerIcon: '👑',
+                bannerText: 'Platform Governance: Master dashboard for role governance, geofence radius adjustments, and system audit trails.',
+                dynLabel1: 'Master Authorization Key / Role ID',
+                dynPlaceholder1: 'e.g. ADM-ROOT-001',
+                dynIcon1: '🔑',
+                dynLabel2: 'Department / Organization',
+                dynPlaceholder2: 'e.g. PERIMETER Central Operations',
+                dynIcon2: '🏛️',
+                btnText: 'Register as Super Admin'
+            }
+        };
+
+        let currentRole = 'user';
+
+        function switchRole(role) {
+            currentRole = role;
+            const config = ROLE_CONFIG[role];
+
+            // Update role pill active state
+            document.querySelectorAll('.role-pill').forEach(pill => {
+                pill.classList.toggle('active', pill.dataset.role === role);
+            });
+
+            // Update banner & dynamic labels
+            const banner = document.getElementById('roleBanner');
+            banner.style.borderLeftColor = config.themeColor;
+            document.getElementById('roleBannerIcon').textContent = config.bannerIcon;
+            document.getElementById('roleBannerText').textContent = config.bannerText;
+
+            document.getElementById('labelDynamic1').textContent = config.dynLabel1;
+            document.getElementById('regDynamic1').placeholder = config.dynPlaceholder1;
+            document.getElementById('iconDynamic1').textContent = config.dynIcon1;
+
+            document.getElementById('labelDynamic2').textContent = config.dynLabel2;
+            document.getElementById('regDynamic2').placeholder = config.dynPlaceholder2;
+            document.getElementById('iconDynamic2').textContent = config.dynIcon2;
+
+            document.getElementById('btnRegText').textContent = config.btnText;
+        }
+
+        function handleRegistration(event) {
+            event.preventDefault();
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirmPassword').value;
+
+            if (password !== confirm) {
+                toast('Passwords do not match! Please check again.', '⚠️');
+                return;
+            }
+
+            const fullName = document.getElementById('regFullName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const dynamic1 = document.getElementById('regDynamic1').value.trim();
+            const dynamic2 = document.getElementById('regDynamic2').value.trim();
+            const config = ROLE_CONFIG[currentRole];
+
+            const btn = document.getElementById('submitRegBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<span>Registering profile...</span> <span>⏳</span>`;
+
+            // Prepare session data
+            const initials = fullName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'P';
+            const userSession = {
+                role: currentRole,
+                name: fullName,
+                email: email,
+                phone: phone,
+                dynamicField1: dynamic1,
+                dynamicField2: dynamic2,
+                badge: config.badge,
+                avatar: initials,
+                token: 'jwt_token_' + Date.now(),
+                registeredAt: new Date().toISOString(),
+                loginTime: new Date().toISOString()
+            };
+
+            // Save in universal session
+            localStorage.setItem('perimeter_session', JSON.stringify(userSession));
+
+            // Also save role-specific profile key so legacy/direct page loads work instantly
+            if (currentRole === 'user') {
+                localStorage.setItem('perimeter_user_profile', JSON.stringify({
+                    username: fullName,
+                    email: email,
+                    phone: phone,
+                    emergencyContact: dynamic1,
+                    area: dynamic2,
+                    registeredAt: userSession.registeredAt
+                }));
+            } else if (currentRole === 'volunteer') {
+                localStorage.setItem('perimeter_vol_profile', JSON.stringify({
+                    name: fullName,
+                    volId: dynamic1,
+                    area: dynamic2,
+                    registeredAt: userSession.registeredAt
+                }));
+            } else if (currentRole === 'police') {
+                localStorage.setItem('perimeter_police_profile', JSON.stringify({
+                    name: fullName,
+                    badge: dynamic1,
+                    precinct: dynamic2,
+                    registeredAt: userSession.registeredAt
+                }));
+            } else if (currentRole === 'journalist') {
+                localStorage.setItem('perimeter_press_profile', JSON.stringify({
+                    name: fullName,
+                    pressId: dynamic1,
+                    outlet: dynamic2,
+                    registeredAt: userSession.registeredAt
+                }));
+            }
+
+            toast(`Account created for ${fullName}! Forwarding to dashboard...`, '🎉');
+
+            setTimeout(() => {
+                window.location.href = config.targetUrl;
+            }, 800);
+        }
+
+        function toast(msg, icon = '✨') {
+            const el = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            document.getElementById('toastIcon').textContent = icon;
+            el.classList.add('show');
+            setTimeout(() => { el.classList.remove('show'); }, 3200);
+        }
+
+        // Check if role passed via query parameter
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const roleParam = params.get('role');
+            if (roleParam && ROLE_CONFIG[roleParam]) {
+                switchRole(roleParam);
+            } else {
+                switchRole('user');
+            }
+        });
+    </script>
+</body>
+
+</html>

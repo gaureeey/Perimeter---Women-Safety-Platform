@@ -189,12 +189,16 @@
 
   <!-- TOP PERSONA SWITCHER NAVBAR -->
   <div class="role-bar">
-    <div class="title">🛡️ PERIMETER</div>
+    <div class="title" style="display: flex; align-items: center; gap: 12px;">
+      <span>🛡️ PERIMETER ADMIN</span>
+      <a href="register.html" style="color: #00F2FE; font-size: 12px; text-decoration: none; font-weight: 600; padding: 4px 10px; background: rgba(0, 242, 254, 0.1); border-radius: 100px;">+ Register New User</a>
+    </div>
     <div class="role-btn-group">
       <button class="role-btn active" onclick="switchRole('user')">👩 User</button>
       <button class="role-btn" onclick="switchRole('volunteer')">🙋 Volunteer</button>
       <button class="role-btn" onclick="switchRole('journalist')">📰 Journalist</button>
       <button class="role-btn" onclick="switchRole('police')">🚔 Police</button>
+      <a href="login.html" class="role-btn" style="text-decoration: none; background: rgba(255, 255, 255, 0.1); color: #FFF;">🔑 Switch / Login</a>
     </div>
   </div>
 
