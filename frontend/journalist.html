@@ -542,7 +542,7 @@
         <button class="reg-btn" onclick="submitPressReg()">📰 Register & Enter Press Desk</button>
 
         <div style="text-align:center;font-size:12px;color:#64748B;margin-top:16px;">
-            Already registered? <a href="login.html" style="color:#0F6E6E;font-weight:600;text-decoration:none;">Sign In</a> or <a href="register.html?role=journalist" style="color:#0F6E6E;font-weight:600;text-decoration:none;">Full Registration Page</a>
+            Need help or switching persona? <a href="register.html" style="color:#0F6E6E;font-weight:600;text-decoration:none;">Go to Register / Switch Persona</a>
         </div>
     </div>
 </div>
@@ -557,7 +557,7 @@
         </div>
         <div class="press-topbar-right">
             <span style="color: #5EEAD4; font-family: var(--mono); font-size: 11px;">OUTLET: THE DECCAN HERALD</span>
-            <a href="login.html" onclick="logout(); return false;">Switch Persona / Logout →</a>
+            <a href="register.html" onclick="logout(); return false;">Switch Persona / Logout →</a>
         </div>
     </div>
 
@@ -728,81 +728,78 @@
         <span id="toastMsg">Notification message</span>
     </div>
 
+    <script src="js/api.js"></script>
     <script>
-        // ── ONE-TIME REGISTRATION: JOURNALIST ──
-        const PRESS_KEY = 'perimeter_press_profile';
+        let currentPressUser = null;
+        let pressName = 'Journalist';
+        let pressAvatar = 'RN';
 
-        function loadPressSession() {
-            // Check universal session
+        async function initJournalistDashboard() {
+            currentPressUser = await guardProtectedPage(['journalist']);
+            if (!currentPressUser) return;
+
+            pressName = currentPressUser.name || 'Journalist';
+            pressAvatar = pressName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'J';
+
+            const topNameEl = document.getElementById('topbarPressName');
+            if (topNameEl) topNameEl.textContent = `${pressName} (Verified Journalist)`;
+            const navNameEl = document.getElementById('navPressName');
+            if (navNameEl) navNameEl.textContent = `${pressName.split(' ')[0]} (Press)`;
+            const avEl = document.getElementById('pressAvatar');
+            if (avEl) avEl.textContent = pressAvatar;
+
+            await loadPressCases();
+        }
+
+        async function loadPressCases() {
             try {
-                const sess = JSON.parse(localStorage.getItem('perimeter_session'));
-                if (sess && sess.name && (sess.role === 'journalist' || !sess.role)) {
-                    return { name: sess.name, pressId: sess.dynamicField1 || 'PRESS-2026' };
+                const cases = await apiCall('/case/');
+                const caseSelect = document.getElementById('reportCaseSelect');
+                const caseList = document.querySelector('.case-list');
+
+                if (caseSelect && cases && cases.length > 0) {
+                    caseSelect.innerHTML = '<option value="">-- Optional: Link Directly to Active Case ID --</option>';
+                    cases.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.case_id;
+                        opt.textContent = `${c.case_id} — ${c.title} (${c.status})`;
+                        caseSelect.appendChild(opt);
+                    });
                 }
-            } catch(e) {}
 
-            try { return JSON.parse(localStorage.getItem(PRESS_KEY)); } catch(e) { return null; }
-        }
-
-        function initPressApp(profile) {
-            const pName   = profile.name || 'Journalist';
-            const pAvatar = profile.name ? profile.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() : 'RN';
-            document.getElementById('topbarPressName').textContent = `${pName} (Verified Journalist)`;
-            document.getElementById('navPressName').textContent = pName.split(' ')[0] + ' (Press)';
-            document.getElementById('pressAvatar').textContent = pAvatar;
-        }
-
-        function submitPressReg() {
-            const name    = document.getElementById('regName').value.trim();
-            const pressId = document.getElementById('regPressId').value.trim();
-            const pass    = document.getElementById('regPass').value;
-            const conf    = document.getElementById('regConf').value;
-            if (!name)    { pressRegAlert('Please enter your full name.'); return; }
-            if (!pressId) { pressRegAlert('Please enter your Press ID / Outlet.'); return; }
-            if (pass.length < 6) { pressRegAlert('Password must be at least 6 characters.'); return; }
-            if (pass !== conf)   { pressRegAlert('Passwords do not match.'); return; }
-
-            const profile = { name, pressId, registeredAt: new Date().toISOString() };
-            localStorage.setItem(PRESS_KEY, JSON.stringify(profile));
-            localStorage.setItem('perimeter_session', JSON.stringify({
-                role: 'journalist',
-                name: name,
-                badge: 'Press Reporter',
-                avatar: name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() || 'J',
-                dynamicField1: pressId,
-                token: 'jwt_token_' + Date.now(),
-                loginTime: new Date().toISOString()
-            }));
-
-            document.getElementById('regOverlay').classList.remove('show');
-            initPressApp(profile);
-            toast(`Registered as ${name}! Welcome to Journalist Press Desk.`, '📰');
-        }
-
-        function pressRegAlert(msg) {
-            const el = document.getElementById('regAlertBox');
-            el.textContent = msg; el.style.display = 'block';
-            setTimeout(() => { el.style.display = 'none'; }, 3500);
-        }
-
-        function logout() {
-            localStorage.removeItem(PRESS_KEY);
-            localStorage.removeItem('perimeter_session');
-            window.location.href = 'login.html';
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const profile = loadPressSession();
-            if (profile && profile.name) {
-                initPressApp(profile);
-            } else {
-                document.getElementById('regOverlay').classList.add('show');
+                if (caseList && cases && cases.length > 0) {
+                    caseList.innerHTML = '';
+                    cases.forEach(c => {
+                        const card = document.createElement('div');
+                        card.className = 'case-card';
+                        card.id = `press_case_${c.case_id}`;
+                        const timeStr = new Date(c.opened_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        card.innerHTML = `
+                            <div class="case-header">
+                                <div>
+                                    <div class="case-id">${c.case_id} · ${c.victim_identifier}</div>
+                                    <div class="case-title">${c.title}</div>
+                                    <div class="case-meta">📍 ${c.location} · Opened: ${timeStr}</div>
+                                </div>
+                                <span class="case-badge ${c.status === 'RESOLVED' ? 'resolved' : 'active'}">${c.status.replace('_', ' ')}</span>
+                            </div>
+                            <div style="margin-top: 10px; display: flex; gap: 8px;">
+                                <button class="btn-police-act resolve" style="padding: 6px 12px; font-size: 12px;" onclick="attachNoteToCase('${c.case_id}')">
+                                    📰 Attach Press Note
+                                </button>
+                            </div>
+                        `;
+                        caseList.appendChild(card);
+                    });
+                }
+            } catch (err) {
+                console.warn('Could not load press cases:', err.message);
             }
-        });
+        }
 
-        // Timeline Sync
         function addTimelineEntry(title, desc) {
             const container = document.getElementById('timelineContainer');
+            if (!container) return;
             const item = document.createElement('div');
             item.className = 'timeline-item';
             const now = new Date();
@@ -814,61 +811,105 @@
             container.insertBefore(item, container.firstChild);
         }
 
-        // Handle Publishing
-        function handlePublishReport(event) {
+        async function handlePublishReport(event) {
             event.preventDefault();
             const headline = document.getElementById('reportHeadline').value.trim();
             const location = document.getElementById('reportLocation').value.trim();
             const caseId = document.getElementById('reportCaseSelect').value;
             const content = document.getElementById('reportContent').value.trim();
 
-            const feed = document.getElementById('pressFeedList');
-            const item = document.createElement('div');
-            item.className = 'press-feed-item';
-            item.innerHTML = `
-                <div class="press-feed-header">
-                    <span class="badge-verified">Verified Press Bulletin</span>
-                    <span style="font-size: 11.5px; color: var(--gray);">${caseId ? 'Linked to ' + caseId + ' · ' : ''}Just now · ${location}</span>
-                </div>
-                <div class="press-feed-title">${headline}</div>
-                <div class="press-feed-body">${content}</div>
-                <div class="press-feed-footer">
-                    <span>Author: ${pressName} (Deccan Herald)</span>
-                    <span style="color: var(--teal); font-weight: 600; cursor: pointer;" onclick="toast('Press link copied!', '↗️')">Share Article ↗️</span>
-                </div>
-            `;
-            feed.prepend(item);
+            if (!headline || !content) {
+                toast('Please provide a headline and article summary.', '⚠️');
+                return;
+            }
 
-            addTimelineEntry('Press Report Published', `${headline} (${location})${caseId ? ' attached to ' + caseId : ''}.`);
-            
-            // Increment stat
-            let count = parseInt(document.getElementById('statArticles').textContent) + 1;
-            document.getElementById('statArticles').textContent = count;
+            try {
+                // 1. Save press post to feed
+                await apiCall('/feed/', 'POST', {
+                    author_name: pressName,
+                    author_role: 'journalist',
+                    title: headline,
+                    content: content,
+                    tag: 'PRESS_REPORT',
+                    location_name: location || 'Press Desk Citywide'
+                });
 
-            // Clear inputs
-            document.getElementById('reportHeadline').value = '';
-            document.getElementById('reportLocation').value = '';
-            document.getElementById('reportContent').value = '';
-            document.getElementById('reportCaseSelect').value = '';
+                // 2. If attached to a case, link press report in DB
+                if (caseId) {
+                    await apiCall(`/case/${caseId}/link-press`, 'POST', {
+                        article_id: 'art_' + Date.now(),
+                        title: headline,
+                        outlet: currentPressUser?.dynamic_field_2 || 'The Deccan Herald',
+                        journalist_name: pressName,
+                        url: '#' + caseId,
+                        published_at: new Date().toISOString()
+                    });
+                }
 
-            toast('📰 Verified Safety Bulletin broadcast to all Citizen feeds & Case Timeline!', '🚀');
+                const feed = document.getElementById('pressFeedList');
+                if (feed) {
+                    const item = document.createElement('div');
+                    item.className = 'press-feed-item';
+                    item.innerHTML = `
+                        <div class="press-feed-header">
+                            <span class="badge-verified">Verified Press Bulletin</span>
+                            <span style="font-size: 11.5px; color: var(--gray);">${caseId ? 'Linked to ' + caseId + ' · ' : ''}Just now · ${location}</span>
+                        </div>
+                        <div class="press-feed-title">${headline}</div>
+                        <div class="press-feed-body">${content}</div>
+                        <div class="press-feed-footer">
+                            <span>Author: ${pressName} (${currentPressUser?.dynamic_field_2 || 'Press Outlet'})</span>
+                            <span style="color: var(--teal); font-weight: 600; cursor: pointer;" onclick="toast('Press link copied!', '↗️')">Share Article ↗️</span>
+                        </div>
+                    `;
+                    feed.prepend(item);
+                }
+
+                addTimelineEntry('Press Report Published in Database', `${headline} (${location})${caseId ? ' attached to ' + caseId : ''}.`);
+
+                let countEl = document.getElementById('statArticles');
+                if (countEl) {
+                    let count = parseInt(countEl.textContent) + 1;
+                    countEl.textContent = count;
+                }
+
+                document.getElementById('reportHeadline').value = '';
+                document.getElementById('reportLocation').value = '';
+                document.getElementById('reportContent').value = '';
+                document.getElementById('reportCaseSelect').value = '';
+
+                toast('📰 Verified Safety Bulletin saved to database and broadcasted!', '🚀');
+            } catch (err) {
+                toast(err.message || 'Could not publish press report.', '❌');
+            }
         }
 
-        function attachNoteToCase(caseId) {
-            const note = prompt(`Enter press update or investigation note for ${caseId}:`, 'Press team verified local police patrol on site.');
+        async function attachNoteToCase(caseId) {
+            const note = prompt(`Enter press update or investigation note for ${caseId}:`, 'Press team verified local patrol response on site.');
             if (note) {
-                addTimelineEntry(`Attached to ${caseId}`, `${pressName}: ${note}`);
-                toast(`Press note attached to ${caseId} timeline!`, '📎');
+                try {
+                    await apiCall(`/case/${caseId}/timeline`, 'POST', {
+                        timestamp: new Date().toISOString(),
+                        title: 'Press Field Note Attached',
+                        description: `${pressName}: ${note}`,
+                        actor_role: 'journalist',
+                        actor_name: pressName
+                    });
+                    addTimelineEntry(`Attached to ${caseId}`, `${pressName}: ${note}`);
+                    toast(`Note attached to case ${caseId}!`, '📰');
+                } catch (err) {
+                    toast(err.message || 'Could not attach note.', '⚠️');
+                }
             }
         }
 
         function toast(msg, icon = '✨') {
-            const el = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            document.getElementById('toastIcon').textContent = icon;
-            el.classList.add('show');
-            setTimeout(() => { el.classList.remove('show'); }, 3000);
+            showToast(msg, icon);
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initJournalistDashboard();
+        });
     </script>
 </body>
 

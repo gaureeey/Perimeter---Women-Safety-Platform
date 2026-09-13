@@ -1,0 +1,145 @@
+# Implementation Plan — PERIMETER Platform 50% Functional Core
+
+Connect the **Frontend**, **FastAPI Backend**, and **SQLite Database** into a cohesive, fully functioning system with one-time persistent authentication, role-based access control, real data persistence, and dynamic frontend interaction across all 5 user roles.
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Authentication Flow Change (One-Time Registration):**
+> Users will register once via `register.html`. On registration, their account is persisted to the database, a secure JWT session token is created, and they are automatically logged in and redirected to their role dashboard. Subsequent page visits or app restarts will automatically authenticate the user from persistent storage without prompting for credentials.
+
+> [!NOTE]
+> All existing designs, CSS styling, and visual elements will be preserved and wired directly to live backend REST endpoints.
+
+---
+
+## Proposed Changes
+
+### 1. Database & Security Layer (Backend)
+
+#### [NEW] [.env.example](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/.env.example) & [.env](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/.env)
+- Environment variables for `SECRET_KEY`, `ALGORITHM`, `ACCESS_TOKEN_EXPIRE_MINUTES`, `DATABASE_URL`, and `BACKEND_CORS_ORIGINS`.
+
+#### [MODIFY] [backend/app/core/config.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/core/config.py)
+- Integrate `pydantic_settings.SettingsConfigDict` to load `.env` securely.
+
+#### [NEW] [backend/app/core/security.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/core/security.py)
+- Password hashing using `passlib` (bcrypt / pbkdf2_sha256).
+- JWT token generation (`create_access_token`) and verification (`decode_access_token`).
+- FastAPI `get_current_user` and `require_role(allowed_roles)` security dependencies for RBAC.
+
+#### [MODIFY] [backend/app/models/user.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/models/user.py)
+- Ensure proper fields and relationships for User entity.
+
+#### [MODIFY] [backend/app/models/sos.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/models/sos.py)
+- Add fields for incident severity, notes, victim user link, and timestamps.
+
+#### [MODIFY] [backend/app/db/init_db.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/db/init_db.py)
+- Seed initial users with properly hashed passwords and default safety feed posts, incidents, and cases.
+
+---
+
+### 2. Backend REST API Layer (FastAPI)
+
+#### [MODIFY] [backend/app/api/auth.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/api/auth.py)
+- **`POST /api/v1/auth/register`**: Registers user in DB, hashes password, generates JWT, returns user profile + token.
+- **`POST /api/v1/auth/login`**: Authenticates credentials for existing accounts or seeded personas, returns JWT.
+- **`GET /api/v1/auth/me`**: Validates JWT Bearer token and returns authenticated user details.
+- **`GET /api/v1/auth/users`**: List registered users for admin and dispatch coordination.
+
+#### [MODIFY] [backend/app/api/feed.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/api/feed.py)
+- **`GET /api/v1/feed/`**: Query all feed posts from DB ordered by `created_at desc`.
+- **`POST /api/v1/feed/`**: Save community safety posts with author metadata, role badges, and tag categories.
+- **`POST /api/v1/feed/{post_id}/upvote`**: Persist upvotes in DB.
+- **`GET /api/v1/feed/stories`** & **`POST /api/v1/feed/stories`**: Story creation and retrieval.
+
+#### [MODIFY] [backend/app/api/sos.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/api/sos.py)
+- **`POST /api/v1/sos/trigger`**: Create emergency SOS / accident help request in DB, auto-generate linked Case & Timeline event.
+- **`GET /api/v1/sos/active`**: Retrieve active emergencies with live responder statuses.
+- **`POST /api/v1/sos/{incident_id}/respond`**: Volunteer or police unit accepts emergency dispatch.
+- **`POST /api/v1/sos/{incident_id}/resolve`**: Resolve emergency incident and update case status.
+
+#### [MODIFY] [backend/app/api/case.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/api/case.py)
+- **`GET /api/v1/case/`**: Retrieve all incident cases with timeline events.
+- **`GET /api/v1/case/{case_id}`**: Retrieve single case timeline and linked press reports.
+- **`POST /api/v1/case/{case_id}/timeline`**: Append audit timeline entry.
+- **`POST /api/v1/case/{case_id}/link-press`**: Journalists attach verified news reports.
+
+#### [NEW] [backend/app/api/admin.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/api/admin.py)
+- **`GET /api/v1/admin/stats`**: Platform metrics (total users by role, active SOS, cases, feed posts).
+- **`DELETE /api/v1/admin/users/{user_id}`**: Delete/deactivate user.
+
+#### [MODIFY] [backend/app/main.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/main.py)
+- Include `admin_router`.
+
+---
+
+### 3. Frontend Integration Layer
+
+#### [NEW] [frontend/js/api.js](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/js/api.js)
+- Unified API client handling `API_BASE_URL` (`http://127.0.0.1:8000/api/v1`).
+- Token & session management in `localStorage` (`perimeter_token`, `perimeter_user`).
+- Centralized auth checking (`checkSessionOrRedirect`, `requireRole`, `logout`).
+- Standardized `apiFetch(endpoint, options)` with automatic `Authorization: Bearer <token>` header injection.
+
+#### [MODIFY] [frontend/register.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/register.html)
+- Auto-redirect if user already has an active session.
+- Submits form to `POST /api/v1/auth/register`.
+- On success, stores token and profile in `localStorage` and routes immediately to the role dashboard.
+- Displays proper loading and error alerts if email is duplicate or inputs are invalid.
+
+#### [MODIFY] [frontend/login.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/login.html)
+- Auto-redirect if user already has an active session.
+- Allows one-click persona login or explicit login calling `POST /api/v1/auth/login`.
+
+#### [MODIFY] [frontend/user.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/user.html) (Citizen User)
+- Authenticated session verification on mount.
+- Load live feed posts and stories from `GET /api/v1/feed/` and `GET /api/v1/feed/stories`.
+- Create post calling `POST /api/v1/feed/` with instant UI prepend and DB persistence.
+- Upvote post calling `POST /api/v1/feed/{id}/upvote`.
+- Trigger Smart SOS button calling `POST /api/v1/sos/trigger` with live GPS / fallback coordinates.
+- Submit Accident / Incident Report modal calling `POST /api/v1/sos/trigger` with severity and vehicle notes.
+
+#### [MODIFY] [frontend/volunteer.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/volunteer.html) (Volunteer Responder)
+- Authenticated role check (`volunteer` or `admin`).
+- Fetch active SOS dispatch alerts from `GET /api/v1/sos/active`.
+- Accept dispatch / Respond to emergency button calling `POST /api/v1/sos/{id}/respond`.
+
+#### [MODIFY] [frontend/police.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/police.html) (Police Command)
+- Authenticated role check (`police` or `admin`).
+- Fetch active incidents and live cases from `GET /api/v1/sos/active` and `GET /api/v1/case/`.
+- Dispatch patrol unit / update status / resolve cases via API.
+
+#### [MODIFY] [frontend/journalist.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/journalist.html) (Press Desk)
+- Authenticated role check (`journalist` or `admin`).
+- Load active cases from `GET /api/v1/case/`.
+- Link verified press article to case via `POST /api/v1/case/{id}/link-press`.
+- Publish verified news story to feed via `POST /api/v1/feed/`.
+
+#### [MODIFY] [frontend/admin.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/admin.html) (Super Admin)
+- Load live stats and user list from `GET /api/v1/admin/stats` and `GET /api/v1/auth/users`.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- Python syntax and import verification for all backend modules:
+  `python -m py_compile backend/app/main.py backend/app/api/*.py backend/app/core/*.py backend/app/models/*.py`
+- End-to-end API integration script verifying:
+  1. User registration (`POST /api/v1/auth/register`) $\rightarrow$ DB storage $\rightarrow$ token generation
+  2. Persistent session retrieval (`GET /api/v1/auth/me`)
+  3. Safety post creation and retrieval (`POST /api/v1/feed/`, `GET /api/v1/feed/`)
+  4. Emergency SOS trigger & dispatch retrieval (`POST /api/v1/sos/trigger`, `GET /api/v1/sos/active`)
+  5. Volunteer responder assignment (`POST /api/v1/sos/{id}/respond`)
+  6. Case timeline update (`POST /api/v1/case/{id}/timeline`)
+  7. Role-based unauthorized access rejection (e.g. invalid role access)
+
+### Manual Verification
+- Test user registration flow on `http://localhost:8080/register.html` with browser and check automatic redirection to `user.html`.
+- Reopen browser to `http://localhost:8080/` or `http://localhost:8080/login.html` and verify the persistent session automatically bypasses authentication forms and enters the dashboard.
+- Create a post on `user.html` and verify it persists after page reload.
+- Trigger SOS on `user.html`, switch to `volunteer.html` / `police.html` and verify the active dispatch alert appears and can be responded to.
+- Verify logout clears storage and returns to registration/login.

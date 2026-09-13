@@ -32,6 +32,25 @@
                     "endsPattern": "PERIMETER Frontend Server"
                 }
             }
+        },
+        {
+            "label": "Start FastAPI Backend",
+            "type": "shell",
+            "command": "python -m uvicorn app.main:app --port 8000 --reload",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^$"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Uvicorn running on",
+                    "endsPattern": "Application startup complete"
+                }
+            }
         }
     ]
 }

@@ -26,7 +26,7 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
     let cleanUrl = req.url.split('?')[0];
     if (cleanUrl === '/' || cleanUrl === '') {
-        cleanUrl = '/login.html';
+        cleanUrl = '/index.html';
     }
 
     // First try frontend subdirectory
@@ -43,7 +43,17 @@ const server = http.createServer((req, res) => {
         fs.createReadStream(filePath).pipe(res);
     } else {
         res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-        res.end(`<h2>404 Not Found</h2><p>Resource ${cleanUrl} not found.</p><p><a href="/login.html">Go to Login</a></p>`);
+        res.end(`<h2>404 Not Found</h2><p>Resource ${cleanUrl} not found.</p><p><a href="/register.html">Go to Registration / Platform</a></p>`);
+    }
+});
+
+server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.log(`\n⚠️  Port ${PORT} is already in use (the server is already running!).`);
+        console.log(`🔗 Access it at: http://localhost:${PORT}/register.html\n`);
+        process.exit(0);
+    } else {
+        throw err;
     }
 });
 
@@ -51,7 +61,6 @@ server.listen(PORT, () => {
     console.log(`\n======================================================`);
     console.log(`🛡️  PERIMETER Frontend Server is running!`);
     console.log(`🔗 Local URL: http://localhost:${PORT}/`);
-    console.log(`📄 Login Page: http://localhost:${PORT}/login.html`);
     console.log(`📝 Register:   http://localhost:${PORT}/register.html`);
     console.log(`======================================================\n`);
 });

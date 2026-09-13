@@ -4,110 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Citizen Dashboard — PERIMETER Women Safety</title>
+    <title>PERIMETER — Women Safety Community & Social Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <style>
-        /* ── ONE-TIME REGISTRATION OVERLAY ── */
-        #regOverlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(10,14,30,0.85);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-        }
-        #regOverlay.show { display: flex; }
-        .reg-box {
-            background: #FFFFFF;
-            border-radius: 24px;
-            width: 100%;
-            max-width: 460px;
-            padding: 36px 32px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
-            animation: regSlideIn 0.4s cubic-bezier(.22,1,.36,1);
-        }
-        @keyframes regSlideIn {
-            from { opacity:0; transform:translateY(24px) scale(0.97); }
-            to   { opacity:1; transform:translateY(0)  scale(1); }
-        }
-        .reg-logo { font-size: 26px; font-weight: 800; color: #FF5A5F; letter-spacing: -1px; margin-bottom: 4px; }
-        .reg-sub  { font-size: 13px; color: #64748B; margin-bottom: 20px; }
-        .reg-title { font-size: 18px; font-weight: 700; color: #111528; margin-bottom: 6px; }
-        .reg-desc  { font-size: 12.5px; color: #64748B; margin-bottom: 20px; line-height: 1.5; }
-        .reg-field {
-            margin-bottom: 14px;
-        }
-        .reg-label {
-            display: block;
-            font-size: 11.5px;
-            font-weight: 700;
-            color: #475569;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .reg-input {
-            width: 100%;
-            padding: 11px 14px;
-            border: 1.5px solid #E2E8F0;
-            border-radius: 12px;
-            font-size: 13.5px;
-            font-family: 'Inter', sans-serif;
-            color: #111528;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .reg-input:focus {
-            border-color: #FF5A5F;
-            box-shadow: 0 0 0 3px rgba(255,90,95,0.15);
-        }
-        .reg-btn {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(135deg, #FF5A5F, #e0393e);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: opacity 0.2s, transform 0.15s;
-            font-family: 'Inter', sans-serif;
-        }
-        .reg-btn:hover { opacity:0.93; transform:translateY(-1px); }
-        .reg-btn:active { transform:translateY(0); }
-        .reg-btn.secondary {
-            background: #F1F5F9;
-            color: #475569;
-            margin-top: 8px;
-        }
-        .reg-footer-link {
-            text-align: center;
-            font-size: 12px;
-            color: #64748B;
-            margin-top: 16px;
-        }
-        .reg-footer-link a {
-            color: #FF5A5F;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        .reg-footer-link a:hover {
-            text-decoration: underline;
-        }
         :root {
             --ink: #111528;
             --ink-secondary: #2A304E;
             --paper: #F8FAFC;
             --paper-2: #EEF2F6;
+            --card-bg: #FFFFFF;
             --coral: #FF5A5F;
             --coral-glow: rgba(255, 90, 95, 0.25);
             --coral-dim: #FFE4E6;
@@ -117,6 +26,8 @@
             --gold-dim: #FEF3C7;
             --police-blue: #2563EB;
             --police-dim: #DBEAFE;
+            --purple: #8B5CF6;
+            --purple-dim: #EDE9FE;
             --gray: #64748B;
             --line: #E2E8F0;
             --white: #FFFFFF;
@@ -141,29 +52,18 @@
             color: var(--ink);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        img,
-        svg,
-        canvas {
-            display: block;
-            max-width: 100%;
+            min-height: 100vh;
         }
 
         /* Top Role Banner */
         .user-topbar {
             background: var(--ink);
             color: white;
-            padding: 8px 24px;
+            padding: 6px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 12.5px;
+            font-size: 12px;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -191,6 +91,7 @@
 
         .user-topbar-right a {
             color: #94A3B8;
+            text-decoration: none;
             transition: color 0.15s;
         }
 
@@ -198,24 +99,25 @@
             color: #FFFFFF;
         }
 
-        /* Navigation Header */
+        /* Main Nav Header */
         header {
             position: sticky;
-            top: 37px;
+            top: 33px;
             z-index: 90;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--line);
         }
 
-        .nav {
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 24px;
-            max-width: 1160px;
-            margin: 0 auto;
+            gap: 16px;
         }
 
         .logo {
@@ -226,40 +128,55 @@
             font-size: 22px;
             color: var(--ink);
             letter-spacing: -0.03em;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         .logo span {
             color: var(--coral);
         }
 
-        .search-bar {
-            background: var(--paper-2);
-            border: 1px solid var(--line);
-            border-radius: 100px;
-            padding: 8px 18px;
+        /* Nav View Switcher Pills */
+        .nav-tabs {
             display: flex;
             align-items: center;
-            gap: 8px;
-            width: 280px;
-            font-size: 13px;
-            color: var(--gray);
-            transition: all 0.2s;
+            gap: 4px;
+            background: var(--paper-2);
+            padding: 4px;
+            border-radius: 100px;
+            overflow-x: auto;
         }
 
-        .search-bar:focus-within {
-            background: #FFFFFF;
-            border-color: var(--ink);
-            box-shadow: 0 0 0 3px rgba(17, 21, 40, 0.06);
-            width: 320px;
-        }
-
-        .search-bar input {
-            border: none;
+        .nav-tab-btn {
             background: none;
-            outline: none;
-            width: 100%;
-            font-size: 13px;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 100px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.18s ease;
+            white-space: nowrap;
+        }
+
+        .nav-tab-btn:hover {
             color: var(--ink);
+        }
+
+        .nav-tab-btn.active {
+            background: #FFFFFF;
+            color: var(--ink);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            font-weight: 700;
+        }
+
+        .nav-tab-btn.active.sos-tab {
+            background: var(--coral);
+            color: #FFFFFF;
         }
 
         .nav-actions {
@@ -268,49 +185,13 @@
             gap: 10px;
         }
 
-        .nav-btn {
-            background: none;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--ink);
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .nav-btn:hover {
-            background: var(--paper-2);
-        }
-
-        .btn-accident {
-            background: var(--gold-dim);
-            color: #92400E;
-            border: 1px solid rgba(217, 119, 6, 0.3);
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .btn-accident:hover {
-            background: #FDE68A;
-            transform: translateY(-1px);
-        }
-
-        .btn-sos {
+        .btn-sos-header {
             background: var(--coral);
             color: #FFFFFF;
             border: none;
-            padding: 8px 18px;
+            padding: 8px 16px;
             border-radius: 100px;
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 800;
             cursor: pointer;
             display: flex;
@@ -326,28 +207,28 @@
             50% { box-shadow: 0 4px 25px rgba(255, 90, 95, 0.55); }
         }
 
-        .btn-sos:hover {
+        .btn-sos-header:hover {
             background: #E02424;
             transform: translateY(-1px);
         }
 
-        .btn-sos:active {
-            transform: scale(0.96);
-        }
-
-        /* User Profile Pill in Header */
-        .user-nav-profile {
+        .user-nav-pill {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 4px 12px 4px 6px;
+            padding: 4px 12px 4px 5px;
             background: var(--paper-2);
-            border-radius: 100px;
             border: 1px solid var(--line);
+            border-radius: 100px;
             cursor: pointer;
+            transition: all 0.15s;
         }
 
-        .avatar-sm {
+        .user-nav-pill:hover {
+            background: #E2E8F0;
+        }
+
+        .avatar-circle {
             width: 28px;
             height: 28px;
             border-radius: 50%;
@@ -360,20 +241,33 @@
             justify-content: center;
         }
 
-        /* Layout Grid */
-        .container {
-            max-width: 1160px;
+        /* Layout Container */
+        .app-container {
+            max-width: 1200px;
             margin: 24px auto;
             padding: 0 24px;
+        }
+
+        /* View Sections */
+        .view-panel {
+            display: none;
+        }
+
+        .view-panel.active {
+            display: block;
+        }
+
+        /* Feed Layout: 2 Columns */
+        .feed-grid {
             display: grid;
             grid-template-columns: 1fr 340px;
             gap: 28px;
             align-items: start;
         }
 
-        /* Stories Row */
-        .stories-card {
-            background: var(--white);
+        /* Stories Bar */
+        .stories-bar {
+            background: #FFFFFF;
             border: 1px solid var(--line);
             border-radius: var(--radius-lg);
             padding: 16px;
@@ -381,7 +275,10 @@
             box-shadow: var(--shadow-subtle);
         }
 
-        .stories-title {
+        .stories-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
@@ -390,22 +287,22 @@
             margin-bottom: 12px;
         }
 
-        .stories-list {
+        .stories-scroll {
             display: flex;
             gap: 16px;
             overflow-x: auto;
             padding-bottom: 4px;
         }
 
-        .stories-list::-webkit-scrollbar {
+        .stories-scroll::-webkit-scrollbar {
             height: 4px;
         }
-        .stories-list::-webkit-scrollbar-thumb {
+        .stories-scroll::-webkit-scrollbar-thumb {
             background: var(--line);
             border-radius: 10px;
         }
 
-        .story-item {
+        .story-node {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -426,19 +323,11 @@
             transition: transform 0.2s;
         }
 
-        .story-ring.verified {
-            background: linear-gradient(45deg, #0F6E6E, #2DD4BF);
-        }
-
-        .story-ring.police {
-            background: linear-gradient(45deg, #2563EB, #60A5FA);
-        }
-
-        .story-item:hover .story-ring {
+        .story-node:hover .story-ring {
             transform: scale(1.06);
         }
 
-        .story-avatar {
+        .story-avatar-inner {
             width: 100%;
             height: 100%;
             border-radius: 50%;
@@ -452,7 +341,7 @@
             font-weight: 700;
         }
 
-        .story-name {
+        .story-label {
             font-size: 11.5px;
             font-weight: 600;
             color: var(--ink);
@@ -463,94 +352,103 @@
             white-space: nowrap;
         }
 
-        /* Post Creation Box */
-        .create-post-card {
-            background: var(--white);
-            border: 1px solid var(--line);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-subtle);
-        }
-
-        .create-input-row {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .create-avatar {
-            width: 42px;
-            height: 42px;
+        .add-story-btn {
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
-            background: var(--coral);
-            color: white;
-            font-size: 13px;
-            font-weight: 800;
+            background: #F1F5F9;
+            border: 2px dashed #CBD5E1;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
+            font-size: 22px;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .create-input {
-            flex: 1;
+        .add-story-btn:hover {
+            border-color: var(--coral);
+            color: var(--coral);
+            background: var(--coral-dim);
+        }
+
+        /* Create Post Card */
+        .create-post-card {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .create-post-header {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .create-post-input {
+            width: 100%;
             background: var(--paper-2);
             border: 1px solid var(--line);
-            border-radius: 100px;
-            padding: 12px 20px;
+            border-radius: 12px;
+            padding: 12px 16px;
             font-size: 13.5px;
             font-family: var(--sans);
             outline: none;
             color: var(--ink);
+            resize: vertical;
+            min-height: 60px;
             transition: all 0.2s;
         }
 
-        .create-input:focus {
+        .create-post-input:focus {
             background: #FFFFFF;
             border-color: var(--coral);
             box-shadow: 0 0 0 3px var(--coral-glow);
         }
 
-        .create-actions {
+        .category-select-row {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 14px;
-            border-top: 1px solid var(--line);
-        }
-
-        .act-btn-group {
-            display: flex;
+            flex-wrap: wrap;
             gap: 8px;
+            margin-bottom: 14px;
         }
 
-        .act-btn {
-            background: none;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 12.5px;
-            font-weight: 600;
+        .tag-pill {
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 11.5px;
+            font-weight: 700;
+            background: #F1F5F9;
             color: var(--gray);
+            border: 1px solid var(--line);
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
             transition: all 0.15s;
         }
 
-        .act-btn:hover {
-            background: var(--paper-2);
-            color: var(--ink);
+        .tag-pill.active {
+            background: var(--coral);
+            color: #FFFFFF;
+            border-color: var(--coral);
         }
 
-        .btn-publish {
+        .create-post-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid var(--line);
+        }
+
+        .btn-publish-post {
             background: var(--coral);
             color: white;
             border: none;
-            padding: 8px 20px;
+            padding: 8px 22px;
             border-radius: 100px;
             font-size: 13px;
             font-weight: 700;
@@ -558,24 +456,47 @@
             transition: all 0.2s;
         }
 
-        .btn-publish:hover {
+        .btn-publish-post:hover {
             background: #E02424;
             transform: translateY(-1px);
         }
 
-        /* Safety Feed Posts */
-        .post-card {
-            background: var(--white);
+        /* Feed Category Filter Bar */
+        .feed-filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+
+        .feed-filter-btn {
+            padding: 6px 14px;
+            border-radius: 100px;
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            color: var(--gray);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .feed-filter-btn.active {
+            background: var(--ink);
+            color: #FFFFFF;
+            border-color: var(--ink);
+        }
+
+        /* Feed Post Cards */
+        .feed-post-card {
+            background: #FFFFFF;
             border: 1px solid var(--line);
             border-radius: var(--radius-lg);
             margin-bottom: 24px;
             box-shadow: var(--shadow-card);
             overflow: hidden;
             transition: border-color 0.2s;
-        }
-
-        .post-card:hover {
-            border-color: #CBD5E1;
         }
 
         .post-header {
@@ -585,13 +506,13 @@
             justify-content: space-between;
         }
 
-        .post-user {
+        .post-author-box {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .post-avatar {
+        .post-author-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -604,7 +525,7 @@
             justify-content: center;
         }
 
-        .post-user-info .name {
+        .post-author-name {
             font-size: 14px;
             font-weight: 700;
             display: flex;
@@ -612,7 +533,7 @@
             gap: 6px;
         }
 
-        .badge {
+        .badge-role {
             font-size: 10.5px;
             font-weight: 700;
             padding: 2px 8px;
@@ -620,1233 +541,1939 @@
             text-transform: uppercase;
         }
 
-        .badge.verified {
-            background: var(--teal-dim);
-            color: var(--teal);
-        }
+        .badge-role.verified { background: var(--teal-dim); color: var(--teal); }
+        .badge-role.volunteer { background: var(--gold-dim); color: #B45309; }
+        .badge-role.police { background: var(--police-dim); color: var(--police-blue); }
+        .badge-role.user { background: #F1F5F9; color: var(--gray); }
 
-        .badge.volunteer {
-            background: var(--gold-dim);
-            color: #B45309;
-        }
-
-        .badge.police {
-            background: var(--police-dim);
-            color: var(--police-blue);
-        }
-
-        .badge.accident {
-            background: #FEE2E2;
-            color: #DC2626;
-        }
-
-        .badge.user {
-            background: #F1F5F9;
-            color: var(--gray);
-        }
-
-        .post-user-info .meta {
+        .post-meta-sub {
             font-size: 11.5px;
             color: var(--gray);
         }
 
-        .post-media {
+        .post-media-container {
             width: 100%;
+            max-height: 440px;
             background: #0B0E1B;
-            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .post-media canvas {
+        .post-media-container img {
             width: 100%;
             height: auto;
+            max-height: 440px;
+            object-fit: cover;
         }
 
         .post-body {
             padding: 16px 20px;
         }
 
-        .dispatch-strip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #FFF1F2;
-            border: 1px solid #FFE4E6;
-            color: #E11D48;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            width: 100%;
-        }
-
-        .dispatch-strip .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #E11D48;
-            box-shadow: 0 0 8px #E11D48;
-            animation: pulse 1.5s infinite;
-        }
-
-        .post-actions {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .left-acts {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .act-icon {
-            font-size: 18px;
-            cursor: pointer;
-            transition: transform 0.15s;
-            user-select: none;
-        }
-
-        .act-icon:hover {
-            transform: scale(1.2);
-        }
-
-        .act-icon.liked {
-            transform: scale(1.2);
-            filter: drop-shadow(0 2px 6px rgba(255, 90, 95, 0.4));
-        }
-
-        .likes-count {
-            font-size: 13px;
-            font-weight: 700;
+        .post-title {
+            font-size: 15px;
+            font-weight: 750;
+            color: var(--ink);
             margin-bottom: 6px;
         }
 
-        .post-caption {
+        .post-content {
             font-size: 13.5px;
-            line-height: 1.5;
-            color: #1E293B;
-            margin-bottom: 8px;
+            line-height: 1.55;
+            color: #334155;
+            margin-bottom: 12px;
         }
 
-        .comments-link {
-            font-size: 12px;
-            color: var(--gray);
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .comments-link:hover {
-            color: var(--ink);
-            text-decoration: underline;
-        }
-
-        /* Sidebar Widgets */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .sidebar-widget {
-            background: var(--white);
-            border: 1px solid var(--line);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            box-shadow: var(--shadow-subtle);
-        }
-
-        .widget-title {
+        .post-interactions {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 14px;
+            padding-top: 10px;
+            border-top: 1px solid var(--line);
+        }
+
+        .interaction-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .interact-btn {
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .interact-btn:hover {
+            color: var(--coral);
+            transform: scale(1.05);
+        }
+
+        .interact-btn.liked {
+            color: var(--coral);
+            font-weight: 700;
+        }
+
+        .interact-btn.saved {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        /* Post Comments Drawer */
+        .comments-section {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--line);
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 12.5px;
+        }
+
+        .comment-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--ink);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .comment-body {
+            background: #F8FAFC;
+            padding: 6px 12px;
+            border-radius: 12px;
+            flex: 1;
+        }
+
+        .comment-author {
+            font-weight: 700;
+            color: var(--ink);
+            margin-right: 6px;
+        }
+
+        .comment-input-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 7px 14px;
+            background: #F1F5F9;
+            border: 1px solid var(--line);
+            border-radius: 100px;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .comment-input:focus {
+            background: #FFFFFF;
+            border-color: var(--coral);
+        }
+
+        .btn-comment-send {
+            background: var(--coral);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Sidebar Widgets */
+        .sidebar-box {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .sidebar-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13.5px;
             font-weight: 800;
             color: var(--ink);
             margin-bottom: 14px;
         }
 
-        .widget-title a {
-            font-size: 12px;
-            color: var(--coral);
-            font-weight: 600;
-        }
-
-        .map-box {
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            border: 1px solid var(--line);
-            margin-bottom: 12px;
-        }
-
-        .map-info {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 12px;
-        }
-
-        .btn-simulate {
-            background: var(--paper-2);
-            border: 1px solid var(--line);
-            padding: 5px 12px;
-            border-radius: 100px;
-            font-size: 11.5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .btn-simulate:hover {
-            background: var(--coral);
+        .radar-pulse-card {
+            background: linear-gradient(135deg, #111528, #1E293B);
             color: white;
-            border-color: var(--coral);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Timeline Items */
-        .timeline-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 320px;
-            overflow-y: auto;
-            padding-right: 4px;
+        .radar-pulse-ring {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 90, 95, 0.4);
+            position: absolute;
+            right: -20px;
+            top: -20px;
+            animation: radarPing 2.5s infinite;
         }
 
-        .timeline-item {
-            padding: 10px 12px;
-            background: var(--paper-2);
-            border-radius: var(--radius-sm);
-            border-left: 3px solid var(--gray);
-            font-size: 12px;
+        @keyframes radarPing {
+            0% { transform: scale(0.6); opacity: 0.8; }
+            100% { transform: scale(1.6); opacity: 0; }
         }
 
-        .timeline-item.user { border-left-color: var(--coral); }
-        .timeline-item.volunteer { border-left-color: var(--gold); }
-        .timeline-item.police { border-left-color: var(--police-blue); }
-        .timeline-item.journalist { border-left-color: var(--teal); }
-
-        .timeline-time {
-            font-size: 10.5px;
-            font-weight: 700;
-            font-family: var(--mono);
-            color: var(--gray);
-            margin-bottom: 2px;
-        }
-
-        .timeline-text {
-            color: var(--ink);
-            line-height: 1.4;
-        }
-
-        /* Friend Connect Row */
-        .friend-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .friend-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-add {
-            background: var(--paper-2);
+        /* ================== EXPLORE / SEARCH VIEW ================== */
+        .explore-header {
+            background: #FFFFFF;
             border: 1px solid var(--line);
-            padding: 4px 12px;
-            border-radius: 100px;
-            font-size: 11.5px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.15s;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
-        .btn-add:hover {
+        .search-input-big {
+            width: 100%;
+            padding: 12px 20px 12px 42px;
+            background: var(--paper-2);
+            border: 1.5px solid var(--line);
+            border-radius: 100px;
+            font-size: 14px;
+            outline: none;
+            color: var(--ink);
+            transition: all 0.2s;
+        }
+
+        .search-input-big:focus {
+            background: #FFFFFF;
+            border-color: var(--coral);
+            box-shadow: 0 0 0 3px var(--coral-glow);
+        }
+
+        .user-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .user-card {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-subtle);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .user-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-card);
+        }
+
+        .user-card-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
             background: var(--ink);
             color: white;
-        }
-
-        /* Wellness Box */
-        .wellness-box {
-            background: #FDF2F8;
-            border: 1px solid #FCE7F3;
-            border-radius: var(--radius-md);
-            padding: 14px;
-            font-size: 12.5px;
-        }
-
-        /* SOS Shake / Trigger Modal */
-        .sos-modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(17, 21, 40, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            display: none;
+            font-size: 20px;
+            font-weight: 800;
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            margin: 0 auto 12px;
         }
 
-        .sos-modal-overlay.open {
-            display: flex;
-        }
-
-        .sos-modal-box {
-            background: #FFFFFF;
-            border-radius: 28px;
+        .btn-follow {
             width: 100%;
-            max-width: 440px;
-            padding: 32px 28px;
-            text-align: center;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
-            animation: zoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 7px;
+            border-radius: 100px;
+            font-size: 12.5px;
+            font-weight: 700;
+            border: none;
+            background: var(--coral);
+            color: white;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.15s;
         }
 
-        @keyframes zoomIn {
-            from { transform: scale(0.85); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        .btn-follow.following {
+            background: #F1F5F9;
+            color: var(--ink);
+            border: 1px solid var(--line);
         }
 
-        .sos-pulse-ring {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            background: var(--coral-dim);
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
+        /* ================== REELS VIEW ================== */
+        .reels-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .reel-card {
+            background: #0B0E1B;
+            color: white;
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             position: relative;
         }
 
-        .sos-pulse-ring::before {
-            content: '';
-            position: absolute;
-            inset: -12px;
-            border-radius: 50%;
-            border: 2px solid var(--coral);
-            animation: pulse-ring 1.8s infinite;
-        }
-
-        @keyframes pulse-ring {
-            0% { transform: scale(0.8); opacity: 1; }
-            100% { transform: scale(1.4); opacity: 0; }
-        }
-
-        .sos-countdown {
-            font-size: 48px;
-            font-weight: 800;
-            font-family: var(--mono);
-            color: var(--coral);
-            margin: 10px 0;
-        }
-
-        .sos-btn-cancel {
+        .reel-video {
             width: 100%;
-            padding: 14px;
-            background: var(--paper-2);
+            height: 520px;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .reel-overlay-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 60px;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+        }
+
+        .reel-actions-rail {
+            position: absolute;
+            bottom: 20px;
+            right: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .reel-action-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: transform 0.15s;
+        }
+
+        .reel-action-btn:hover {
+            transform: scale(1.15);
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* ================== DIRECT MESSAGES VIEW ================== */
+        .messages-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            height: 650px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .conversations-sidebar {
+            border-right: 1px solid var(--line);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .conv-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .conv-item {
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #F1F5F9;
+            transition: background 0.15s;
+        }
+
+        .conv-item:hover, .conv-item.active {
+            background: #F8FAFC;
+        }
+
+        .chat-panel {
+            display: flex;
+            flex-direction: column;
+            background: #FAFBFD;
+        }
+
+        .chat-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--line);
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .msg-bubble {
+            max-width: 70%;
+            padding: 10px 16px;
+            border-radius: 16px;
+            font-size: 13.5px;
+            line-height: 1.4;
+        }
+
+        .msg-bubble.mine {
+            align-self: flex-end;
+            background: var(--coral);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg-bubble.theirs {
+            align-self: flex-start;
+            background: #FFFFFF;
             color: var(--ink);
             border: 1px solid var(--line);
-            border-radius: 100px;
-            font-size: 14px;
-            font-weight: 700;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-input-bar {
+            padding: 14px 20px;
+            background: #FFFFFF;
+            border-top: 1px solid var(--line);
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ================== CHANNELS VIEW ================== */
+        .channel-card {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        /* ================== PROFILE & 14-SECTION ACTIVITY HUB ================== */
+        .profile-hero {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .profile-avatar-big {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: var(--coral);
+            color: white;
+            font-size: 32px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 8px 25px var(--coral-glow);
+        }
+
+        .profile-stats-row {
+            display: flex;
+            gap: 24px;
+            margin: 14px 0;
+        }
+
+        .stat-badge {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-badge .num {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        .stat-badge .lbl {
+            font-size: 12px;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        /* 14 Activity Tabs Bar */
+        .activity-tabs-bar {
+            display: flex;
+            gap: 6px;
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .activity-tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray);
             cursor: pointer;
-            margin-top: 18px;
+            border-bottom: 2.5px solid transparent;
+            white-space: nowrap;
             transition: all 0.15s;
         }
 
-        .sos-btn-cancel:hover {
-            background: var(--ink);
-            color: white;
+        .activity-tab-btn:hover {
+            color: var(--ink);
         }
 
-        /* Accident Modal */
+        .activity-tab-btn.active {
+            color: var(--coral);
+            border-bottom-color: var(--coral);
+            font-weight: 700;
+        }
+
+        /* Case Card */
+        .case-card {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .case-status-badge {
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .case-status-badge.active { background: #FEE2E2; color: #DC2626; }
+        .case-status-badge.resolved { background: #D1FAE5; color: #059669; }
+
+        .timeline-box {
+            margin-top: 14px;
+            padding-left: 14px;
+            border-left: 2px solid var(--line);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .timeline-event-item {
+            position: relative;
+            font-size: 12.5px;
+        }
+
+        .timeline-event-item::before {
+            content: '';
+            position: absolute;
+            left: -19px;
+            top: 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--coral);
+        }
+
+        /* Modals */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(17, 21, 40, 0.65);
-            backdrop-filter: blur(4px);
-            z-index: 500;
+            background: rgba(10, 14, 30, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 16px;
         }
 
-        .modal-overlay.open {
+        .modal-overlay.show {
             display: flex;
         }
 
-        .modal-box {
-            background: white;
+        .modal-card {
+            background: #FFFFFF;
             border-radius: var(--radius-lg);
             width: 100%;
-            max-width: 440px;
-            padding: 24px;
-            box-shadow: var(--shadow-elevation);
+            max-width: 500px;
+            padding: 28px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
-        .modal-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-
-        .modal-head h3 {
-            font-size: 18px;
-            font-weight: 800;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--gray);
-        }
-
-        .modal-sub {
-            font-size: 12.5px;
-            color: var(--gray);
-            margin-bottom: 16px;
-        }
-
-        .modal-loc {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: var(--teal);
-            background: var(--teal-dim);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
-        .field-label {
-            font-size: 11.5px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--gray);
-            margin: 12px 0 6px;
-        }
-
-        .field-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .chip {
-            border: 1px solid var(--line);
-            background: var(--paper-2);
-            padding: 6px 12px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            color: var(--ink);
-            transition: all 0.15s;
-        }
-
-        .chip.active {
-            background: var(--ink);
-            color: white;
-            border-color: var(--ink);
-        }
-
-        .chip.sev-active {
-            background: var(--coral);
-            color: white;
-            border-color: var(--coral);
-        }
-
-        .modal-input,
-        .modal-textarea {
-            width: 100%;
-            border: 1px solid var(--line);
-            background: var(--paper-2);
-            border-radius: 10px;
-            padding: 10px 12px;
-            font-size: 13px;
-            font-family: var(--sans);
-            outline: none;
-            color: var(--ink);
-        }
-
-        .modal-textarea {
-            resize: none;
-            height: 64px;
-        }
-
-        .btn-submit-accident {
-            width: 100%;
-            margin-top: 18px;
-            background: var(--coral);
-            color: white;
-            border: none;
-            border-radius: 100px;
-            padding: 12px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-submit-accident:hover {
-            background: #E02424;
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--ink);
-            color: #FFFFFF;
-            padding: 12px 24px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 2000;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-
-        @media (max-width: 900px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                display: none;
-            }
-            .search-bar {
-                display: none;
-            }
+        /* Responsive */
+        @media (max-width: 880px) {
+            .feed-grid { grid-template-columns: 1fr; }
+            .messages-layout { grid-template-columns: 1fr; }
+            .conversations-sidebar { display: none; }
+            .profile-hero { flex-direction: column; text-align: center; }
+            .profile-stats-row { justify-content: center; }
         }
     </style>
 </head>
 
 <body>
 
-<!-- ══════════════════════════════════════════════════ -->
-<!--        ONE-TIME REGISTRATION OVERLAY              -->
-<!-- ══════════════════════════════════════════════════ -->
-<div id="regOverlay">
-    <div class="reg-box">
-        <div class="reg-logo">⬡ PERIMETER</div>
-        <div class="reg-sub">Citizen Safety Console — One-time Registration</div>
-
-        <!-- Alert box -->
-        <div id="regAlertBox" style="display:none;background:#FEF2F2;border:1.5px solid #FECACA;color:#B91C1C;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:14px;"></div>
-
-        <div class="reg-title">Create Your Citizen Profile</div>
-        <div class="reg-desc">Enter your basic credentials once. You will be remembered automatically on this device with no biometrics required.</div>
-
-        <div class="reg-field">
-            <label class="reg-label" for="regUsername">Full Name</label>
-            <input class="reg-input" type="text" id="regUsername" placeholder="e.g. Aarohi Sharma" autocomplete="name">
-        </div>
-
-        <div class="reg-field">
-            <label class="reg-label" for="regEmergency">Primary Emergency Contact</label>
-            <input class="reg-input" type="tel" id="regEmergency" placeholder="e.g. +91 98200 12345 (Family / Guardian)">
-        </div>
-
-        <div class="reg-field">
-            <label class="reg-label" for="regPassword">Password</label>
-            <input class="reg-input" type="password" id="regPassword" placeholder="At least 6 characters">
-        </div>
-
-        <div class="reg-field">
-            <label class="reg-label" for="regConfirm">Confirm Password</label>
-            <input class="reg-input" type="password" id="regConfirm" placeholder="Re-enter your password">
-        </div>
-
-        <button class="reg-btn" onclick="submitCitizenReg()">👩 Register & Enter Citizen Feed</button>
-
-        <div class="reg-footer-link">
-            Already registered? <a href="login.html">Sign In</a> or <a href="register.html">Switch Role</a>
-        </div>
-    </div>
-</div>
-
-
-    <!-- Role Status Topbar -->
+    <!-- Top Role Banner -->
     <div class="user-topbar">
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <span>Logged in as</span>
-            <span class="user-badge-pill">👩 <span id="topbarUserName">Aarohi Sharma (Citizen)</span></span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="user-badge-pill" id="userBadgeTop">🛡️ Citizen Member</div>
+            <span style="color: #94A3B8;">GPS Safety Geofence: Active (5 km)</span>
         </div>
         <div class="user-topbar-right">
-            <span style="color: #94A3B8; font-family: var(--mono); font-size: 11px;">GEOFENCE: 5KM ACTIVE</span>
-            <a href="login.html" onclick="logout(); return false;">Switch Persona / Logout →</a>
+            <a href="volunteer.html">Volunteer View</a>
+            <a href="police.html">Police Command</a>
+            <a href="journalist.html">Press Desk</a>
+            <a href="admin.html">Admin</a>
+            <a href="#" onclick="logout(); return false;" style="color: #FF5A5F; font-weight: 700;">Logout ⏏</a>
         </div>
     </div>
 
-    <!-- Main Navigation -->
+    <!-- Main Navigation Header -->
     <header>
-        <nav class="nav">
-            <div class="logo">PERIMETER <span>.</span></div>
-
-            <div class="search-bar">
-                <span>🔍</span>
-                <input type="text" placeholder="Search friends, safe corridors, alerts...">
+        <div class="nav-container">
+            <div class="logo" onclick="switchNavView('feed')">
+                🛡️ PERIMETER <span>.</span>
             </div>
+
+            <nav class="nav-tabs">
+                <button class="nav-tab-btn active" id="tab-feed" onclick="switchNavView('feed')">🏠 Feed</button>
+                <button class="nav-tab-btn" id="tab-explore" onclick="switchNavView('explore')">🔍 Explore</button>
+                <button class="nav-tab-btn" id="tab-reels" onclick="switchNavView('reels')">🎬 Reels</button>
+                <button class="nav-tab-btn" id="tab-messages" onclick="switchNavView('messages')">💬 Messages</button>
+                <button class="nav-tab-btn" id="tab-channels" onclick="switchNavView('channels')">📢 Channels</button>
+                <button class="nav-tab-btn" id="tab-profile" onclick="switchNavView('profile')">👤 Profile</button>
+                <button class="nav-tab-btn sos-tab" id="tab-sos" onclick="switchNavView('sos')">🚨 SOS Radar</button>
+            </nav>
 
             <div class="nav-actions">
-                <button class="nav-btn" onclick="scrollToFeed()">🏠 Feed</button>
-                <button class="btn-accident" onclick="openAccidentModal()">🚗 Report Accident</button>
-                <button class="btn-sos" onclick="triggerSmartSOS()">🚨 Smart SOS</button>
-
-                <div class="user-nav-profile" onclick="toast('Citizen Profile: Verified Safe Citizen ID #8849', '🛡️')">
-                    <div class="avatar-sm" id="navAvatar">AS</div>
-                    <span style="font-size: 12.5px; font-weight: 700;" id="navUserName">Aarohi</span>
+                <button class="btn-sos-header" onclick="triggerSOSInstant()">
+                    <span>⚡ SOS</span>
+                </button>
+                <div class="user-nav-pill" onclick="switchNavView('profile')">
+                    <div class="avatar-circle" id="navUserAvatar">AS</div>
+                    <span id="navUserName" style="font-size: 13px; font-weight: 600;">Aarohi</span>
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="container">
+    <!-- Main Application Container -->
+    <main class="app-container">
 
-        <!-- Left Column: Stories, Post Box & Feed -->
-        <section class="feed-column">
+        <!-- ==================== 1. FEED VIEW ==================== -->
+        <section class="view-panel active" id="view-feed">
+            <div class="feed-grid">
+                <!-- Left: Feed Content -->
+                <div>
+                    <!-- Stories Bar -->
+                    <div class="stories-bar">
+                        <div class="stories-header">
+                            <span>24H Safety Stories & Beacons</span>
+                            <span style="color: var(--teal); font-weight: 700;">● Live Radar</span>
+                        </div>
+                        <div class="stories-scroll" id="storiesContainer">
+                            <div class="story-node" onclick="openCreateStoryModal()">
+                                <div class="add-story-btn">+</div>
+                                <span class="story-label">Your Story</span>
+                            </div>
+                            <!-- Dynamic stories loaded via JS -->
+                        </div>
+                    </div>
 
-            <!-- Stories Row -->
-            <div class="stories-card">
-                <div class="stories-title">Live Safety Stories & Safe Routes</div>
-                <div class="stories-list">
-                    <div class="story-item" onclick="openStory('Your Safety Status')">
-                        <div class="story-ring">
-                            <div class="story-avatar" style="background: var(--coral);">+</div>
+                    <!-- Create Post Box -->
+                    <div class="create-post-card">
+                        <div class="create-post-header">
+                            <div class="avatar-circle" id="createPostAvatar">AS</div>
+                            <textarea class="create-post-input" id="postContentInput" placeholder="Share a safety update, hazard alert, or safe route note..."></textarea>
                         </div>
-                        <div class="story-name">Add Story</div>
+                        <div class="category-select-row">
+                            <button type="button" class="tag-pill active" data-cat="COMMUNITY_UPDATE" onclick="selectPostCategory(this, 'COMMUNITY_UPDATE')">💬 Community</button>
+                            <button type="button" class="tag-pill" data-cat="SAFE_ROUTE" onclick="selectPostCategory(this, 'SAFE_ROUTE')">🚶 Safe Route</button>
+                            <button type="button" class="tag-pill" data-cat="HAZARD_ALERT" onclick="selectPostCategory(this, 'HAZARD_ALERT')">⚠️ Hazard Alert</button>
+                            <button type="button" class="tag-pill" data-cat="HELP_REQUEST" onclick="selectPostCategory(this, 'HELP_REQUEST')">🙋 Help Request</button>
+                            <button type="button" class="tag-pill" data-cat="POLICE_NOTICE" onclick="selectPostCategory(this, 'POLICE_NOTICE')">🚔 Police Notice</button>
+                        </div>
+                        <div class="create-post-footer">
+                            <div style="display: flex; gap: 10px; font-size: 12px; color: var(--gray);">
+                                <span style="cursor: pointer;" onclick="promptMediaUrl()">📷 Add Photo URL</span>
+                                <span id="attachedMediaIndicator" style="display: none; color: var(--teal); font-weight: 700;">✓ Media Attached</span>
+                            </div>
+                            <button class="btn-publish-post" onclick="publishPost()">Post Update →</button>
+                        </div>
                     </div>
-                    <div class="story-item" onclick="openStory('Rhea Nair (Press)')">
-                        <div class="story-ring verified">
-                            <div class="story-avatar" style="background: var(--teal);">RN</div>
-                        </div>
-                        <div class="story-name">Rhea (Press)</div>
+
+                    <!-- Category Filters -->
+                    <div class="feed-filter-bar">
+                        <button class="feed-filter-btn active" onclick="filterFeed(this, 'ALL')">All Updates</button>
+                        <button class="feed-filter-btn" onclick="filterFeed(this, 'FOLLOWING')">Following</button>
+                        <button class="feed-filter-btn" onclick="filterFeed(this, 'ALERTS')">Safety Alerts</button>
+                        <button class="feed-filter-btn" onclick="filterFeed(this, 'POLICE')">Police Bulletins</button>
+                        <button class="feed-filter-btn" onclick="filterFeed(this, 'HELP_REQUEST')">Help Requests</button>
                     </div>
-                    <div class="story-item" onclick="openStory('Priya D. (Volunteer)')">
-                        <div class="story-ring">
-                            <div class="story-avatar" style="background: var(--gold);">PD</div>
-                        </div>
-                        <div class="story-name">Priya (Vol)</div>
-                    </div>
-                    <div class="story-item" onclick="openStory('Inspector Patil (Police)')">
-                        <div class="story-ring police">
-                            <div class="story-avatar" style="background: var(--police-blue);">IP</div>
-                        </div>
-                        <div class="story-name">Police Unit</div>
-                    </div>
-                    <div class="story-item" onclick="openStory('Safe Corridor MG Road')">
-                        <div class="story-ring verified">
-                            <div class="story-avatar" style="background: #0D9488;">📍</div>
-                        </div>
-                        <div class="story-name">MG Route</div>
+
+                    <!-- Feed Posts List -->
+                    <div id="feedPostsList">
+                        <!-- Loaded dynamically from API -->
                     </div>
                 </div>
+
+                <!-- Right: Safety Radar Sidebar -->
+                <aside>
+                    <div class="sidebar-box">
+                        <div class="sidebar-title">
+                            <span>🚨 5 km Active Radar</span>
+                            <span style="color: var(--coral); font-size: 11px;">● LIVE</span>
+                        </div>
+                        <div class="radar-pulse-card">
+                            <div class="radar-pulse-ring"></div>
+                            <div style="font-size: 14px; font-weight: 800; margin-bottom: 4px;">Smart SOS & Geofence</div>
+                            <div style="font-size: 12px; opacity: 0.85; margin-bottom: 12px;">Active patrol units & 14 verified volunteers within 5 km.</div>
+                            <button class="btn-sos-header" style="width: 100%; justify-content: center;" onclick="triggerSOSInstant()">
+                                ⚡ Trigger Emergency SOS
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <div class="sidebar-title">
+                            <span>📢 Verified Broadcasts</span>
+                            <a href="#" onclick="switchNavView('channels'); return false;" style="color: var(--coral); font-size: 12px; text-decoration: none;">View All →</a>
+                        </div>
+                        <div id="sidebarChannelsList">
+                            <!-- Loaded from API -->
+                        </div>
+                    </div>
+                </aside>
             </div>
-
-            <!-- Create Post Card -->
-            <div class="create-post-card">
-                <div class="create-input-row">
-                    <div class="create-avatar" id="postBoxAvatar">AS</div>
-                    <input type="text" class="create-input" id="postInput"
-                        placeholder="Share a safety update, incident alert, or ask for help...">
-                </div>
-                <div class="create-actions">
-                    <div class="act-btn-group">
-                        <button class="act-btn" onclick="toast('Photo & video attachment modal opened', '📷')">📷 Photo / Video</button>
-                        <button class="act-btn" onclick="tagSafeLocation()">📍 Tag Safe Location</button>
-                        <button class="act-btn" onclick="openAccidentModal()">🚗 Accident</button>
-                    </div>
-                    <button class="btn-publish" onclick="publishCitizenPost()">Publish Post</button>
-                </div>
-            </div>
-
-            <!-- Feed List -->
-            <div id="feedList">
-
-                <!-- Post 1: Journalist Verified Safe Corridor -->
-                <article class="post-card">
-                    <div class="post-header">
-                        <div class="post-user">
-                            <div class="post-avatar" style="background: var(--teal);">RN</div>
-                            <div class="post-user-info">
-                                <div class="name">Rhea Nair <span class="badge verified">Verified Reporter</span></div>
-                                <div class="meta">MG Road Sector · 12 mins ago</div>
-                            </div>
-                        </div>
-                        <div style="cursor: pointer; color: var(--gray);" onclick="toast('Options: Report, Save or Copy Link', '•••')">•••</div>
-                    </div>
-
-                    <div class="post-media">
-                        <canvas id="mediaCanvas1" width="600" height="300"></canvas>
-                    </div>
-
-                    <div class="post-body">
-                        <div class="post-actions">
-                            <div class="left-acts">
-                                <span class="act-icon" onclick="toggleLike(this, 342)">❤️</span>
-                                <span class="act-icon" onclick="toast('Opening verified discussion thread...', '💬')">💬</span>
-                                <span class="act-icon" onclick="toast('Safe route link copied to clipboard!', '↗️')">↗️</span>
-                            </div>
-                            <span class="act-icon" onclick="toggleBookmark(this)">🔖</span>
-                        </div>
-                        <div class="likes-count"><span class="like-number">342</span> likes</div>
-                        <div class="post-caption">
-                            <b>Rhea Nair</b> Verified safe corridor established near MG Road metro station. Volunteer night patrols active until 2 AM. Walk safely!
-                        </div>
-                        <div class="comments-link" onclick="toast('Loaded 48 citizen safety comments', '💬')">View all 48 comments</div>
-                    </div>
-                </article>
-
-                <!-- Post 2: Volunteer Warning -->
-                <article class="post-card">
-                    <div class="post-header">
-                        <div class="post-user">
-                            <div class="post-avatar" style="background: var(--gold);">PD</div>
-                            <div class="post-user-info">
-                                <div class="name">Priya Deshmukh <span class="badge volunteer">Verified Volunteer</span></div>
-                                <div class="meta">Koramangala 4th Block · 45 mins ago</div>
-                            </div>
-                        </div>
-                        <div style="cursor: pointer; color: var(--gray);" onclick="toast('Options: Report, Save or Copy Link', '•••')">•••</div>
-                    </div>
-
-                    <div class="post-media">
-                        <canvas id="mediaCanvas2" width="600" height="300"></canvas>
-                    </div>
-
-                    <div class="post-body">
-                        <div class="post-actions">
-                            <div class="left-acts">
-                                <span class="act-icon" onclick="toggleLike(this, 512)">❤️</span>
-                                <span class="act-icon" onclick="toast('Opening discussion thread...', '💬')">💬</span>
-                                <span class="act-icon" onclick="toast('Warning link copied to clipboard!', '↗️')">↗️</span>
-                            </div>
-                            <span class="act-icon" onclick="toggleBookmark(this)">🔖</span>
-                        </div>
-                        <div class="likes-count"><span class="like-number">512</span> likes</div>
-                        <div class="post-caption">
-                            <b>Priya Deshmukh</b> ⚠️ Unlit street stretch near the 4th block park. Avoid walking alone post 9 PM. Volunteer escorts available nearby—send an alert if needed!
-                        </div>
-                        <div class="comments-link" onclick="toast('Loaded 89 responses', '💬')">View all 89 comments</div>
-                    </div>
-                </article>
-
-            </div>
-
         </section>
 
-        <!-- Right Sidebar: Safety Heatmap, Unified Timeline, Guardians & Wellness -->
-        <aside class="sidebar">
-
-            <!-- Heatmap Mini-Widget -->
-            <div class="sidebar-widget">
-                <div class="widget-title">
-                    <span>📍 Safety Heatmap & Zones</span>
-                    <a href="#" onclick="toast('Full screen GIS Heatmap view opening...', '🗺️'); return false;">Expand</a>
-                </div>
-                <div class="map-box">
-                    <canvas id="miniMapCanvas" width="300" height="180"></canvas>
-                </div>
-                <div class="map-info">
-                    <span>Zone: <b style="color: var(--teal);" id="zoneStatusText">Safe Corridor</b></span>
-                    <button class="btn-simulate" onclick="simulateUnsafeMovement()">Simulate Risk</button>
+        <!-- ==================== 2. EXPLORE / SEARCH VIEW ==================== -->
+        <section class="view-panel" id="view-explore">
+            <div class="explore-header">
+                <div style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Explore Safety Community</div>
+                <div style="font-size: 13px; color: var(--gray); margin-bottom: 14px;">Find neighbors, verified emergency volunteers, police command precincts, and journalists.</div>
+                <div style="position: relative;">
+                    <span style="position: absolute; left: 16px; top: 13px; font-size: 15px;">🔍</span>
+                    <input type="text" class="search-input-big" id="exploreSearchInput" placeholder="Search by name, @username, role (volunteer/police), or location..." oninput="handleExploreSearch(this.value)">
                 </div>
             </div>
 
-            <!-- Unified Timeline Widget -->
-            <div class="sidebar-widget">
-                <div class="widget-title">
-                    <span>⚡ Unified Incident Timeline</span>
-                </div>
-                <p style="font-size: 11.5px; color: var(--gray); margin-bottom: 12px;">Real-time synchronized updates across Volunteers, Police, and Press.</p>
-                <div class="timeline-container" id="timelineContainer">
-                    <div class="timeline-item user">
-                        <div class="timeline-time">10:42 AM · Citizen SOS</div>
-                        <div class="timeline-text">Motion SOS triggered in Sector 4. Coordinates routed to 5km responders.</div>
-                    </div>
-                    <div class="timeline-item volunteer">
-                        <div class="timeline-time">10:43 AM · Volunteer</div>
-                        <div class="timeline-text">Volunteer Priya D. accepted dispatch. Trajectory logged.</div>
-                    </div>
-                    <div class="timeline-item police">
-                        <div class="timeline-time">10:45 AM · Police</div>
-                        <div class="timeline-text">Patrol Unit #4 arrived on scene. User secured safely.</div>
-                    </div>
-                </div>
+            <div class="user-grid" id="exploreUsersGrid">
+                <!-- Loaded dynamically -->
             </div>
+        </section>
 
-            <!-- Connect Helpers -->
-            <div class="sidebar-widget">
-                <div class="widget-title">
-                    <span>👥 Trusted Guardians Nearby</span>
+        <!-- ==================== 3. REELS VIEW ==================== -->
+        <section class="view-panel" id="view-reels">
+            <div style="display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin: 0 auto 16px;">
+                <div style="font-size: 20px; font-weight: 800;">Safety Reels</div>
+                <button class="btn-publish-post" style="padding: 6px 14px; font-size: 12px;" onclick="openCreateReelModal()">+ Upload Reel</button>
+            </div>
+            <div class="reels-container" id="reelsContainer">
+                <!-- Loaded dynamically -->
+            </div>
+        </section>
+
+        <!-- ==================== 4. DIRECT MESSAGES VIEW ==================== -->
+        <section class="view-panel" id="view-messages">
+            <div class="messages-layout">
+                <div class="conversations-sidebar">
+                    <div style="padding: 16px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 16px; font-weight: 800;">Messages</span>
+                        <button class="btn-publish-post" style="padding: 4px 10px; font-size: 11px;" onclick="promptNewConversation()">+ New Chat</button>
+                    </div>
+                    <div class="conv-list" id="conversationsList">
+                        <!-- Loaded dynamically -->
+                    </div>
                 </div>
-                <div class="friend-row">
-                    <div class="friend-info">
-                        <div class="post-avatar" style="width: 32px; height: 32px; font-size: 11px; background: var(--coral);">SK</div>
-                        <div>
-                            <div style="font-size: 13px; font-weight: 700;">Sneha Kapoor</div>
-                            <div style="font-size: 11px; color: var(--gray);">Verified Volunteer · 0.8km</div>
+
+                <div class="chat-panel">
+                    <div class="chat-header">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="avatar-circle" id="chatHeaderAvatar">P</div>
+                            <div>
+                                <div id="chatHeaderName" style="font-size: 14px; font-weight: 700;">Select a conversation</div>
+                                <div id="chatHeaderStatus" style="font-size: 11px; color: var(--teal); font-weight: 600;">Secure Perimeter Channel</div>
+                            </div>
                         </div>
                     </div>
-                    <button class="btn-add" onclick="addGuardian(this)">+ Add</button>
-                </div>
-                <div class="friend-row">
-                    <div class="friend-info">
-                        <div class="post-avatar" style="width: 32px; height: 32px; font-size: 11px; background: var(--teal);">AR</div>
-                        <div>
-                            <div style="font-size: 13px; font-weight: 700;">Ananya Rao</div>
-                            <div style="font-size: 11px; color: var(--gray);">Community Guardian · 1.2km</div>
+
+                    <div class="chat-messages" id="chatMessagesContainer">
+                        <div style="text-align: center; color: var(--gray); margin-top: 40px; font-size: 13px;">
+                            Select a chat or start a conversation with a verified responder.
                         </div>
                     </div>
-                    <button class="btn-add" onclick="addGuardian(this)">+ Add</button>
+
+                    <div class="chat-input-bar">
+                        <input type="text" class="search-input-big" id="chatTextInput" placeholder="Type an encrypted message..." style="padding-left: 16px;" onkeydown="if(event.key==='Enter') sendChatMessage()">
+                        <button class="btn-publish-post" onclick="sendChatMessage()">Send →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 5. BROADCAST CHANNELS VIEW ==================== -->
+        <section class="view-panel" id="view-channels">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <div style="font-size: 22px; font-weight: 800;">Official Broadcast Channels</div>
+                    <div style="font-size: 13px; color: var(--gray);">Subscribe to one-to-many official safety bulletins, investigative dispatches, and emergency alerts.</div>
                 </div>
             </div>
 
-            <!-- Wellness Journal -->
-            <div class="sidebar-widget">
-                <div class="widget-title">
-                    <span>🌸 Women Wellness</span>
+            <div id="channelsViewList">
+                <!-- Loaded dynamically -->
+            </div>
+        </section>
+
+        <!-- ==================== 6. SOS RADAR & EMERGENCY VIEW ==================== -->
+        <section class="view-panel" id="view-sos">
+            <div style="background: #FFFFFF; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 32px; text-align: center; max-width: 650px; margin: 0 auto; box-shadow: var(--shadow-card);">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--coral-dim); color: var(--coral); font-size: 38px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                    🚨
                 </div>
-                <p style="font-size: 12px; color: var(--gray); margin-bottom: 8px;">Private safety check-ins and cycle tracking.</p>
-                <div class="wellness-box">
-                    <div>Status: <b>Day 18 (Luteal Phase)</b></div>
-                    <div style="color: var(--teal); margin-top: 4px; font-size: 11.5px; font-weight: 600;">✔ Private Safety Journal Encrypted</div>
+                <h1 style="font-size: 26px; font-weight: 800; margin-bottom: 6px;">Instant Emergency SOS Dispatch</h1>
+                <p style="font-size: 13.5px; color: var(--gray); margin-bottom: 24px;">
+                    Triggering sends your real-time GPS coordinates to all nearby police patrol units and verified volunteers within a 5 km spatial radius.
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    <button class="btn-sos-header" style="padding: 16px; font-size: 16px; justify-content: center;" onclick="triggerSOSInstant()">
+                        ⚡ HOLD OR TAP: TRIGGER 5KM GEOFENCE SOS
+                    </button>
+                    <button style="padding: 12px; border-radius: 100px; border: 1px solid var(--line); background: #F8FAFC; font-weight: 700; color: #475569; cursor: pointer;" onclick="openAccidentModal()">
+                        🚗 Report Accident / Collision Dispatch
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 7. PROFILE & 14-SECTION ACTIVITY HUB ==================== -->
+        <section class="view-panel" id="view-profile">
+            <!-- Profile Hero -->
+            <div class="profile-hero">
+                <div class="profile-avatar-big" id="profileAvatarBig">AS</div>
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <h2 style="font-size: 24px; font-weight: 800;" id="profileNameBig">Aarohi Sharma</h2>
+                        <span class="badge-role verified" id="profileRoleBadge">Citizen User</span>
+                        <button style="padding: 4px 12px; border-radius: 100px; border: 1px solid var(--line); background: var(--paper-2); font-size: 12px; font-weight: 700; cursor: pointer;" onclick="openEditProfileModal()">✏️ Edit Profile</button>
+                    </div>
+                    <div style="font-size: 13.5px; color: var(--gray); font-family: var(--mono); margin-top: 2px;" id="profileUsername">@aarohi_sharma</div>
+                    <p style="font-size: 13.5px; color: #334155; margin-top: 8px;" id="profileBio">Active community safety member in Bandra West.</p>
+                    <div style="font-size: 12px; color: var(--gray); margin-top: 4px;">📍 <span id="profileLocation">Bandra West, Mumbai</span></div>
+
+                    <div class="profile-stats-row">
+                        <div class="stat-badge"><span class="num" id="statPostsCount">0</span><span class="lbl">Posts</span></div>
+                        <div class="stat-badge"><span class="num" id="statFollowersCount">0</span><span class="lbl">Followers</span></div>
+                        <div class="stat-badge"><span class="num" id="statFollowingCount">0</span><span class="lbl">Following</span></div>
+                        <div class="stat-badge"><span class="num" id="statCasesCount">0</span><span class="lbl">Cases Filed</span></div>
+                    </div>
                 </div>
             </div>
 
-        </aside>
+            <!-- 14 Activity Switcher Tabs -->
+            <div class="activity-tabs-bar">
+                <button class="activity-tab-btn active" onclick="switchProfileActivity(this, 'my-posts')">📝 My Posts</button>
+                <button class="activity-tab-btn" onclick="switchProfileActivity(this, 'my-cases')">🆘 My SOS Cases & Follow-ups</button>
+                <button class="activity-tab-btn" onclick="switchProfileActivity(this, 'my-liked')">❤️ Posts I Liked</button>
+                <button class="activity-tab-btn" onclick="switchProfileActivity(this, 'my-saved')">🔖 Saved Posts</button>
+                <button class="activity-tab-btn" onclick="switchProfileActivity(this, 'my-following')">👥 Following</button>
+                <button class="activity-tab-btn" onclick="switchProfileActivity(this, 'my-followers')">🌟 Followers</button>
+                <button class="activity-tab-btn" onclick="switchProfileActivity(this, 'follow-requests')">📥 Follow Requests</button>
+            </div>
+
+            <!-- Activity Container -->
+            <div id="profileActivityContent">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
 
     </main>
 
-    <!-- SMART SOS COUNTDOWN MODAL -->
-    <div class="sos-modal-overlay" id="sosModal">
-        <div class="sos-modal-box">
-            <div class="sos-pulse-ring">🚨</div>
-            <h2 style="font-size: 22px; font-weight: 800; color: var(--ink);">EMERGENCY SOS TRIGGERED</h2>
-            <p style="font-size: 13px; color: var(--gray); margin-top: 6px;">
-                Broadcasting your live GPS to 5km radius verified responders and City Police.
-            </p>
-            <div class="sos-countdown" id="sosTimer">3</div>
-            <p style="font-size: 11px; color: var(--gray);">Siren, audio recording & dispatch will activate when countdown hits 0.</p>
-            <button class="sos-btn-cancel" onclick="cancelSOS()">✕ Cancel False Alarm</button>
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" id="editProfileModal">
+        <div class="modal-card">
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 14px;">Edit Profile</h3>
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Full Name</label>
+                <input type="text" id="editNameInput" class="search-input-big" style="border-radius: 10px; margin-top: 4px; padding-left: 14px;">
+            </div>
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Username (@handle)</label>
+                <input type="text" id="editUsernameInput" class="search-input-big" style="border-radius: 10px; margin-top: 4px; padding-left: 14px;">
+            </div>
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Bio</label>
+                <textarea id="editBioInput" class="create-post-input" style="min-height: 70px; margin-top: 4px;"></textarea>
+            </div>
+            <div style="margin-bottom: 16px;">
+                <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Home Area / Sector</label>
+                <input type="text" id="editLocationInput" class="search-input-big" style="border-radius: 10px; margin-top: 4px; padding-left: 14px;">
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button style="padding: 8px 16px; border-radius: 100px; border: 1px solid var(--line); background: #F1F5F9; font-weight: 600; cursor: pointer;" onclick="closeModal('editProfileModal')">Cancel</button>
+                <button class="btn-publish-post" onclick="saveProfileUpdates()">Save Changes</button>
+            </div>
         </div>
     </div>
 
-    <!-- ACCIDENT REPORT MODAL -->
+    <!-- Create Story Modal with Poll -->
+    <div class="modal-overlay" id="createStoryModal">
+        <div class="modal-card">
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 14px;">Publish 24H Safety Story</h3>
+            <textarea id="storyCaptionInput" class="create-post-input" placeholder="What's your safety status right now? (e.g. Walking home via Linking Road safe corridor)"></textarea>
+            
+            <div style="margin: 14px 0;">
+                <label style="font-size: 11.5px; font-weight: 700; text-transform: uppercase; color: var(--coral);">Optional Interactive Poll:</label>
+                <input type="text" id="storyPollQuestion" class="search-input-big" placeholder="Poll Question (e.g. Is your street lit tonight?)" style="border-radius: 8px; margin-top: 4px; padding-left: 12px; margin-bottom: 8px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="text" id="storyPollOptionA" class="search-input-big" placeholder="Option A (e.g. Yes)" style="border-radius: 8px; padding-left: 12px;">
+                    <input type="text" id="storyPollOptionB" class="search-input-big" placeholder="Option B (e.g. No)" style="border-radius: 8px; padding-left: 12px;">
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
+                <button style="padding: 8px 16px; border-radius: 100px; border: 1px solid var(--line); background: #F1F5F9; font-weight: 600; cursor: pointer;" onclick="closeModal('createStoryModal')">Cancel</button>
+                <button class="btn-publish-post" onclick="publishStory()">Publish Story (24h) →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Story Viewer Modal -->
+    <div class="modal-overlay" id="viewStoryModal">
+        <div class="modal-card" style="background: linear-gradient(135deg, #111528, #1E293B); color: white; border: 1px solid rgba(255,255,255,0.15);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="avatar-circle" id="viewStoryAvatar">U</div>
+                    <div>
+                        <div id="viewStoryAuthor" style="font-size: 14px; font-weight: 700;">Author</div>
+                        <div id="viewStoryTag" style="font-size: 11px; color: #5EEAD4;">SAFE STATUS</div>
+                    </div>
+                </div>
+                <button onclick="closeModal('viewStoryModal')" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">✕</button>
+            </div>
+
+            <div id="viewStoryCaption" style="font-size: 16px; line-height: 1.5; margin-bottom: 20px; font-weight: 500;">Story content</div>
+
+            <!-- Interactive Poll Viewer -->
+            <div id="viewStoryPollBox" style="display: none; background: rgba(255,255,255,0.08); padding: 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.15);">
+                <div id="viewStoryPollQ" style="font-weight: 700; margin-bottom: 10px; font-size: 13.5px;">Poll Question</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <button id="pollBtnA" style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; font-weight: 700; cursor: pointer;" onclick="voteOnCurrentStory('A')">Option A</button>
+                    <button id="pollBtnB" style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; font-weight: 700; cursor: pointer;" onclick="voteOnCurrentStory('B')">Option B</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Reel Modal -->
+    <div class="modal-overlay" id="createReelModal">
+        <div class="modal-card">
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 14px;">Upload Safety Reel (up to 90s)</h3>
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Caption</label>
+                <input type="text" id="reelCaptionInput" class="search-input-big" placeholder="e.g. 3 Quick Safety Steps at Bandra Station" style="border-radius: 8px; padding-left: 12px;">
+            </div>
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Video URL (MP4 / WebM)</label>
+                <input type="url" id="reelVideoUrlInput" class="search-input-big" placeholder="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" style="border-radius: 8px; padding-left: 12px;">
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
+                <button style="padding: 8px 16px; border-radius: 100px; border: 1px solid var(--line); background: #F1F5F9; font-weight: 600; cursor: pointer;" onclick="closeModal('createReelModal')">Cancel</button>
+                <button class="btn-publish-post" onclick="publishReel()">Upload Reel →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accident Report Modal -->
     <div class="modal-overlay" id="accidentModal">
-        <div class="modal-box">
-            <div class="modal-head">
-                <h3>🚗 Report Vehicle Accident</h3>
-                <button class="modal-close" onclick="closeAccidentModal()">✕</button>
+        <div class="modal-card">
+            <h3 style="font-size: 18px; font-weight: 800; color: #DC2626; margin-bottom: 14px;">🚗 Report Accident / Collision</h3>
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Incident Severity</label>
+                <select id="accidentSeverity" class="search-input-big" style="border-radius: 8px; padding-left: 12px;">
+                    <option value="CRITICAL">CRITICAL (Ambulance & PCR required)</option>
+                    <option value="HIGH">HIGH (Major Vehicle Collision)</option>
+                    <option value="MEDIUM">MEDIUM (Minor Fender / Road Obstruction)</option>
+                </select>
             </div>
-            <div class="modal-sub">Directly alerts Traffic Police, Ambulance dispatch & nearby volunteers.</div>
-
-            <div class="modal-loc">📍 Auto-tagged GPS: MG Road Junction, Bengaluru</div>
-
-            <div class="field-label">Vehicle Type Involved</div>
-            <div class="field-row" id="vehicleChips">
-                <div class="chip" onclick="selectChip(this, 'vehicleChips')">🚗 Car</div>
-                <div class="chip" onclick="selectChip(this, 'vehicleChips')">🏍️ Two-wheeler</div>
-                <div class="chip" onclick="selectChip(this, 'vehicleChips')">🚌 Bus</div>
-                <div class="chip" onclick="selectChip(this, 'vehicleChips')">🚚 Truck</div>
-                <div class="chip" onclick="selectChip(this, 'vehicleChips')">🚶 Pedestrian</div>
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Vehicle / Landmark Details</label>
+                <textarea id="accidentNotes" class="create-post-input" placeholder="e.g. Two-wheeler collision near Metro Pillar #42. Two riders injured."></textarea>
             </div>
-
-            <div class="field-label">Severity Level</div>
-            <div class="field-row" id="severityChips">
-                <div class="chip" onclick="selectSeverity(this, 'Minor')">Minor</div>
-                <div class="chip" onclick="selectSeverity(this, 'Injuries Reported')">Injuries Reported</div>
-                <div class="chip" onclick="selectSeverity(this, 'Critical / Trapped')">Critical / Trapped</div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
+                <button style="padding: 8px 16px; border-radius: 100px; border: 1px solid var(--line); background: #F1F5F9; font-weight: 600; cursor: pointer;" onclick="closeModal('accidentModal')">Cancel</button>
+                <button class="btn-sos-header" style="background: #DC2626;" onclick="submitAccidentReport()">Dispatch Emergency Units →</button>
             </div>
-
-            <div class="field-label">Vehicles / People Involved</div>
-            <input type="text" class="modal-input" id="accidentCount" placeholder="e.g. 2 cars, 3 passengers">
-
-            <div class="field-label">Description (Optional)</div>
-            <textarea class="modal-textarea" id="accidentDesc" placeholder="Road blocked, fuel leak, fire risk..."></textarea>
-
-            <button class="btn-submit-accident" onclick="submitAccidentReport()">Alert Emergency Services Now</button>
         </div>
     </div>
 
-    <!-- Global Toast -->
-    <div class="toast" id="toast">
-        <span id="toastIcon">✨</span>
-        <span id="toastMsg">Notification message</span>
-    </div>
-
+    <script src="js/api.js"></script>
     <script>
-        // ── ONE-TIME REGISTRATION LOGIC ──
-        const STORAGE_KEY = 'perimeter_user_profile';
+        let currentUser = null;
+        let selectedCategory = 'COMMUNITY_UPDATE';
+        let attachedMediaUrl = null;
+        let activeStoryId = null;
+        let activeConvId = null;
 
-        function loadSession() {
-            // First check universal session
-            try {
-                const universalSession = JSON.parse(localStorage.getItem('perimeter_session'));
-                if (universalSession && universalSession.name) {
-                    return { username: universalSession.name, email: universalSession.email };
-                }
-            } catch (e) {}
+        window.addEventListener('DOMContentLoaded', async () => {
+            currentUser = await guardProtectedPage(['user', 'admin']);
+            if (!currentUser) return;
 
-            // Fallback to role profile
-            try {
-                const profile = JSON.parse(localStorage.getItem(STORAGE_KEY));
-                if (profile && profile.username) return profile;
-            } catch (e) {}
-            return null;
-        }
+            // Render user badge & header info
+            document.getElementById('navUserName').textContent = currentUser.name.split(' ')[0];
+            document.getElementById('navUserAvatar').textContent = currentUser.avatar || 'AS';
+            document.getElementById('createPostAvatar').textContent = currentUser.avatar || 'AS';
+            document.getElementById('userBadgeTop').textContent = `🛡️ ${currentUser.badge_title || 'Citizen Member'}`;
 
-        function initApp(profile) {
-            const userName  = profile.username || 'Citizen';
-            const userAvatar = (profile.username || 'U').slice(0,2).toUpperCase();
-            document.getElementById('topbarUserName').textContent = `${userName} (Citizen User)`;
-            document.getElementById('navUserName').textContent = userName.split(' ')[0];
-            document.getElementById('navAvatar').textContent = userAvatar;
-            document.getElementById('postBoxAvatar').textContent = userAvatar;
-        }
-
-        function logout() {
-            localStorage.removeItem(STORAGE_KEY);
-            localStorage.removeItem('perimeter_session');
-            window.location.href = 'login.html';
-        }
-
-        function submitCitizenReg() {
-            const username = document.getElementById('regUsername').value.trim();
-            const emergency = document.getElementById('regEmergency').value.trim();
-            const password = document.getElementById('regPassword').value;
-            const confirm  = document.getElementById('regConfirm').value;
-
-            if (!username) { regAlert('Please enter your full name.'); return; }
-            if (password.length < 6) { regAlert('Password must be at least 6 characters.'); return; }
-            if (password !== confirm) { regAlert('Passwords do not match.'); return; }
-
-            const profile = {
-                username: username,
-                emergencyContact: emergency,
-                registeredAt: new Date().toISOString()
-            };
-
-            // Save both role profile & universal session
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
-            localStorage.setItem('perimeter_session', JSON.stringify({
-                role: 'user',
-                name: username,
-                badge: 'Citizen User',
-                avatar: username.slice(0, 2).toUpperCase(),
-                emergencyContact: emergency,
-                token: 'jwt_token_' + Date.now(),
-                loginTime: new Date().toISOString()
-            }));
-
-            document.getElementById('regOverlay').classList.remove('show');
-            initApp(profile);
-            toast(`Welcome to PERIMETER, ${username}! Profile saved.`, '🎉');
-        }
-
-        function regAlert(msg) {
-            const el = document.getElementById('regAlertBox');
-            el.textContent = msg;
-            el.style.display = 'block';
-            setTimeout(() => { el.style.display = 'none'; }, 3500);
-        }
-
-        // ── Bootstrap ──
-        window.addEventListener('DOMContentLoaded', () => {
-            const profile = loadSession();
-            if (profile && profile.username) {
-                initApp(profile);
-            } else {
-                document.getElementById('regOverlay').classList.add('show');
-            }
+            // Load initial data
+            loadFeed('ALL');
+            loadStories();
+            loadSidebarChannels();
+            loadProfileData();
         });
 
-        // Post Visuals Canvas Rendering
-        function renderPostVisuals() {
-            const c1 = document.getElementById('mediaCanvas1');
-            if (c1) {
-                const ctx = c1.getContext('2d');
-                ctx.fillStyle = '#0F172A'; ctx.fillRect(0, 0, 600, 300);
-                ctx.strokeStyle = '#0F6E6E'; ctx.lineWidth = 4;
-                ctx.beginPath(); ctx.moveTo(60, 240); ctx.lineTo(200, 100); ctx.lineTo(380, 160); ctx.lineTo(540, 50); ctx.stroke();
-                ctx.fillStyle = '#2DD4BF'; ctx.beginPath(); ctx.arc(540, 50, 10, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 15px Inter'; ctx.fillText('📍 VERIFIED SAFE PATROL ROUTE ACTIVE', 36, 36);
-            }
+        /* View Navigation Switcher */
+        function switchNavView(viewName) {
+            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
 
-            const c2 = document.getElementById('mediaCanvas2');
-            if (c2) {
-                const ctx = c2.getContext('2d');
-                ctx.fillStyle = '#1E1B2E'; ctx.fillRect(0, 0, 600, 300);
-                ctx.fillStyle = 'rgba(255, 90, 95, 0.35)'; ctx.beginPath(); ctx.arc(300, 150, 90, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = '#FF5A5F'; ctx.beginPath(); ctx.arc(300, 150, 18, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 15px Inter'; ctx.fillText('⚠️ CAUTION: UNLIT AREA REPORTED BY VOLUNTEERS', 36, 36);
-            }
+            const targetView = document.getElementById(`view-${viewName}`);
+            const targetTab = document.getElementById(`tab-${viewName}`);
+            if (targetView) targetView.classList.add('active');
+            if (targetTab) targetTab.classList.add('active');
+
+            if (viewName === 'explore') loadExploreUsers('');
+            else if (viewName === 'reels') loadReels();
+            else if (viewName === 'messages') loadConversations();
+            else if (viewName === 'channels') loadChannelsView();
+            else if (viewName === 'profile') loadProfileData();
         }
 
-        // Mini Map Heatmap
-        let userGps = { x: 75, y: 110 };
-        function renderMiniMap() {
-            const c = document.getElementById('miniMapCanvas');
-            if (!c) return;
-            const ctx = c.getContext('2d');
-            ctx.fillStyle = '#0F172A'; ctx.fillRect(0, 0, 300, 180);
-            ctx.strokeStyle = '#1E293B'; ctx.lineWidth = 1;
+        /* ------------------ FEED & STORIES ------------------ */
 
-            for (let x = 0; x < 300; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 180); ctx.stroke(); }
-            for (let y = 0; y < 180; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(300, y); ctx.stroke(); }
-
-            // High risk glow
-            let grad = ctx.createRadialGradient(220, 70, 4, 220, 70, 50);
-            grad.addColorStop(0, 'rgba(255, 90, 95, 0.85)');
-            grad.addColorStop(1, 'rgba(255, 90, 95, 0)');
-            ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(220, 70, 50, 0, Math.PI * 2); ctx.fill();
-
-            // User location pin
-            ctx.fillStyle = '#38BDF8'; ctx.beginPath(); ctx.arc(userGps.x, userGps.y, 6, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#FFFFFF'; ctx.font = '10px Inter'; ctx.fillText(' You', userGps.x + 8, userGps.y + 3);
-        }
-
-        function simulateUnsafeMovement() {
-            userGps = { x: 215, y: 72 };
-            renderMiniMap();
-            document.getElementById('zoneStatusText').textContent = '⚠️ Elevated Risk Zone';
-            document.getElementById('zoneStatusText').style.color = 'var(--coral)';
-            toast('⚠️ Alert: You moved into a flagged unlit zone. Auto-sharing GPS with guardians.', '🚨');
-            addTimelineItem('user', 'Geofence Entry Alert', 'User entered flagged risk area near MG Road Backstreet.');
-        }
-
-        // Timeline Management
-        function addTimelineItem(roleClass, title, text) {
-            const container = document.getElementById('timelineContainer');
-            const item = document.createElement('div');
-            item.className = 'timeline-item ' + roleClass;
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            item.innerHTML = `
-                <div class="timeline-time">${timeStr} · ${roleClass.toUpperCase()}</div>
-                <div class="timeline-text"><b>${title}:</b> ${text}</div>
-            `;
-            container.insertBefore(item, container.firstChild);
-        }
-
-        // Smart SOS Feature
-        let sosCountdownInterval = null;
-        function triggerSmartSOS() {
-            const modal = document.getElementById('sosModal');
-            const timerEl = document.getElementById('sosTimer');
-            modal.classList.add('open');
-            let timeLeft = 3;
-            timerEl.textContent = timeLeft;
-
-            if (sosCountdownInterval) clearInterval(sosCountdownInterval);
-
-            sosCountdownInterval = setInterval(() => {
-                timeLeft--;
-                if (timeLeft > 0) {
-                    timerEl.textContent = timeLeft;
-                } else {
-                    clearInterval(sosCountdownInterval);
-                    timerEl.textContent = 'DISPATCHED';
-                    modal.classList.remove('open');
-                    toast('🚨 SOS DISPATCH ACTIVATED! Responders & Police notified.', '🚨');
-                    addTimelineItem('user', 'Emergency SOS Broadcast', 'User triggered SOS. 5km perimeter responder ring activated.');
-                }
-            }, 1000);
-        }
-
-        function cancelSOS() {
-            if (sosCountdownInterval) clearInterval(sosCountdownInterval);
-            document.getElementById('sosModal').classList.remove('open');
-            toast('SOS Cancelled. False alarm logged.', '🛡️');
-        }
-
-        // Post Publishing
-        function publishCitizenPost() {
-            const input = document.getElementById('postInput');
-            const text = input.value.trim();
-            if (!text) { toast('Please write something to share.', '⚠️'); return; }
-
-            const feed = document.getElementById('feedList');
-            const card = document.createElement('article');
-            card.className = 'post-card';
-            card.innerHTML = `
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-avatar" style="background: var(--coral);">${userAvatar}</div>
-                        <div class="post-user-info">
-                            <div class="name">${userName} <span class="badge user">Citizen</span></div>
-                            <div class="meta">Just now · Verified GPS Tagged</div>
-                        </div>
-                    </div>
-                    <div style="cursor: pointer; color: var(--gray);" onclick="toast('Options menu', '•••')">•••</div>
-                </div>
-                <div class="post-body">
-                    <div class="post-actions">
-                        <div class="left-acts">
-                            <span class="act-icon" onclick="toggleLike(this, 0)">❤️</span>
-                            <span class="act-icon" onclick="toast('Opening comment thread...', '💬')">💬</span>
-                            <span class="act-icon" onclick="toast('Link copied!', '↗️')">↗️</span>
-                        </div>
-                        <span class="act-icon" onclick="toggleBookmark(this)">🔖</span>
-                    </div>
-                    <div class="likes-count"><span class="like-number">0</span> likes</div>
-                    <div class="post-caption"><b>${userName}</b> ${text}</div>
-                    <div class="comments-link">0 comments</div>
-                </div>
-            `;
-            feed.prepend(card);
-            input.value = '';
-            toast('Safety post published to community feed!', '✅');
-            addTimelineItem('user', 'Community Safety Update', `${userName} shared a safety alert.`);
-        }
-
-        // Accident Modal
-        let selectedVehicle = null;
-        let selectedSeverity = null;
-        let accidentCounter = 0;
-
-        function openAccidentModal() { document.getElementById('accidentModal').classList.add('open'); }
-        function closeAccidentModal() { document.getElementById('accidentModal').classList.remove('open'); }
-
-        function selectChip(el, group) {
-            document.querySelectorAll('#' + group + ' .chip').forEach(c => c.classList.remove('active'));
+        function selectPostCategory(el, cat) {
+            document.querySelectorAll('.category-select-row .tag-pill').forEach(p => p.classList.remove('active'));
             el.classList.add('active');
-            selectedVehicle = el.textContent.trim();
+            selectedCategory = cat;
         }
 
-        function selectSeverity(el, val) {
-            document.querySelectorAll('#severityChips .chip').forEach(c => c.classList.remove('sev-active'));
-            el.classList.add('sev-active');
-            selectedSeverity = val;
+        function promptMediaUrl() {
+            const url = prompt("Enter Image URL (e.g. Unsplash URL or hosted photo):");
+            if (url && url.trim()) {
+                attachedMediaUrl = url.trim();
+                document.getElementById('attachedMediaIndicator').style.display = 'inline';
+                showToast('Media attached to post!', '📷');
+            }
         }
 
-        function submitAccidentReport() {
-            if (!selectedVehicle) { toast('Please choose vehicle type involved.', '⚠️'); return; }
-            if (!selectedSeverity) { toast('Please choose severity level.', '⚠️'); return; }
+        async function publishPost() {
+            const content = document.getElementById('postContentInput').value.trim();
+            if (!content) {
+                showToast('Please enter post text before sharing.', '⚠️');
+                return;
+            }
 
-            const count = document.getElementById('accidentCount').value.trim();
-            const desc = document.getElementById('accidentDesc').value.trim();
-            accidentCounter++;
+            try {
+                const title = content.length > 50 ? content.substring(0, 48) + '...' : content;
+                await SocialAPI.createPost({
+                    title: title,
+                    content: content,
+                    tag: selectedCategory,
+                    location_name: currentUser.location || "Mumbai Metro Area",
+                    media_url: attachedMediaUrl,
+                    media_type: attachedMediaUrl ? 'image' : 'text'
+                });
 
-            const dispatchTargets = selectedSeverity === 'Critical / Trapped'
-                ? 'Traffic Police, Fire Response & Ambulance'
-                : 'Traffic Police and Volunteer Marshals';
+                document.getElementById('postContentInput').value = '';
+                attachedMediaUrl = null;
+                document.getElementById('attachedMediaIndicator').style.display = 'none';
+                showToast('Safety update published to live feed!', '🎉');
+                loadFeed('ALL');
+            } catch (err) {
+                showToast(err.message || 'Failed to post update.', '❌');
+            }
+        }
 
-            addTimelineItem('user', 'Accident Dispatched', `${selectedVehicle} accident reported. Routed to ${dispatchTargets}.`);
+        async function filterFeed(btn, cat) {
+            document.querySelectorAll('.feed-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            loadFeed(cat);
+        }
 
-            const feed = document.getElementById('feedList');
-            const canvasId = 'accidentCanvas' + accidentCounter;
-            const card = document.createElement('article');
-            card.className = 'post-card';
-            card.innerHTML = `
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-avatar" style="background: #EA580C;">${userAvatar}</div>
-                        <div class="post-user-info">
-                            <div class="name">${userName} <span class="badge accident">Accident Report</span></div>
-                            <div class="meta">MG Road Junction · Just now</div>
+        async function loadFeed(category = 'ALL') {
+            const container = document.getElementById('feedPostsList');
+            container.innerHTML = '<div style="text-align:center; padding: 30px; color: var(--gray);">Loading community updates... ⏳</div>';
+
+            try {
+                const posts = await SocialAPI.getFeed(category);
+                if (!posts || posts.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line); color: var(--gray);">No updates found for this filter. Be the first to share!</div>';
+                    return;
+                }
+
+                container.innerHTML = posts.map(p => `
+                    <div class="feed-post-card">
+                        <div class="post-header">
+                            <div class="post-author-box">
+                                <div class="post-author-avatar">${p.author_avatar || 'U'}</div>
+                                <div>
+                                    <div class="post-author-name">
+                                        <span>${p.author_name}</span>
+                                        <span class="badge-role ${p.author_role}">${p.author_badge}</span>
+                                    </div>
+                                    <div class="post-meta-sub">📍 ${p.location_name} · ${new Date(p.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${p.media_url ? `
+                            <div class="post-media-container">
+                                <img src="${p.media_url}" alt="Post Media" loading="lazy" onerror="this.style.display='none'">
+                            </div>
+                        ` : ''}
+
+                        <div class="post-body">
+                            <div class="post-title">${p.title}</div>
+                            <div class="post-content">${p.content}</div>
+
+                            <div class="post-interactions">
+                                <div class="interaction-left">
+                                    <button class="interact-btn ${p.is_liked ? 'liked' : ''}" onclick="toggleLike('${p.id}', this)">
+                                        <span>${p.is_liked ? '❤️' : '🤍'}</span>
+                                        <span class="like-num">${p.upvotes || 0}</span>
+                                    </button>
+                                    <button class="interact-btn" onclick="toggleCommentsSection('${p.id}')">
+                                        <span>💬</span>
+                                        <span>${p.comments_count || 0}</span>
+                                    </button>
+                                    <button class="interact-btn" onclick="sharePost('${p.id}', this)">
+                                        <span>↗️</span>
+                                        <span>${p.shares_count || 0}</span>
+                                    </button>
+                                </div>
+                                <button class="interact-btn ${p.is_saved ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)">
+                                    <span>${p.is_saved ? '🔖' : '📑'}</span>
+                                </button>
+                            </div>
+
+                            <!-- Comments Section -->
+                            <div class="comments-section" id="comments-${p.id}" style="display: none;">
+                                <div id="comments-list-${p.id}">Loading comments...</div>
+                                <div class="comment-input-row">
+                                    <input type="text" id="input-cmt-${p.id}" class="comment-input" placeholder="Write a supportive comment..." onkeydown="if(event.key==='Enter') submitComment('${p.id}')">
+                                    <button class="btn-comment-send" onclick="submitComment('${p.id}')">Post</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div style="cursor: pointer; color: var(--gray);" onclick="toast('Options menu', '•••')">•••</div>
-                </div>
-                <div class="post-media"><canvas id="${canvasId}" width="600" height="280"></canvas></div>
-                <div class="post-body">
-                    <div class="dispatch-strip"><span class="dot"></span> Live dispatch active: ${dispatchTargets}</div>
-                    <div class="post-caption">
-                        <b>${userName}</b> ${selectedVehicle} incident — ${selectedSeverity}${count ? ' · ' + count : ''}.${desc ? ' ' + desc : ''}
-                    </div>
-                </div>
-            `;
-            feed.prepend(card);
+                `).join('');
+            } catch (err) {
+                container.innerHTML = `<div style="color: #DC2626; padding: 20px;">Failed to load feed: ${err.message}</div>`;
+            }
+        }
 
-            // Render graphic on accident canvas
-            setTimeout(() => {
-                const ac = document.getElementById(canvasId);
-                if (ac) {
-                    const ctx = ac.getContext('2d');
-                    ctx.fillStyle = '#1C1917'; ctx.fillRect(0, 0, 600, 280);
-                    ctx.fillStyle = 'rgba(234, 88, 12, 0.35)'; ctx.beginPath(); ctx.arc(300, 140, 90, 0, Math.PI * 2); ctx.fill();
-                    ctx.fillStyle = '#EA580C'; ctx.beginPath(); ctx.arc(300, 140, 14, 0, Math.PI * 2); ctx.fill();
-                    ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 15px Inter'; ctx.fillText('🚗 ACCIDENT REPORTED — RESPONDERS ROUTED', 32, 36);
+        async function toggleLike(postId, btn) {
+            try {
+                const res = await SocialAPI.toggleLike(postId);
+                btn.classList.toggle('liked', res.is_liked);
+                btn.querySelector('span:first-child').textContent = res.is_liked ? '❤️' : '🤍';
+                btn.querySelector('.like-num').textContent = res.upvotes;
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        async function toggleSave(postId, btn) {
+            try {
+                const res = await SocialAPI.toggleSave(postId);
+                btn.classList.toggle('saved', res.is_saved);
+                btn.querySelector('span').textContent = res.is_saved ? '🔖' : '📑';
+                showToast(res.is_saved ? 'Post saved to your bookmarks!' : 'Post removed from bookmarks.', '📑');
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        async function sharePost(postId, btn) {
+            try {
+                const res = await SocialAPI.sharePost(postId);
+                showToast('Post shared with community network!', '↗️');
+                btn.querySelector('span:last-child').textContent = res.shares_count;
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        async function toggleCommentsSection(postId) {
+            const drawer = document.getElementById(`comments-${postId}`);
+            if (!drawer) return;
+            if (drawer.style.display === 'none') {
+                drawer.style.display = 'block';
+                loadComments(postId);
+            } else {
+                drawer.style.display = 'none';
+            }
+        }
+
+        async function loadComments(postId) {
+            const list = document.getElementById(`comments-list-${postId}`);
+            try {
+                const cmts = await SocialAPI.getComments(postId);
+                if (!cmts || cmts.length === 0) {
+                    list.innerHTML = '<div style="font-size: 11.5px; color: var(--gray); margin-bottom: 6px;">No comments yet.</div>';
+                    return;
                 }
-            }, 50);
-
-            closeAccidentModal();
-            toast('🚗 Accident report sent to emergency units!', '🚨');
+                list.innerHTML = cmts.map(c => `
+                    <div class="comment-item">
+                        <div class="comment-avatar">${c.user_avatar || 'U'}</div>
+                        <div class="comment-body">
+                            <span class="comment-author">${c.user_name}</span>
+                            <span>${c.text}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                list.innerHTML = `<div style="font-size: 11px; color: #DC2626;">Error loading comments.</div>`;
+            }
         }
 
-        // Helpers
-        function toggleLike(el, base) {
-            el.classList.toggle('liked');
-            const card = el.closest('.post-card');
-            const span = card.querySelector('.like-number');
-            let count = parseInt(span.textContent);
-            span.textContent = el.classList.contains('liked') ? count + 1 : count - 1;
+        async function submitComment(postId) {
+            const input = document.getElementById(`input-cmt-${postId}`);
+            const text = input.value.trim();
+            if (!text) return;
+
+            try {
+                await SocialAPI.addComment(postId, text);
+                input.value = '';
+                loadComments(postId);
+                showToast('Comment posted!', '💬');
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
         }
 
-        function toggleBookmark(el) {
-            el.style.color = el.style.color === 'rgb(255, 90, 95)' ? '' : '#FF5A5F';
-            toast('Post saved to private safety vault.', '🔖');
+        /* ------------------ STORIES & POLLS ------------------ */
+
+        async function loadStories() {
+            const container = document.getElementById('storiesContainer');
+            try {
+                const stories = await SocialAPI.getStories();
+                const addBtnHtml = `
+                    <div class="story-node" onclick="openCreateStoryModal()">
+                        <div class="add-story-btn">+</div>
+                        <span class="story-label">Your Story</span>
+                    </div>
+                `;
+
+                const storiesHtml = stories.map(s => `
+                    <div class="story-node" onclick="openViewStoryModal('${s.id}')">
+                        <div class="story-ring">
+                            <div class="story-avatar-inner">${s.author_avatar || 'U'}</div>
+                        </div>
+                        <span class="story-label">${s.author_name.split(' ')[0]}</span>
+                    </div>
+                `).join('');
+
+                container.innerHTML = addBtnHtml + storiesHtml;
+                window.storiesCache = stories;
+            } catch (e) {}
         }
 
-        function addGuardian(btn) {
-            btn.textContent = 'Requested';
-            btn.style.background = 'var(--teal)';
-            btn.style.color = 'white';
-            toast('Guardian connection request sent.', '👥');
+        function openCreateStoryModal() {
+            document.getElementById('createStoryModal').classList.add('show');
         }
 
-        function tagSafeLocation() {
-            toast('📍 Live Safe Location pinned: MG Road Metro Hub', '📍');
+        async function publishStory() {
+            const caption = document.getElementById('storyCaptionInput').value.trim();
+            if (!caption) {
+                showToast('Please enter a caption for your story.', '⚠️');
+                return;
+            }
+
+            const pollQ = document.getElementById('storyPollQuestion').value.trim();
+            const pollA = document.getElementById('storyPollOptionA').value.trim();
+            const pollB = document.getElementById('storyPollOptionB').value.trim();
+
+            try {
+                await SocialAPI.createStory({
+                    caption: caption,
+                    tag: 'SAFE_STATUS',
+                    poll_question: pollQ || null,
+                    poll_option_a: pollA || null,
+                    poll_option_b: pollB || null
+                });
+
+                closeModal('createStoryModal');
+                document.getElementById('storyCaptionInput').value = '';
+                showToast('24H Safety Story published!', '🎉');
+                loadStories();
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
         }
 
-        function openStory(name) {
-            toast(`Viewing story update from: ${name}`, '📷');
+        function openViewStoryModal(storyId) {
+            const story = (window.storiesCache || []).find(s => s.id === storyId);
+            if (!story) return;
+
+            activeStoryId = storyId;
+            document.getElementById('viewStoryAvatar').textContent = story.author_avatar || 'U';
+            document.getElementById('viewStoryAuthor').textContent = story.author_name;
+            document.getElementById('viewStoryTag').textContent = story.tag.replace('_', ' ');
+            document.getElementById('viewStoryCaption').textContent = story.caption;
+
+            const pollBox = document.getElementById('viewStoryPollBox');
+            if (story.poll_question) {
+                pollBox.style.display = 'block';
+                document.getElementById('viewStoryPollQ').textContent = `📊 ${story.poll_question}`;
+                document.getElementById('pollBtnA').textContent = `${story.poll_option_a || 'Option A'} (${story.poll_votes_a || 0})`;
+                document.getElementById('pollBtnB').textContent = `${story.poll_option_b || 'Option B'} (${story.poll_votes_b || 0})`;
+            } else {
+                pollBox.style.display = 'none';
+            }
+
+            document.getElementById('viewStoryModal').classList.add('show');
         }
 
-        function scrollToFeed() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        async function voteOnCurrentStory(option) {
+            if (!activeStoryId) return;
+            try {
+                const res = await SocialAPI.voteStoryPoll(activeStoryId, option);
+                document.getElementById('pollBtnA').textContent = `Option A (${res.votes_a})`;
+                document.getElementById('pollBtnB').textContent = `Option B (${res.votes_b})`;
+                showToast(`Voted for Option ${option}!`, '📊');
+            } catch (err) {
+                showToast(err.message, '⚠️');
+            }
         }
 
-        function toast(msg, icon = '✨') {
-            const el = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            document.getElementById('toastIcon').textContent = icon;
-            el.classList.add('show');
-            setTimeout(() => { el.classList.remove('show'); }, 3000);
+        /* ------------------ EXPLORE & FOLLOWS ------------------ */
+
+        async function loadExploreUsers(q = '') {
+            const grid = document.getElementById('exploreUsersGrid');
+            grid.innerHTML = '<div style="color: var(--gray);">Searching safety community... ⏳</div>';
+
+            try {
+                const users = q ? await SocialAPI.searchUsers(q) : await SocialAPI.searchUsers('a');
+                if (!users || users.length === 0) {
+                    grid.innerHTML = '<div style="color: var(--gray); grid-column: span 3; text-align: center; padding: 30px;">No users found matching your search.</div>';
+                    return;
+                }
+
+                grid.innerHTML = users.map(u => `
+                    <div class="user-card">
+                        <div class="user-card-avatar">${u.avatar || 'U'}</div>
+                        <div style="font-weight: 800; font-size: 15px;">${u.name}</div>
+                        <div style="font-size: 12px; color: var(--gray); font-family: var(--mono);">${u.username || '@member'}</div>
+                        <span class="badge-role ${u.role}" style="display: inline-block; margin: 6px 0;">${u.badge_title}</span>
+                        <div style="font-size: 12px; color: #475569; margin: 6px 0; min-height: 36px;">${u.bio || 'Active safety network member.'}</div>
+                        <div style="font-size: 11.5px; color: var(--gray);">👥 ${u.followers_count || 0} followers</div>
+                        <button class="btn-follow ${u.is_following ? 'following' : ''}" onclick="toggleFollowUser('${u.id}', this)">
+                            ${u.is_following ? 'Following' : '+ Follow'}
+                        </button>
+                    </div>
+                `).join('');
+            } catch (e) {
+                grid.innerHTML = `<div style="color: #DC2626;">Error: ${e.message}</div>`;
+            }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            renderPostVisuals();
-            renderMiniMap();
-        });
+        let searchDebounce = null;
+        function handleExploreSearch(val) {
+            clearTimeout(searchDebounce);
+            searchDebounce = setTimeout(() => {
+                loadExploreUsers(val.trim());
+            }, 300);
+        }
+
+        async function toggleFollowUser(userId, btn) {
+            const isFollowing = btn.classList.contains('following');
+            try {
+                if (isFollowing) {
+                    const res = await SocialAPI.unfollowUser(userId);
+                    btn.classList.remove('following');
+                    btn.textContent = '+ Follow';
+                    showToast(res.message, '👋');
+                } else {
+                    const res = await SocialAPI.followUser(userId);
+                    btn.classList.add('following');
+                    btn.textContent = 'Following';
+                    showToast(res.message, '🌟');
+                }
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        /* ------------------ REELS ------------------ */
+
+        async function loadReels() {
+            const container = document.getElementById('reelsContainer');
+            container.innerHTML = '<div style="color: var(--gray); text-align: center; padding: 40px;">Loading Reels... ⏳</div>';
+
+            try {
+                const reels = await SocialAPI.getReels();
+                if (!reels || reels.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--gray);">No reels yet. Be the first to upload!</div>';
+                    return;
+                }
+
+                container.innerHTML = reels.map(r => `
+                    <div class="reel-card">
+                        <video class="reel-video" src="${r.video_url}" controls playsinline loop></video>
+                        <div class="reel-overlay-info">
+                            <div style="font-weight: 800; font-size: 14px; margin-bottom: 4px;">@${r.author_name.toLowerCase().replace(' ', '_')} · <span style="font-size: 11px; color: #5EEAD4;">${r.author_role.toUpperCase()}</span></div>
+                            <div style="font-size: 13px; line-height: 1.4;">${r.caption}</div>
+                            <div style="font-size: 11px; opacity: 0.8; margin-top: 6px;">🎵 ${r.audio_title}</div>
+                        </div>
+                        <div class="reel-actions-rail">
+                            <button class="reel-action-btn" onclick="likeReel('${r.id}', this)">
+                                <span>❤️</span>
+                                <span style="font-size: 10px; font-weight: 700;">${r.likes_count || 0}</span>
+                            </button>
+                            <button class="reel-action-btn" onclick="showToast('Reel shared with community!', '↗️')">
+                                <span>↗️</span>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = `<div style="color: #DC2626;">Error: ${err.message}</div>`;
+            }
+        }
+
+        function openCreateReelModal() {
+            document.getElementById('createReelModal').classList.add('show');
+        }
+
+        async function publishReel() {
+            const caption = document.getElementById('reelCaptionInput').value.trim();
+            const videoUrl = document.getElementById('reelVideoUrlInput').value.trim();
+
+            if (!caption || !videoUrl) {
+                showToast('Please enter both caption and video URL.', '⚠️');
+                return;
+            }
+
+            try {
+                await SocialAPI.createReel({ caption, video_url: videoUrl });
+                closeModal('createReelModal');
+                document.getElementById('reelCaptionInput').value = '';
+                document.getElementById('reelVideoUrlInput').value = '';
+                showToast('Safety Reel published!', '🎉');
+                loadReels();
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        async function likeReel(reelId, btn) {
+            try {
+                const res = await SocialAPI.toggleReelLike(reelId);
+                btn.querySelector('span:last-child').textContent = res.likes_count;
+                showToast(res.is_liked ? 'Liked Reel!' : 'Unliked Reel', '❤️');
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        /* ------------------ DIRECT MESSAGES ------------------ */
+
+        async function loadConversations() {
+            const list = document.getElementById('conversationsList');
+            try {
+                const convs = await SocialAPI.getConversations();
+                if (!convs || convs.length === 0) {
+                    list.innerHTML = '<div style="padding: 20px; font-size: 12px; color: var(--gray); text-align: center;">No active chats. Tap + New Chat to connect.</div>';
+                    return;
+                }
+
+                list.innerHTML = convs.map(c => `
+                    <div class="conv-item ${activeConvId === c.id ? 'active' : ''}" onclick="selectConversation('${c.id}', '${c.recipient_name}', '${c.recipient_avatar}')">
+                        <div class="avatar-circle">${c.recipient_avatar || 'P'}</div>
+                        <div style="flex: 1; overflow: hidden;">
+                            <div style="font-weight: 700; font-size: 13.5px;">${c.recipient_name}</div>
+                            <div style="font-size: 11.5px; color: var(--gray); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${c.last_message || 'Started chat'}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                if (!activeConvId && convs.length > 0) {
+                    selectConversation(convs[0].id, convs[0].recipient_name, convs[0].recipient_avatar);
+                }
+            } catch (e) {}
+        }
+
+        async function selectConversation(convId, recipName, recipAvatar) {
+            activeConvId = convId;
+            document.getElementById('chatHeaderName').textContent = recipName;
+            document.getElementById('chatHeaderAvatar').textContent = recipAvatar || 'P';
+
+            const container = document.getElementById('chatMessagesContainer');
+            container.innerHTML = '<div style="text-align: center; color: var(--gray); font-size: 12px;">Loading messages...</div>';
+
+            try {
+                const msgs = await SocialAPI.getMessages(convId);
+                if (!msgs || msgs.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: var(--gray); font-size: 12px; margin-top: 30px;">Encrypted chat initiated. Say hello! 👋</div>';
+                    return;
+                }
+
+                container.innerHTML = msgs.map(m => `
+                    <div class="msg-bubble ${m.sender_id === currentUser.id ? 'mine' : 'theirs'}">
+                        <div>${m.text}</div>
+                        <div style="font-size: 9.5px; opacity: 0.75; text-align: right; margin-top: 3px;">${new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                    </div>
+                `).join('');
+                container.scrollTop = container.scrollHeight;
+            } catch (err) {
+                container.innerHTML = `<div style="color: #DC2626;">Error: ${err.message}</div>`;
+            }
+        }
+
+        async function sendChatMessage() {
+            if (!activeConvId) {
+                showToast('Please select a conversation first.', '⚠️');
+                return;
+            }
+
+            const input = document.getElementById('chatTextInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            try {
+                await SocialAPI.sendMessage(activeConvId, text);
+                input.value = '';
+                selectConversation(activeConvId, document.getElementById('chatHeaderName').textContent, document.getElementById('chatHeaderAvatar').textContent);
+                loadConversations();
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        async function promptNewConversation() {
+            const emailOrId = prompt("Enter the Name or Email of the user/responder you wish to message:");
+            if (!emailOrId) return;
+
+            try {
+                const results = await SocialAPI.searchUsers(emailOrId.trim());
+                if (results && results.length > 0) {
+                    const target = results[0];
+                    const conv = await SocialAPI.startConversation(target.id);
+                    showToast(`Started conversation with ${target.name}!`, '💬');
+                    loadConversations();
+                    selectConversation(conv.id, target.name, target.avatar);
+                } else {
+                    showToast('No user found matching query.', '⚠️');
+                }
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        /* ------------------ BROADCAST CHANNELS ------------------ */
+
+        async function loadSidebarChannels() {
+            const list = document.getElementById('sidebarChannelsList');
+            try {
+                const channels = await SocialAPI.getChannels();
+                if (!channels || channels.length === 0) return;
+                list.innerHTML = channels.slice(0, 3).map(ch => `
+                    <div style="padding: 10px 0; border-bottom: 1px solid #F1F5F9; display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <div style="font-weight: 700; font-size: 13px;">${ch.avatar} ${ch.name}</div>
+                            <div style="font-size: 11px; color: var(--gray);">${ch.subscriber_count} subscribers</div>
+                        </div>
+                        <button style="padding: 4px 10px; border-radius: 100px; border: 1px solid var(--line); font-size: 11px; font-weight: 700; background: ${ch.is_subscribed ? '#F1F5F9' : 'var(--coral)'}; color: ${ch.is_subscribed ? 'var(--ink)' : 'white'}; cursor: pointer;" onclick="toggleChannelSub('${ch.id}')">
+                            ${ch.is_subscribed ? 'Joined' : '+ Join'}
+                        </button>
+                    </div>
+                `).join('');
+            } catch (e) {}
+        }
+
+        async function loadChannelsView() {
+            const container = document.getElementById('channelsViewList');
+            container.innerHTML = '<div style="color: var(--gray);">Loading broadcast channels... ⏳</div>';
+
+            try {
+                const channels = await SocialAPI.getChannels();
+                container.innerHTML = channels.map(ch => `
+                    <div class="channel-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="font-size: 28px;">${ch.avatar}</div>
+                                <div>
+                                    <div style="font-size: 16px; font-weight: 800;">${ch.name}</div>
+                                    <div style="font-size: 12px; color: var(--gray);">Created by ${ch.creator_name} (${ch.creator_role.toUpperCase()}) · 👥 ${ch.subscriber_count} subscribers</div>
+                                </div>
+                            </div>
+                            <button class="btn-publish-post" style="padding: 6px 16px; font-size: 12px; background: ${ch.is_subscribed ? '#F1F5F9' : 'var(--coral)'}; color: ${ch.is_subscribed ? 'var(--ink)' : 'white'}; border: 1px solid var(--line);" onclick="toggleChannelSub('${ch.id}')">
+                                ${ch.is_subscribed ? 'Subscribed ✓' : '+ Subscribe'}
+                            </button>
+                        </div>
+                        <p style="font-size: 13.5px; color: #475569; margin-bottom: 14px;">${ch.description}</p>
+                        
+                        <div style="background: var(--paper-2); padding: 12px 16px; border-radius: 12px;">
+                            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--gray); margin-bottom: 6px;">Recent Dispatches:</div>
+                            ${ch.recent_posts && ch.recent_posts.length > 0 ? ch.recent_posts.map(p => `
+                                <div style="margin-bottom: 8px; font-size: 12.5px;">
+                                    <strong>${p.title}:</strong> ${p.content}
+                                </div>
+                            `).join('') : '<div style="font-size: 12px; color: var(--gray);">No broadcasts published yet.</div>'}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = `<div style="color: #DC2626;">Error: ${err.message}</div>`;
+            }
+        }
+
+        async function toggleChannelSub(channelId) {
+            try {
+                const res = await SocialAPI.toggleSubscribeChannel(channelId);
+                showToast(res.is_subscribed ? 'Subscribed to channel bulletins!' : 'Unsubscribed from channel.', '📢');
+                loadChannelsView();
+                loadSidebarChannels();
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        /* ------------------ PROFILE & 14-SECTION ACTIVITY ------------------ */
+
+        async function loadProfileData() {
+            try {
+                const prof = await SocialAPI.getMyProfile();
+                document.getElementById('profileNameBig').textContent = prof.name;
+                document.getElementById('profileAvatarBig').textContent = prof.avatar || 'AS';
+                document.getElementById('profileRoleBadge').textContent = prof.badge_title;
+                document.getElementById('profileUsername').textContent = prof.username || `@${prof.name.toLowerCase().replace(' ', '_')}`;
+                document.getElementById('profileBio').textContent = prof.bio || 'Active community safety member.';
+                document.getElementById('profileLocation').textContent = prof.location || 'Mumbai Metro Area';
+
+                document.getElementById('statPostsCount').textContent = prof.posts_count || 0;
+                document.getElementById('statFollowersCount').textContent = prof.followers_count || 0;
+                document.getElementById('statFollowingCount').textContent = prof.following_count || 0;
+
+                // Load initial activity tab
+                switchProfileActivity(document.querySelector('.activity-tab-btn.active') || document.querySelector('.activity-tab-btn'), 'my-posts');
+            } catch (e) {}
+        }
+
+        function openEditProfileModal() {
+            document.getElementById('editNameInput').value = currentUser.name;
+            document.getElementById('editUsernameInput').value = currentUser.username || '';
+            document.getElementById('editBioInput').value = currentUser.bio || '';
+            document.getElementById('editLocationInput').value = currentUser.location || '';
+            document.getElementById('editProfileModal').classList.add('show');
+        }
+
+        async function saveProfileUpdates() {
+            const name = document.getElementById('editNameInput').value.trim();
+            const username = document.getElementById('editUsernameInput').value.trim();
+            const bio = document.getElementById('editBioInput').value.trim();
+            const location = document.getElementById('editLocationInput').value.trim();
+
+            try {
+                const updated = await SocialAPI.updateMyProfile({ name, username, bio, location });
+                currentUser = updated;
+                saveSession(getAuthToken(), updated);
+                closeModal('editProfileModal');
+                showToast('Profile updated successfully!', '🎉');
+                loadProfileData();
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        async function switchProfileActivity(btn, activityType) {
+            document.querySelectorAll('.activity-tab-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const content = document.getElementById('profileActivityContent');
+            content.innerHTML = '<div style="color: var(--gray); padding: 30px; text-align: center;">Loading activity... ⏳</div>';
+
+            try {
+                if (activityType === 'my-posts') {
+                    const posts = await SocialAPI.getMyPosts();
+                    if (!posts || posts.length === 0) {
+                        content.innerHTML = '<div style="padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line); text-align: center; color: var(--gray);">You haven\'t published any posts yet.</div>';
+                        return;
+                    }
+                    content.innerHTML = posts.map(p => `
+                        <div class="feed-post-card">
+                            <div class="post-header">
+                                <div class="post-author-box">
+                                    <div class="post-author-avatar">${p.author_avatar}</div>
+                                    <div>
+                                        <div class="post-author-name">${p.author_name}</div>
+                                        <div class="post-meta-sub">${new Date(p.created_at).toLocaleDateString()} · 📍 ${p.location_name}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post-body">
+                                <div class="post-title">${p.title}</div>
+                                <div class="post-content">${p.content}</div>
+                                <div style="font-size: 12px; color: var(--gray);">❤️ ${p.upvotes || 0} upvotes · 💬 ${p.comments_count || 0} comments</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                else if (activityType === 'my-cases') {
+                    const cases = await SocialAPI.getMyCases();
+                    document.getElementById('statCasesCount').textContent = cases.length;
+                    if (!cases || cases.length === 0) {
+                        content.innerHTML = '<div style="padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line); text-align: center; color: var(--gray);">No emergency cases filed. You are safe! 🛡️</div>';
+                        return;
+                    }
+                    content.innerHTML = cases.map(c => `
+                        <div class="case-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <div>
+                                    <span style="font-size: 12px; font-family: var(--mono); color: var(--coral); font-weight: 700;">${c.case_id}</span>
+                                    <h3 style="font-size: 16px; font-weight: 800; margin-top: 2px;">${c.title}</h3>
+                                </div>
+                                <span class="case-status-badge ${c.status === 'RESOLVED' ? 'resolved' : 'active'}">${c.status}</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--gray); margin-bottom: 12px;">
+                                📍 ${c.location} · 🏢 ${c.assigned_precinct} · 📅 ${new Date(c.opened_at).toLocaleString()}
+                            </div>
+                            
+                            <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink);">Audit Timeline Log:</div>
+                            <div class="timeline-box">
+                                ${c.timeline.map(t => `
+                                    <div class="timeline-event-item">
+                                        <strong>${t.title}</strong> (${t.actor_name} - ${t.actor_role}): ${t.description}
+                                        <div style="font-size: 10px; color: var(--gray);">${new Date(t.timestamp).toLocaleTimeString()}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                else if (activityType === 'my-liked') {
+                    const posts = await SocialAPI.getMyLikedPosts();
+                    if (!posts || posts.length === 0) {
+                        content.innerHTML = '<div style="padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line); text-align: center; color: var(--gray);">No liked posts yet.</div>';
+                        return;
+                    }
+                    content.innerHTML = posts.map(p => `
+                        <div class="feed-post-card">
+                            <div class="post-body">
+                                <div class="post-title">${p.title}</div>
+                                <div class="post-content">${p.content}</div>
+                                <div style="font-size: 12px; color: var(--coral);">❤️ Liked by you</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                else if (activityType === 'my-saved') {
+                    const posts = await SocialAPI.getMySavedPosts();
+                    if (!posts || posts.length === 0) {
+                        content.innerHTML = '<div style="padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line); text-align: center; color: var(--gray);">No bookmarked posts yet.</div>';
+                        return;
+                    }
+                    content.innerHTML = posts.map(p => `
+                        <div class="feed-post-card">
+                            <div class="post-body">
+                                <div class="post-title">${p.title}</div>
+                                <div class="post-content">${p.content}</div>
+                                <div style="font-size: 12px; color: var(--gold);">🔖 Saved to your bookmarks</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                else if (activityType === 'my-following') {
+                    const users = await SocialAPI.getFollowing(currentUser.id);
+                    if (!users || users.length === 0) {
+                        content.innerHTML = '<div style="padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line); text-align: center; color: var(--gray);">You are not following anyone yet. Visit Explore to connect!</div>';
+                        return;
+                    }
+                    content.innerHTML = `<div class="user-grid">${users.map(u => `
+                        <div class="user-card">
+                            <div class="user-card-avatar">${u.avatar}</div>
+                            <div style="font-weight: 800;">${u.name}</div>
+                            <div style="font-size: 12px; color: var(--gray);">${u.username}</div>
+                            <button class="btn-follow following" onclick="toggleFollowUser('${u.id}', this)">Following</button>
+                        </div>
+                    `).join('')}</div>`;
+                }
+                else if (activityType === 'my-followers') {
+                    const users = await SocialAPI.getFollowers(currentUser.id);
+                    if (!users || users.length === 0) {
+                        content.innerHTML = '<div style="padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line); text-align: center; color: var(--gray);">No followers yet.</div>';
+                        return;
+                    }
+                    content.innerHTML = `<div class="user-grid">${users.map(u => `
+                        <div class="user-card">
+                            <div class="user-card-avatar">${u.avatar}</div>
+                            <div style="font-weight: 800;">${u.name}</div>
+                            <div style="font-size: 12px; color: var(--gray);">${u.username}</div>
+                        </div>
+                    `).join('')}</div>`;
+                }
+                else if (activityType === 'follow-requests') {
+                    const reqs = await SocialAPI.getFollowRequests();
+                    if (!reqs || reqs.length === 0) {
+                        content.innerHTML = '<div style="padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line); text-align: center; color: var(--gray);">No pending follow requests.</div>';
+                        return;
+                    }
+                    content.innerHTML = reqs.map(r => `
+                        <div class="case-card" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="avatar-circle">${r.requester_avatar}</div>
+                                <div>
+                                    <div style="font-weight: 800;">${r.requester_name}</div>
+                                    <div style="font-size: 12px; color: var(--gray);">${r.requester_username} (${r.requester_role})</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-publish-post" style="padding: 4px 12px; font-size: 12px;" onclick="respondReq('${r.id}', 'accept')">Accept</button>
+                                <button style="padding: 4px 12px; border-radius: 100px; border: 1px solid var(--line); background: #F1F5F9; font-size: 12px; font-weight: 600; cursor: pointer;" onclick="respondReq('${r.id}', 'reject')">Decline</button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                content.innerHTML = `<div style="color: #DC2626;">Error: ${err.message}</div>`;
+            }
+        }
+
+        async function respondReq(reqId, action) {
+            try {
+                await SocialAPI.respondFollowRequest(reqId, action);
+                showToast(`Follow request ${action}ed!`, '✅');
+                switchProfileActivity(null, 'follow-requests');
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        /* ------------------ EMERGENCY SOS & DISPATCH ------------------ */
+
+        async function triggerSOSInstant() {
+            showToast('Triggering 5km Geofence Emergency SOS...', '🚨');
+            try {
+                const res = await SocialAPI.triggerSOS({
+                    user_name: currentUser.name,
+                    user_id: currentUser.id,
+                    phone: currentUser.phone,
+                    trigger_type: "MANUAL_HOLD",
+                    severity: "CRITICAL",
+                    location: {
+                        latitude: 19.0760,
+                        longitude: 72.8777,
+                        accuracy_meters: 6.5,
+                        address: currentUser.location || "SV Road, Bandra West, Mumbai"
+                    },
+                    notes: "High priority citizen SOS triggered via social platform header."
+                });
+
+                showToast(`EMERGENCY SOS BROADCASTED! Case ID: ${res.case_id}`, '🚨', 6000);
+                switchNavView('profile');
+                setTimeout(() => {
+                    switchProfileActivity(null, 'my-cases');
+                }, 400);
+            } catch (err) {
+                showToast(err.message || 'SOS dispatch failed.', '❌');
+            }
+        }
+
+        function openAccidentModal() {
+            document.getElementById('accidentModal').classList.add('show');
+        }
+
+        async function submitAccidentReport() {
+            const severity = document.getElementById('accidentSeverity').value;
+            const notes = document.getElementById('accidentNotes').value.trim();
+
+            try {
+                const res = await SocialAPI.triggerSOS({
+                    user_name: currentUser.name,
+                    user_id: currentUser.id,
+                    phone: currentUser.phone,
+                    trigger_type: "ACCIDENT_REPORT",
+                    severity: severity,
+                    location: {
+                        latitude: 19.0760,
+                        longitude: 72.8777,
+                        accuracy_meters: 8.0,
+                        address: currentUser.location || "Metro Corridor Junction"
+                    },
+                    notes: notes || "Accident report submitted by citizen."
+                });
+
+                closeModal('accidentModal');
+                showToast(`Accident dispatch sent! Case ID: ${res.case_id}`, '🚑', 5000);
+                switchNavView('profile');
+                setTimeout(() => {
+                    switchProfileActivity(null, 'my-cases');
+                }, 400);
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
     </script>
 </body>
 

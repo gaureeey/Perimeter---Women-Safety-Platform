@@ -629,6 +629,346 @@
             opacity: 1;
         }
 
+        /* View Switcher Tabs */
+        .nav-tabs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-tab-btn {
+            background: transparent;
+            border: none;
+            color: #94A3B8;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-tab-btn.active {
+            background: var(--gold);
+            color: #000000;
+            font-weight: 700;
+            box-shadow: 0 2px 10px rgba(217, 119, 6, 0.3);
+        }
+
+        /* ── INSTAGRAM-LIKE STORIES ROW ── */
+        .stories-card {
+            background: var(--ink-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-elevation);
+        }
+
+        .stories-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #94A3B8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stories-list {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .stories-list::-webkit-scrollbar { height: 4px; }
+        .stories-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+
+        .story-item:hover { transform: translateY(-2px); }
+
+        .story-ring {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            padding: 2.5px;
+            background: linear-gradient(45deg, #F59E0B, #FF5A5F, #8B5CF6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .story-ring.verified { background: linear-gradient(45deg, #0F6E6E, #2DD4BF); }
+        .story-ring.police { background: linear-gradient(45deg, #2563EB, #60A5FA); }
+        .story-ring.user { background: linear-gradient(45deg, #FF5A5F, #F43F5E); }
+
+        .story-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #111528;
+            border: 2px solid #0B0E1B;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .story-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: #F8FAFC;
+            max-width: 68px;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ── SAFETY POSTS FEED ── */
+        .feed-post-card {
+            background: var(--ink-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-elevation);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .post-author-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), #B45309);
+            color: white;
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .post-meta-name { font-size: 14px; font-weight: 700; color: #FFFFFF; }
+        .post-meta-sub { font-size: 11.5px; color: #94A3B8; }
+
+        .post-badge {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 100px;
+            letter-spacing: 0.04em;
+        }
+
+        .post-badge.police { background: rgba(37, 99, 235, 0.2); color: #60A5FA; border: 1px solid rgba(37, 99, 235, 0.4); }
+        .post-badge.volunteer { background: rgba(217, 119, 6, 0.2); color: #FBBF24; border: 1px solid rgba(217, 119, 6, 0.4); }
+        .post-badge.press { background: rgba(15, 110, 110, 0.25); color: #5EEAD4; border: 1px solid rgba(15, 110, 110, 0.5); }
+        .post-badge.hazard { background: rgba(239, 68, 68, 0.2); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+
+        .post-title { font-size: 16px; font-weight: 800; color: #FFFFFF; margin-bottom: 8px; }
+        .post-content { font-size: 13.5px; color: #CBD5E1; line-height: 1.6; margin-bottom: 14px; }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: 14px;
+        }
+
+        .post-action-btn {
+            background: transparent;
+            border: none;
+            color: #94A3B8;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.15s;
+        }
+
+        .post-action-btn:hover { color: #FFFFFF; }
+        .post-action-btn.liked { color: #FF5A5F; }
+
+        /* ── INSTAGRAM STORY VIEWER MODAL ── */
+        .story-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(16px);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .story-modal-overlay.show { display: flex; }
+
+        .story-viewer-card {
+            width: 100%;
+            max-width: 420px;
+            height: 680px;
+            max-height: 90vh;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .story-progress-container {
+            display: flex;
+            gap: 4px;
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            right: 16px;
+            z-index: 10;
+        }
+
+        .story-progress-segment {
+            height: 3px;
+            flex: 1;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .story-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #FFFFFF;
+            transition: width 5s linear;
+        }
+
+        .story-progress-fill.active { width: 100%; }
+
+        .story-top-user {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+            z-index: 10;
+        }
+
+        .story-user-info { display: flex; align-items: center; gap: 10px; }
+        .story-user-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; }
+        .story-user-name { font-weight: 700; font-size: 13.5px; color: #FFF; }
+        .story-user-role { font-size: 11px; color: #94A3B8; }
+
+        .story-body {
+            z-index: 10;
+            text-align: center;
+            margin: auto 0;
+            padding: 20px 10px;
+        }
+
+        .story-tag-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #FFF;
+            margin-bottom: 16px;
+            letter-spacing: 0.05em;
+        }
+
+        .story-caption-text {
+            font-size: 19px;
+            font-weight: 800;
+            color: #FFFFFF;
+            line-height: 1.4;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .story-reaction-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .story-reply-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 100px;
+            padding: 10px 16px;
+            color: #FFF;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .story-emoji-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            font-size: 16px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+
+        .story-emoji-btn:hover { transform: scale(1.15); }
+
+        .story-close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #FFF;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         @media (max-width: 960px) {
             .container {
                 grid-template-columns: 1fr;
@@ -671,7 +1011,7 @@
         <button class="reg-btn" onclick="submitVolReg()">🚀 Join as Verified Volunteer</button>
 
         <div style="text-align:center;font-size:12px;color:#64748B;margin-top:16px;">
-            Already registered? <a href="login.html" style="color:#D97706;font-weight:600;text-decoration:none;">Sign In</a> or <a href="register.html?role=volunteer" style="color:#D97706;font-weight:600;text-decoration:none;">Full Registration Page</a>
+            Already registered? <a href="register.html?role=volunteer" style="color:#D97706;font-weight:600;text-decoration:none;">Full Registration Page</a>
         </div>
     </div>
 </div>
@@ -689,7 +1029,7 @@
                 <span class="duty-dot" id="dutyDot"></span>
                 <span id="dutyText">Active on Duty</span>
             </div>
-            <a href="login.html" onclick="logout(); return false;">Logout →</a>
+            <a href="#" onclick="logout(); return false;" style="color: #FF5A5F; font-weight: 700; text-decoration: none;">Logout ⏏</a>
         </div>
     </div>
 
@@ -698,11 +1038,16 @@
         <nav class="nav">
             <div class="logo">PERIMETER <span>.</span> <span style="font-size: 13px; color: var(--gold); font-weight: 600; margin-left: 4px;">VOLUNTEER DESK</span></div>
 
+            <!-- View Switcher Tabs -->
+            <div class="nav-tabs">
+                <button type="button" class="nav-tab-btn active" id="tabBtnTactical" onclick="switchVolunteerTab('tactical')">📡 Tactical Radar</button>
+                <button type="button" class="nav-tab-btn" id="tabBtnFeed" onclick="switchVolunteerTab('feed')">📱 Stories & Safety Feed</button>
+            </div>
+
             <div class="vol-stats-bar">
                 <div class="vol-stat">Dispatches: <b id="statDispatches">18</b></div>
                 <div class="vol-stat">Avg ETA: <b>3.4 mins</b></div>
                 <div class="vol-stat">Radius: <b>5.0 km</b></div>
-                <div class="vol-stat">Rating: <b>4.9 ★</b></div>
             </div>
 
             <div class="user-nav-profile" onclick="toast('Volunteer Badge #VOL-9022 (Verified Level 3)', '🎖️')">
@@ -713,7 +1058,7 @@
     </header>
 
     <!-- Main Container -->
-    <main class="container">
+    <main class="container" id="tacticalContainer">
 
         <!-- Left Column: Tactical Radar & Active Dispatch List -->
         <section>
@@ -887,77 +1232,72 @@
         <span id="toastMsg">Notification message</span>
     </div>
 
+    <script src="js/api.js"></script>
     <script>
-        // ── ONE-TIME REGISTRATION: VOLUNTEER ──
-        const VOL_KEY = 'perimeter_vol_profile';
+        let currentVolUser = null;
+        let volName = 'Volunteer';
+        let volAvatar = 'PD';
+        let currentIncidentId = null;
 
-        function loadVolSession() {
-            // Check universal session
+        async function initVolunteerDashboard() {
+            currentVolUser = await guardProtectedPage(['volunteer']);
+            if (!currentVolUser) return;
+
+            volName = currentVolUser.name || 'Volunteer';
+            volAvatar = volName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'V';
+
+            const topNameEl = document.getElementById('topbarVolName');
+            if (topNameEl) topNameEl.textContent = `${volName} (Verified Volunteer)`;
+            const navNameEl = document.getElementById('navVolName');
+            if (navNameEl) navNameEl.textContent = `${volName.split(' ')[0]} (Vol)`;
+            const avEl = document.getElementById('volAvatar');
+            if (avEl) avEl.textContent = volAvatar;
+
+            await loadActiveIncidents();
+            drawRadar();
+        }
+
+        async function loadActiveIncidents() {
             try {
-                const sess = JSON.parse(localStorage.getItem('perimeter_session'));
-                if (sess && sess.name && (sess.role === 'volunteer' || !sess.role)) {
-                    return { name: sess.name, volId: sess.dynamicField1 || 'VOL-2026' };
-                }
-            } catch(e) {}
+                const incidents = await apiCall('/sos/active');
+                const dispatchList = document.querySelector('.dispatch-list');
+                if (!dispatchList || !incidents || incidents.length === 0) return;
 
-            try { return JSON.parse(localStorage.getItem(VOL_KEY)); } catch(e) { return null; }
-        }
+                // Render dynamic dispatches from DB
+                dispatchList.innerHTML = '';
+                incidents.forEach(inc => {
+                    const card = document.createElement('div');
+                    card.className = 'dispatch-card';
+                    card.id = `dispatch_${inc.incident_id}`;
+                    const timeStr = new Date(inc.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        function initVolApp(profile) {
-            const vName   = profile.name || 'Volunteer';
-            const vAvatar = profile.name ? profile.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() : 'PD';
-            document.getElementById('topbarVolName').textContent = `${vName} (Verified Volunteer)`;
-            document.getElementById('navVolName').textContent = vName.split(' ')[0] + ' (Vol)';
-            document.getElementById('volAvatar').textContent = vAvatar;
-        }
+                    const isAccepted = inc.active_responders.some(r => r.responder_id === currentVolUser?.id);
 
-        function submitVolReg() {
-            const name  = document.getElementById('regName').value.trim();
-            const volId = document.getElementById('regVolId').value.trim();
-            const pass  = document.getElementById('regPass').value;
-            const conf  = document.getElementById('regConf').value;
-            if (!name)  { volRegAlert('Please enter your full name.'); return; }
-            if (!volId) { volRegAlert('Please enter your Volunteer ID.'); return; }
-            if (pass.length < 6) { volRegAlert('Password must be at least 6 characters.'); return; }
-            if (pass !== conf)   { volRegAlert('Passwords do not match.'); return; }
-
-            const profile = { name, volId, registeredAt: new Date().toISOString() };
-            localStorage.setItem(VOL_KEY, JSON.stringify(profile));
-            localStorage.setItem('perimeter_session', JSON.stringify({
-                role: 'volunteer',
-                name: name,
-                badge: 'Verified Responder',
-                avatar: name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() || 'V',
-                dynamicField1: volId,
-                token: 'jwt_token_' + Date.now(),
-                loginTime: new Date().toISOString()
-            }));
-
-            document.getElementById('regOverlay').classList.remove('show');
-            initVolApp(profile);
-            toast(`Registered as ${name}! Welcome to Volunteer Radar.`, '🚀');
-        }
-
-        function volRegAlert(msg) {
-            const el = document.getElementById('regAlertBox');
-            el.textContent = msg; el.style.display = 'block';
-            setTimeout(() => { el.style.display = 'none'; }, 3500);
-        }
-
-        function logout() {
-            localStorage.removeItem(VOL_KEY);
-            localStorage.removeItem('perimeter_session');
-            window.location.href = 'login.html';
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const profile = loadVolSession();
-            if (profile && profile.name) {
-                initVolApp(profile);
-            } else {
-                document.getElementById('regOverlay').classList.add('show');
+                    card.innerHTML = `
+                        <div class="dispatch-header">
+                            <div>
+                                <span class="priority-tag ${inc.severity === 'CRITICAL' ? 'critical' : 'high'}">${inc.severity || 'HIGH PRIORITY'}</span>
+                                <div class="incident-title">${inc.user_name} · ${inc.trigger_type.replace('_', ' ')}</div>
+                                <div class="incident-meta">📍 ${inc.location.address} · Time: ${timeStr}</div>
+                            </div>
+                            <span class="distance-badge">🚨 ~0.8 km</span>
+                        </div>
+                        <div style="font-size: 13px; color: #CBD5E1; margin: 8px 0;">
+                            ${inc.notes || 'Emergency broadcast received via 5km Geofence spatial mesh.'}
+                        </div>
+                        <div class="dispatch-actions">
+                            <button id="btn-${inc.incident_id}" class="btn-dispatch ${isAccepted ? 'accepted' : 'accept'}" 
+                                onclick="acceptDispatch('${inc.incident_id}', '${inc.user_name}', '${inc.location.address}', '0.8km')">
+                                ${isAccepted ? '✔ Dispatch Active · En Route' : 'Accept Geofence Dispatch'}
+                            </button>
+                        </div>
+                    `;
+                    dispatchList.appendChild(card);
+                });
+            } catch (err) {
+                console.warn('Could not load active incidents:', err.message);
             }
-        });
+        }
 
         let isOnDuty = true;
         function toggleDuty() {
@@ -991,7 +1331,6 @@
             ctx.fillStyle = '#070A14';
             ctx.fillRect(0, 0, w, h);
 
-            // Concentric range rings (1km, 2.5km, 5km)
             ctx.strokeStyle = 'rgba(245, 158, 11, 0.2)';
             ctx.lineWidth = 1;
             [35, 75, 115].forEach(r => {
@@ -1000,11 +1339,9 @@
                 ctx.stroke();
             });
 
-            // Crosshairs
             ctx.beginPath(); ctx.moveTo(cx - 120, cy); ctx.lineTo(cx + 120, cy); ctx.stroke();
             ctx.beginPath(); ctx.moveTo(cx, cy - 120); ctx.lineTo(cx, cy + 120); ctx.stroke();
 
-            // Radar sweep line
             ctx.save();
             ctx.translate(cx, cy);
             ctx.rotate(radarAngle);
@@ -1019,31 +1356,20 @@
             ctx.stroke();
             ctx.restore();
 
-            // Volunteer Center Pin
             ctx.fillStyle = '#F59E0B';
             ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2); ctx.fill();
 
-            // Incident Blips
-            // Blip 1: Sector 4 (0.8km)
             ctx.fillStyle = '#FF5A5F';
             ctx.beginPath(); ctx.arc(cx + 30, cy - 25, 5, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = '#FFFFFF'; ctx.font = '10px IBM Plex Mono'; ctx.fillText('🚨 0.8km', cx + 38, cy - 22);
-
-            // Blip 2: Koramangala (1.4km)
-            ctx.fillStyle = '#FBBF24';
-            ctx.beginPath(); ctx.arc(cx - 50, cy + 30, 4, 0, Math.PI * 2); ctx.fill();
-
-            // Blip 3: MG Road (2.2km)
-            ctx.fillStyle = '#EA580C';
-            ctx.beginPath(); ctx.arc(cx + 70, cy + 45, 4, 0, Math.PI * 2); ctx.fill();
 
             if (isOnDuty) radarAngle += 0.035;
             requestAnimationFrame(drawRadar);
         }
 
-        // Timeline Sync
         function addTimelineEntry(title, desc) {
             const container = document.getElementById('timelineContainer');
+            if (!container) return;
             const item = document.createElement('div');
             item.className = 'timeline-item';
             const now = new Date();
@@ -1055,23 +1381,30 @@
             container.insertBefore(item, container.firstChild);
         }
 
-        // Accept Dispatch Action
         let activeDispatchTarget = '';
-        function acceptDispatch(id, person, loc, dist) {
+        async function acceptDispatch(id, person, loc, dist) {
+            currentIncidentId = id;
             const btn = document.getElementById('btn-' + id);
-            btn.classList.add('accepted');
-            btn.innerHTML = '✔ Dispatch Active · En Route';
+            if (btn) {
+                btn.classList.add('accepted');
+                btn.innerHTML = '✔ Dispatch Active · En Route';
+            }
 
             activeDispatchTarget = person;
-            addTimelineEntry('Volunteer Dispatch Accepted', `${volName} accepted emergency request for ${person} at ${loc} (${dist}).`);
 
-            // Open HUD
+            try {
+                await apiCall(`/sos/${id}/respond?responder_id=${currentVolUser.id}&responder_name=${encodeURIComponent(volName)}&role=volunteer`, 'POST');
+                addTimelineEntry('Volunteer Dispatch Stored in DB', `${volName} accepted emergency request for ${person} at ${loc} (${dist}).`);
+            } catch (e) {
+                console.warn('Dispatch respond notice:', e.message);
+            }
+
             document.getElementById('hudTargetTitle').textContent = `Navigating to ${person}`;
             document.getElementById('hudLocation').textContent = loc;
             document.getElementById('hudModal').classList.add('open');
             drawHudRoute();
 
-            toast(`Dispatch accepted! Live trajectory sharing activated.`, '🚀');
+            toast(`Dispatch accepted! Live trajectory sharing activated with Case Timeline.`, '🚀');
         }
 
         function drawHudRoute() {
@@ -1080,12 +1413,10 @@
             const ctx = c.getContext('2d');
             ctx.fillStyle = '#0A0D18'; ctx.fillRect(0, 0, 460, 200);
 
-            // Draw route polyline
             ctx.strokeStyle = '#F59E0B'; ctx.lineWidth = 4; ctx.setLineDash([8, 4]);
             ctx.beginPath(); ctx.moveTo(50, 150); ctx.lineTo(180, 70); ctx.lineTo(340, 110); ctx.lineTo(410, 40); ctx.stroke();
             ctx.setLineDash([]);
 
-            // Start & End markers
             ctx.fillStyle = '#10B981'; ctx.beginPath(); ctx.arc(50, 150, 8, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 11px Inter'; ctx.fillText('You (Vol)', 40, 175);
 
@@ -1093,38 +1424,50 @@
             ctx.fillStyle = '#FFFFFF'; ctx.fillText('Target (0.8km)', 350, 30);
         }
 
-        function markArrivedOnScene() {
+        async function markArrivedOnScene() {
             addTimelineEntry('Arrived On Scene', `${volName} arrived on location with ${activeDispatchTarget}. Citizen secured.`);
             document.getElementById('hudModal').classList.remove('open');
             toast('✔ Arrival logged to Universal Case Timeline & Police Desk!', '🛡️');
-            let d = parseInt(document.getElementById('statDispatches').textContent) + 1;
-            document.getElementById('statDispatches').textContent = d;
+            let dEl = document.getElementById('statDispatches');
+            if (dEl) {
+                let d = parseInt(dEl.textContent) + 1;
+                dEl.textContent = d;
+            }
         }
 
         function closeHud() {
             document.getElementById('hudModal').classList.remove('open');
         }
 
-        function publishVolunteerNotice() {
+        async function publishVolunteerNotice() {
             const input = document.getElementById('broadcastInput');
             const txt = input.value.trim();
             if (!txt) { toast('Please type a safety notice to publish.', '⚠️'); return; }
 
-            addTimelineEntry('Volunteer Notice Broadcast', `${volName}: ${txt}`);
-            input.value = '';
-            toast('Verified Volunteer Notice published to 5km community feed!', '📢');
+            try {
+                await apiCall('/feed/', 'POST', {
+                    author_name: volName,
+                    author_role: 'volunteer',
+                    title: 'Verified Volunteer Safety Broadcast',
+                    content: txt,
+                    tag: 'HAZARD_ALERT',
+                    location_name: currentVolUser?.dynamic_field_2 || 'Volunteer Sector 4'
+                });
+
+                addTimelineEntry('Volunteer Notice Broadcast', `${volName}: ${txt}`);
+                input.value = '';
+                toast('Verified Volunteer Notice saved to database and broadcasted!', '📢');
+            } catch (err) {
+                toast(err.message || 'Could not publish notice.', '❌');
+            }
         }
 
         function toast(msg, icon = '✨') {
-            const el = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            document.getElementById('toastIcon').textContent = icon;
-            el.classList.add('show');
-            setTimeout(() => { el.classList.remove('show'); }, 3000);
+            showToast(msg, icon);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            drawRadar();
+            initVolunteerDashboard();
         });
     </script>
 </body>

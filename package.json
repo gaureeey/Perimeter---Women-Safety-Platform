@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "serve:py": "python serve.py"
+    "serve:py": "python serve.py",
+    "backend": "cd backend && python -m uvicorn app.main:app --port 8000 --reload"
   },
   "keywords": [
     "women-safety",

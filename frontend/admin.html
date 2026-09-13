@@ -198,7 +198,7 @@
       <button class="role-btn" onclick="switchRole('volunteer')">🙋 Volunteer</button>
       <button class="role-btn" onclick="switchRole('journalist')">📰 Journalist</button>
       <button class="role-btn" onclick="switchRole('police')">🚔 Police</button>
-      <a href="login.html" class="role-btn" style="text-decoration: none; background: rgba(255, 255, 255, 0.1); color: #FFF;">🔑 Switch / Login</a>
+      <a href="register.html" class="role-btn" style="text-decoration: none; background: rgba(255, 255, 255, 0.1); color: #FFF;">🔑 Switch Persona</a>
     </div>
   </div>
 
@@ -286,43 +286,120 @@
 
   </div>
 
-  <script>
-    // ROLE SWITCHER LOGIC
-    function switchRole(role) {
-      document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
+    <script src="js/api.js"></script>
+    <script>
+      let currentAdminUser = null;
 
-      document.querySelectorAll('.role-console').forEach(console => console.classList.remove('active-console'));
-      document.getElementById(`${role}-console`).classList.add('active-console');
-    }
+      async function initAdminDashboard() {
+        currentAdminUser = await guardProtectedPage(['admin']);
+        if (!currentAdminUser) return;
 
-    function triggerSOS() {
-      alert("🚨 SOS EMERGENCY TRIGGERED!\nGeofenced FCM alerts dispatched to nearby volunteers and Police Command!");
-    }
+        await loadLiveStats();
+        drawHeatmap();
+      }
 
-    // DRAW HEATMAP CANVAS SIMULATION
-    const canvas = document.getElementById('heatmapCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+      async function loadLiveStats() {
+        try {
+          const stats = await apiCall('/admin/stats');
+          if (stats) {
+            console.log('[Admin Stats]', stats);
+            const userCard = document.getElementById('citizen-console');
+            if (userCard) {
+              userCard.innerHTML = `
+                <h3 style="color: var(--accent-teal); margin-bottom: 8px;">👩 Citizen Governance</h3>
+                <p style="font-size: 13px; color: var(--text-sub);">Registered Citizens: <strong>${stats.users_by_role.user || 0}</strong></p>
+                <a href="user.html" style="color: var(--accent-teal); font-size: 12px; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 8px;">Open Citizen Dashboard →</a>
+              `;
+            }
 
-    ctx.fillStyle = '#0D131E';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const volCard = document.getElementById('volunteer-console');
+            if (volCard) {
+              volCard.innerHTML = `
+                <h3 style="color: var(--accent-green); margin-bottom: 8px;">🙋 Volunteer Network</h3>
+                <p style="font-size: 13px; color: var(--text-sub);">Active Responders: <strong>${stats.users_by_role.volunteer || 0}</strong> | Active SOS: <strong>${stats.active_sos_incidents || 0}</strong></p>
+                <a href="volunteer.html" style="color: var(--accent-green); font-size: 12px; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 8px;">Open Volunteer Console →</a>
+              `;
+            }
 
-    // Green safe corridor
-    ctx.strokeStyle = '#34C759';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(20, 140);
-    ctx.lineTo(120, 80);
-    ctx.lineTo(250, 40);
-    ctx.stroke();
+            const polCard = document.getElementById('police-console');
+            if (polCard) {
+              polCard.innerHTML = `
+                <h3 style="color: var(--accent-red); margin-bottom: 8px;">🚔 Police Command Operations</h3>
+                <p style="font-size: 13px; color: var(--text-sub);">Active Cases: <strong>${stats.total_cases || 0}</strong> | Police Units: <strong>${stats.users_by_role.police || 0}</strong></p>
+                <a href="police.html" style="color: var(--accent-red); font-size: 12px; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 8px;">Open Police Command Room →</a>
+              `;
+            }
 
-    // Red alert hotspot
-    ctx.fillStyle = 'rgba(255, 59, 48, 0.4)';
-    ctx.beginPath();
-    ctx.arc(180, 110, 35, 0, Math.PI * 2);
-    ctx.fill();
-  </script>
+            const prsCard = document.getElementById('journalist-console');
+            if (prsCard) {
+              prsCard.innerHTML = `
+                <h3 style="color: var(--accent-teal); margin-bottom: 8px;">📰 Press Desk Suite</h3>
+                <p style="font-size: 13px; color: var(--text-sub);">Accredited Journalists: <strong>${stats.users_by_role.journalist || 0}</strong> | Feed Posts: <strong>${stats.total_feed_posts || 0}</strong></p>
+                <a href="journalist.html" style="color: var(--accent-teal); font-size: 12px; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 8px;">Open Press Desk →</a>
+              `;
+            }
+          }
+        } catch (e) {
+          console.warn('Could not load admin stats:', e.message);
+        }
+      }
+
+      function switchRole(role) {
+        document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+        if (event && event.target) event.target.classList.add('active');
+
+        document.querySelectorAll('.role-console').forEach(c => c.classList.remove('active-console'));
+        const targetConsole = document.getElementById(`${role}-console`);
+        if (targetConsole) targetConsole.classList.add('active-console');
+      }
+
+      async function triggerSOS() {
+        try {
+          const inc = await apiCall('/sos/trigger', 'POST', {
+            user_name: 'Admin Broadcast',
+            user_id: currentAdminUser?.id,
+            trigger_type: 'MANUAL_HOLD',
+            severity: 'CRITICAL',
+            location: {
+              latitude: 19.0760,
+              longitude: 72.8777,
+              address: 'Central Admin Operations HQ'
+            },
+            notes: 'Systemwide emergency test alert triggered by Super Administrator.'
+          });
+          showToast(`🚨 Emergency Alert Broadcasted! Incident: ${inc.incident_id}`, '🚨');
+        } catch (err) {
+          showToast('Could not trigger test SOS.', '⚠️');
+        }
+      }
+
+      function drawHeatmap() {
+        const canvas = document.getElementById('heatmapCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth || 280;
+        canvas.height = canvas.offsetHeight || 180;
+
+        ctx.fillStyle = '#0D131E';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = '#34C759';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(20, 140);
+        ctx.lineTo(120, 80);
+        ctx.lineTo(250, 40);
+        ctx.stroke();
+
+        ctx.fillStyle = 'rgba(255, 59, 48, 0.4)';
+        ctx.beginPath();
+        ctx.arc(180, 110, 35, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        initAdminDashboard();
+      });
+    </script>
 </body>
 </html>

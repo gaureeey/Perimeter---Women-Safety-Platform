@@ -1,0 +1,201 @@
+# Perimeter Platform — Women Safety Social Community Platform Implementation Plan
+
+Transform Perimeter into a community-based women safety social platform (inspired by social networks like Instagram, centered around women's safety, incident reporting, verified emergency dispatch, and case follow-ups).
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Complete Removal of `login.html` & Pure One-Time Persistent Registration:**
+> `frontend/login.html` will be permanently deleted. All links, redirects, server default fallbacks, and scripts referencing `login.html` will be updated to point to `register.html` or the authenticated dashboard.
+> When opening `http://localhost:8080/`:
+> 1. If an active JWT session exists in `localStorage`, the user is immediately routed to their designated role dashboard (`user.html`, `volunteer.html`, `police.html`, `journalist.html`, `admin.html`).
+> 2. If no valid session exists, `register.html` is displayed. Registration saves the user to SQLite, issues a signed JWT, and immediately logs them in persistently.
+> 3. For development & testing convenience, `register.html` will feature a quick-switch persona selector that authenticates pre-seeded test roles (`Aarohi Sharma`, `Inspector K. Patil`, `Priya Deshmukh`, `Rhea Nair`, `Admin`) in 1 click without retyping.
+
+> [!NOTE]
+> **Data & Feature Continuity:**
+> All existing working features (Emergency SOS button, 5km Geofence spatial router, active dispatch cards, volunteer accept flow, police resolution, case timeline audit, admin stats) will be 100% preserved and cleanly integrated into the unified social architecture.
+
+---
+
+## Proposed Changes
+
+### 1. File Cleanup & Route Harmonization (Removal of `login.html`)
+
+#### [DELETE] [frontend/login.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/login.html)
+- Remove `login.html` completely from the filesystem.
+
+#### [MODIFY] [server.js](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/server.js) & [serve.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/serve.py) & [index.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/index.html)
+- Update 404 fallback and console logs in `server.js` from `login.html` to `register.html`.
+- Update `index.html` meta refresh and script redirect to `frontend/register.html` (which auto-routes to dashboard if authenticated).
+
+#### [MODIFY] [frontend/js/api.js](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/js/api.js)
+- Update `logout()` and `guardProtectedPage()` to redirect to `register.html`.
+- Add API helper methods for follow/unfollow, post likes, comments, shares, saves, user profile retrieval, case follow-ups, stories, reels, messaging, and channels.
+
+#### [MODIFY] [frontend/register.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/register.html)
+- Remove all "Sign In to login.html" links.
+- Integrate one-time registration with instant JWT session setup and automatic redirect.
+- Add quick persona switcher for testing seeded accounts.
+
+#### [MODIFY] [frontend/user.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/user.html), [volunteer.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/volunteer.html), [police.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/police.html), [journalist.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/journalist.html), [admin.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/admin.html)
+- Replace any remaining links or onclick handlers pointing to `login.html` with standard `logout()` or profile navigation.
+
+---
+
+### 2. Database Models & Schema Layer (Backend)
+
+#### [MODIFY] [backend/app/models/user.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/models/user.py)
+- Add columns: `username` (unique indexed handle, e.g. `@aarohi`), `bio`, `is_private` (boolean), `profile_image_url`, `location`, `followers_count`, `following_count`, `posts_count`.
+
+#### [NEW] [backend/app/models/social.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/models/social.py)
+- **`Follow`**: `id`, `follower_id`, `following_id`, `created_at` (with unique constraint on `follower_id` + `following_id`).
+- **`FollowRequest`**: `id`, `requester_id`, `target_id`, `status` (`pending`, `accepted`, `rejected`), `created_at`.
+- **`PostLike`**: `id`, `post_id`, `user_id`, `created_at`.
+- **`PostComment`**: `id`, `post_id`, `user_id`, `user_name`, `user_avatar`, `user_role`, `text`, `created_at`.
+- **`PostShare`**: `id`, `post_id`, `user_id`, `share_target`, `created_at`.
+- **`PostSave`**: `id`, `post_id`, `user_id`, `created_at`.
+- **`StoryView`**: `id`, `story_id`, `user_id`, `viewed_at`.
+- **`StoryPollVote`**: `id`, `story_id`, `user_id`, `selected_option`, `created_at`.
+- **`Reel`**: `id`, `author_id`, `author_name`, `author_avatar`, `author_role`, `caption`, `video_url`, `thumbnail_url`, `audio_title`, `likes_count`, `comments_count`, `created_at`.
+- **`Conversation`**: `id`, `title`, `is_group`, `created_at`, `updated_at`.
+- **`ConversationMember`**: `id`, `conversation_id`, `user_id`, `joined_at`.
+- **`Message`**: `id`, `conversation_id`, `sender_id`, `sender_name`, `sender_avatar`, `text`, `media_url`, `is_read`, `created_at`.
+- **`BroadcastChannel`**: `id`, `creator_id`, `creator_name`, `creator_role`, `name`, `description`, `category`, `subscriber_count`, `created_at`.
+- **`ChannelMember`**: `id`, `channel_id`, `user_id`, `joined_at`.
+- **`ChannelPost`**: `id`, `channel_id`, `author_name`, `title`, `content`, `media_url`, `created_at`.
+
+#### [MODIFY] [backend/app/models/feed.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/models/feed.py)
+- Extend `FeedPost` with `author_id`, `media_type` (`image`, `video`, `carousel`), `media_urls` (JSON string for up to 10 items), `likes_count`, `shares_count`, `saves_count`.
+- Extend `Story` with `author_id`, `media_url`, `media_type`, `expires_at` (24h calculation), `poll_question`, `poll_options` (JSON string), `quiz_data`.
+
+#### [MODIFY] [backend/app/models/case.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/models/case.py)
+- Add `user_id` / `reporter_id` column to `IncidentCase` to allow users to securely retrieve their own case follow-ups and timeline audits.
+
+#### [MODIFY] [backend/app/models/__init__.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/models/__init__.py)
+- Export all social, messaging, reel, and channel models.
+
+---
+
+### 3. Backend REST APIs & Schemas Layer
+
+#### [NEW] [backend/app/schemas/social.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/schemas/social.py)
+- Pydantic models for user profile details, edit profile, follow actions, post comments, likes, shares, saves, story interactions, reels, direct messages, and broadcast channels.
+
+#### [NEW] [backend/app/api/social.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/api/social.py)
+- **Profile Endpoints**:
+  - `GET /api/v1/social/profile/me`: Full user profile with follower/following stats and activity counters.
+  - `PUT /api/v1/social/profile/me`: Update bio, avatar, phone, location, private account setting.
+  - `GET /api/v1/social/users/{user_id}/profile`: Public profile view for another user with follow relationship status.
+  - `GET /api/v1/social/users/search`: Search users by name, username, role, or area.
+- **Follow System Endpoints**:
+  - `POST /api/v1/social/users/{user_id}/follow`: Follow / send follow request.
+  - `POST /api/v1/social/users/{user_id}/unfollow`: Unfollow user.
+  - `GET /api/v1/social/users/{user_id}/followers`: List followers.
+  - `GET /api/v1/social/users/{user_id}/following`: List following.
+  - `GET /api/v1/social/follow-requests`: List pending requests for private accounts.
+  - `POST /api/v1/social/follow-requests/{request_id}/respond`: Accept/reject request.
+- **Activity & Profile History Endpoints**:
+  - `GET /api/v1/social/profile/my-posts`: Posts created by user.
+  - `GET /api/v1/social/profile/my-liked-posts`: Posts liked by user.
+  - `GET /api/v1/social/profile/my-commented-posts`: Posts commented on by user.
+  - `GET /api/v1/social/profile/my-shared-posts`: Posts shared by user.
+  - `GET /api/v1/social/profile/my-cases`: Emergency SOS cases and incident reports filed by this user with live responder timeline.
+- **Post Interactions Endpoints**:
+  - `POST /api/v1/social/posts/{post_id}/like`: Toggle like/unlike with DB persistence.
+  - `POST /api/v1/social/posts/{post_id}/comments`: Post a comment.
+  - `GET /api/v1/social/posts/{post_id}/comments`: Get comments for a post.
+  - `DELETE /api/v1/social/comments/{comment_id}`: Delete own comment.
+  - `POST /api/v1/social/posts/{post_id}/share`: Record post share.
+  - `POST /api/v1/social/posts/{post_id}/save`: Bookmark/save post.
+- **Reels & Video Endpoints**:
+  - `GET /api/v1/social/reels`: List reels feed with video URLs.
+  - `POST /api/v1/social/reels`: Upload/publish a safety reel (up to 90s).
+  - `POST /api/v1/social/reels/{reel_id}/like`: Like/unlike reel.
+- **Direct Messages Endpoints**:
+  - `GET /api/v1/social/conversations`: List active DM conversations.
+  - `POST /api/v1/social/conversations`: Start or get conversation with another user.
+  - `GET /api/v1/social/conversations/{conv_id}/messages`: Retrieve conversation message history.
+  - `POST /api/v1/social/conversations/{conv_id}/messages`: Send text message.
+- **Broadcast Channels Endpoints**:
+  - `GET /api/v1/social/channels`: List public broadcast channels (Police, Press, Emergency).
+  - `POST /api/v1/social/channels`: Create channel (for Police, Journalist, Admin).
+  - `POST /api/v1/social/channels/{channel_id}/subscribe`: Subscribe/join channel.
+  - `GET /api/v1/social/channels/{channel_id}/posts`: Retrieve channel broadcasts.
+  - `POST /api/v1/social/channels/{channel_id}/posts`: Publish broadcast update.
+
+#### [MODIFY] [backend/app/api/feed.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/api/feed.py)
+- Support feed filtering: All, Following, Safety Alerts, Police Notices.
+- Support 24-hour expiration filter for active stories.
+- Support story poll voting.
+
+#### [MODIFY] [backend/app/main.py](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/backend/app/main.py)
+- Include `social_router` in FastAPI application.
+
+---
+
+### 4. Frontend Social Community & Case Follow-up UI
+
+#### [MODIFY] [frontend/user.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/user.html)
+- **Instagram-Style Navigation & View Switcher**:
+  - **Feed Tab (Home)**: Social safety feed, stories bar (with 24h timer & poll badges), post creator with media/tag options, like/unlike animation, comment sheet/modal, share and bookmark buttons.
+  - **Explore / Search Tab**: Search users, filter by role (Citizen, Volunteer, Police, Press), preview public profiles, follow/unfollow buttons.
+  - **Reels Tab**: Dedicated short safety video viewer with playback, like count, audio badge, and "Upload Reel" modal.
+  - **Direct Messages (DMs) Tab**: Clean chat interface with conversation list, message thread, real-time message sending & persistence.
+  - **Broadcast Channels Tab**: Verified police alerts, investigative press dispatches, and emergency broadcast subscriptions.
+  - **Emergency / SOS Section**: Unchanged high-visibility SOS trigger, accident report modal, live GPS coordinate beacon.
+  - **Comprehensive Profile Tab (14 Activity Sections)**:
+    - User banner, profile avatar, `@handle`, name, bio, role badge, location tag.
+    - Counters: Posts, Followers, Following, Cases Filed.
+    - Edit Profile Modal (Name, Bio, Area, Emergency Contact, Profile Avatar).
+    - Tabbed Activity Switcher:
+      1. *My Posts*
+      2. *My Stories*
+      3. *Posts I Liked*
+      4. *Comments & Shared*
+      5. *Saved Posts*
+      6. *Following & Followers*
+      7. *Follow Requests*
+      8. *My SOS Cases & Follow-ups* (shows case ID, date, status badge, full timeline log, responder status, police notes).
+
+#### [MODIFY] [frontend/volunteer.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/volunteer.html), [police.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/police.html), [journalist.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/journalist.html), [admin.html](file:///c:/Users/DELL/OneDrive/Desktop/Perimeter/Perimeter---Women-Safety-Platform/frontend/admin.html)
+- Integrate shared social capabilities (Profile view, follow status, broadcast publishing for police/journalists, live community safety feed integration, role-specific safety alerts).
+
+---
+
+## Verification Plan
+
+### Automated Tests
+1. **Backend Integration Test Suite** (`backend/test_integration.py`):
+   - User registration & JWT generation (without `login.html`).
+   - Profile retrieval & profile update.
+   - Follow & Unfollow flow + follower count verification.
+   - Post creation $\to$ Like $\to$ Comment $\to$ Share $\to$ Save persistence.
+   - Story creation with 24h expiration + poll voting.
+   - Reel creation & retrieval.
+   - Direct Message exchange between two users.
+   - Broadcast channel creation & subscriber broadcast.
+   - Case follow-up retrieval for victim user.
+   - Role permission enforcement (e.g. only verified roles can publish broadcast channels).
+
+### Manual Verification
+1. **Remove `login.html` & Test Auto-Routing**:
+   - Verify `http://localhost:8080/login.html` is gone (returns 404).
+   - Open `http://localhost:8080/` $\to$ automatically directs to `register.html` when logged out.
+   - Register or select persona $\to$ automatically directed to `user.html` (or appropriate dashboard).
+   - Refresh `user.html` or reopen browser $\to$ user stays logged in.
+   - Click Logout $\to$ clears session and cleanly redirects to `register.html`.
+2. **Profile & 14 Activity Sections**:
+   - Open Profile tab on `user.html`.
+   - Edit bio and area $\to$ save $\to$ verify persistence.
+   - Switch tabs: My Posts, Liked Posts, Following, and My SOS Cases $\to$ verify correct items load.
+3. **Social Features in Browser**:
+   - Create post with safety category $\to$ verify instant appearance on Feed.
+   - Click Like $\to$ verify heart animation and persistent count.
+   - Add comment $\to$ verify comment renders under post.
+   - Go to Explore/Search $\to$ follow another user $\to$ verify follower count increments.
+   - Switch to Reels tab $\to$ play video clip.
+   - Switch to Messages tab $\to$ send message to another user $\to$ verify it persists.
+   - Trigger SOS $\to$ check Profile > My SOS Cases to see the newly generated Case ID and timeline event.

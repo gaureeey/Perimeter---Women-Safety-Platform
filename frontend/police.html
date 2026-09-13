@@ -640,7 +640,7 @@
         <button class="reg-btn" onclick="submitPoliceReg()">🛡️ Complete Registration & Enter Command</button>
 
         <div style="text-align:center;font-size:12px;color:#64748B;margin-top:16px;">
-            Already registered? <a href="login.html" style="color:#2563EB;font-weight:600;text-decoration:none;">Sign In</a> or <a href="register.html?role=police" style="color:#2563EB;font-weight:600;text-decoration:none;">Full Registration Page</a>
+            Need help or switching persona? <a href="register.html" style="color:#2563EB;font-weight:600;text-decoration:none;">Go to Register / Switch Persona</a>
         </div>
     </div>
 </div>
@@ -655,7 +655,7 @@
         </div>
         <div class="police-topbar-right">
             <span style="color: #93C5FD; font-family: var(--mono); font-size: 11px;">COMMAND ROOM: CENTRAL #01</span>
-            <a href="login.html" onclick="logout(); return false;">Switch Persona / Logout →</a>
+            <a href="register.html" onclick="logout(); return false;">Switch Persona / Logout →</a>
         </div>
     </div>
 
@@ -817,77 +817,71 @@
         <span id="toastMsg">Notification message</span>
     </div>
 
+    <script src="js/api.js"></script>
     <script>
-        // ── ONE-TIME REGISTRATION: POLICE ──
-        const POLICE_KEY = 'perimeter_police_profile';
+        let currentPoliceUser = null;
+        let policeName = 'Inspector';
+        let policeAvatar = 'IP';
 
-        function loadPoliceSession() {
-            // Check universal session
+        async function initPoliceDashboard() {
+            currentPoliceUser = await guardProtectedPage(['police']);
+            if (!currentPoliceUser) return;
+
+            policeName = currentPoliceUser.name || 'Inspector';
+            policeAvatar = policeName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'P';
+
+            const topNameEl = document.getElementById('topbarPoliceName');
+            if (topNameEl) topNameEl.textContent = `${policeName} (City Police Command)`;
+            const navNameEl = document.getElementById('navPoliceName');
+            if (navNameEl) navNameEl.textContent = `${policeName.split(' ')[0]} (Police)`;
+            const avEl = document.getElementById('policeAvatar');
+            if (avEl) avEl.textContent = policeAvatar;
+
+            await loadCasesAndAlerts();
+            renderPoliceMap();
+        }
+
+        async function loadCasesAndAlerts() {
             try {
-                const sess = JSON.parse(localStorage.getItem('perimeter_session'));
-                if (sess && sess.name && (sess.role === 'police' || !sess.role)) {
-                    return { name: sess.name, badge: sess.dynamicField1 || 'POL-7741' };
+                const cases = await apiCall('/case/');
+                const caseList = document.querySelector('.case-list');
+                if (caseList && cases && cases.length > 0) {
+                    caseList.innerHTML = '';
+                    cases.forEach(c => {
+                        const card = document.createElement('div');
+                        card.className = 'case-card';
+                        card.id = `card_${c.case_id}`;
+                        const timeStr = new Date(c.opened_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        const isResolved = c.status === 'RESOLVED';
+
+                        card.innerHTML = `
+                            <div class="case-header">
+                                <div>
+                                    <div class="case-id">${c.case_id} · ${c.victim_identifier}</div>
+                                    <div class="case-title">${c.title}</div>
+                                    <div class="case-meta">📍 ${c.location} · Opened: ${timeStr} · Precinct: ${c.assigned_precinct}</div>
+                                </div>
+                                <span class="case-badge ${isResolved ? 'resolved' : 'active'}">${c.status.replace('_', ' ')}</span>
+                            </div>
+                            <div class="case-actions">
+                                <button class="btn-police-act dispatch" onclick="dispatchPatrolUnit('${c.case_id}', 'Patrol Unit #04', '${c.location}')">
+                                    🚔 Dispatch Patrol Unit
+                                </button>
+                                ${!isResolved ? `
+                                <button class="btn-police-act resolve" onclick="openResolveModal('${c.case_id}', '${c.title}')">
+                                    ✔ Resolve & Close Case
+                                </button>` : `
+                                <span style="font-size: 12px; color: #10B981; font-weight: 600; padding: 6px 12px;">Case Verified & Resolved</span>
+                                `}
+                            </div>
+                        `;
+                        caseList.appendChild(card);
+                    });
                 }
-            } catch(e) {}
-
-            try { return JSON.parse(localStorage.getItem(POLICE_KEY)); } catch(e) { return null; }
-        }
-
-        function initPoliceApp(profile) {
-            const pName   = profile.name   || 'Officer';
-            const pAvatar = profile.name ? profile.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() : 'IP';
-            document.getElementById('topbarPoliceName').textContent = `${pName} (City Police)`;
-            document.getElementById('navPoliceName').textContent = pName.split(' ')[0] + ' (Police)';
-            document.getElementById('policeAvatar').textContent = pAvatar;
-        }
-
-        function submitPoliceReg() {
-            const name   = document.getElementById('regName').value.trim();
-            const badge  = document.getElementById('regBadge').value.trim();
-            const pass   = document.getElementById('regPass').value;
-            const conf   = document.getElementById('regConf').value;
-            if (!name)  { policeRegAlert('Please enter your full name.'); return; }
-            if (!badge) { policeRegAlert('Please enter your Badge / ID number.'); return; }
-            if (pass.length < 6) { policeRegAlert('Password must be at least 6 characters.'); return; }
-            if (pass !== conf)   { policeRegAlert('Passwords do not match.'); return; }
-
-            const profile = { name, badge, registeredAt: new Date().toISOString() };
-            localStorage.setItem(POLICE_KEY, JSON.stringify(profile));
-            localStorage.setItem('perimeter_session', JSON.stringify({
-                role: 'police',
-                name: name,
-                badge: 'City Police Command',
-                avatar: name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() || 'P',
-                dynamicField1: badge,
-                token: 'jwt_token_' + Date.now(),
-                loginTime: new Date().toISOString()
-            }));
-
-            document.getElementById('regOverlay').classList.remove('show');
-            initPoliceApp(profile);
-            toast(`Registered as ${name}! Welcome to Police Command Room.`, '🚔');
-        }
-
-        function policeRegAlert(msg) {
-            const el = document.getElementById('regAlertBox');
-            el.textContent = msg; el.style.display = 'block';
-            setTimeout(() => { el.style.display = 'none'; }, 3500);
-        }
-
-        function logout() {
-            localStorage.removeItem(POLICE_KEY);
-            localStorage.removeItem('perimeter_session');
-            window.location.href = 'login.html';
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const profile = loadPoliceSession();
-            if (profile && profile.name) {
-                initPoliceApp(profile);
-            } else {
-                document.getElementById('regOverlay').classList.add('show');
+            } catch (err) {
+                console.warn('Could not load police cases:', err.message);
             }
-        });
+        }
 
         // Tactical Canvas
         function renderPoliceMap() {
@@ -900,29 +894,23 @@
             ctx.fillStyle = '#060810';
             ctx.fillRect(0, 0, w, h);
 
-            // Grid lines
             ctx.strokeStyle = '#151D33';
             ctx.lineWidth = 1;
             for (let x = 0; x < w; x += 35) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
             for (let y = 0; y < h; y += 35) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
 
-            // Safe route corridors (Teal)
             ctx.strokeStyle = '#0F6E6E';
             ctx.lineWidth = 3;
             ctx.beginPath(); ctx.moveTo(60, 220); ctx.lineTo(240, 100); ctx.lineTo(460, 150); ctx.stroke();
 
-            // Active Patrol Units (Blue)
             ctx.fillStyle = '#3B82F6';
-            // Patrol 1
             ctx.beginPath(); ctx.arc(140, 160, 8, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = '#FFFFFF'; ctx.font = '10px IBM Plex Mono'; ctx.fillText('🚔 PCR-04', 152, 164);
 
-            // Patrol 2
             ctx.fillStyle = '#3B82F6';
             ctx.beginPath(); ctx.arc(380, 80, 8, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = '#FFFFFF'; ctx.fillText('🚔 PCR-12', 392, 84);
 
-            // Distress Beacons (Red Glow)
             let grad1 = ctx.createRadialGradient(280, 110, 2, 280, 110, 30);
             grad1.addColorStop(0, 'rgba(239, 68, 68, 0.9)');
             grad1.addColorStop(1, 'rgba(239, 68, 68, 0)');
@@ -931,9 +919,9 @@
             ctx.fillStyle = '#FFFFFF'; ctx.fillText('🚨 SOS #089', 290, 114);
         }
 
-        // Timeline Sync
         function addTimelineEntry(title, desc) {
             const container = document.getElementById('timelineContainer');
+            if (!container) return;
             const item = document.createElement('div');
             item.className = 'timeline-item';
             const now = new Date();
@@ -945,13 +933,22 @@
             container.insertBefore(item, container.firstChild);
         }
 
-        // Dispatch Patrol
-        function dispatchPatrolUnit(caseId, unit, loc) {
-            addTimelineEntry('Patrol Unit Dispatched', `${policeName} dispatched ${unit} to ${loc} with priority sirens.`);
-            toast(`🚔 ${unit} dispatched to ${caseId} with live sirens active!`, '🚨');
+        async function dispatchPatrolUnit(caseId, unit, loc) {
+            try {
+                await apiCall(`/case/${caseId}/timeline`, 'POST', {
+                    timestamp: new Date().toISOString(),
+                    title: 'Patrol Unit Dispatched',
+                    description: `${policeName} dispatched ${unit} to ${loc} with priority sirens.`,
+                    actor_role: 'police',
+                    actor_name: policeName
+                });
+                addTimelineEntry('Patrol Unit Dispatched', `${policeName} dispatched ${unit} to ${loc} with priority sirens.`);
+                toast(`🚔 ${unit} dispatched to ${caseId} with live sirens active!`, '🚨');
+            } catch (err) {
+                toast(`Could not dispatch unit: ${err.message}`, '⚠️');
+            }
         }
 
-        // Case Resolution Modal
         let activeResolveCaseId = '';
         function openResolveModal(caseId, title) {
             activeResolveCaseId = caseId;
@@ -964,38 +961,61 @@
             document.getElementById('resolveModal').classList.remove('open');
         }
 
-        function confirmResolveCase() {
+        async function confirmResolveCase() {
             const notes = document.getElementById('resolveNotes').value.trim();
-            addTimelineEntry('Case Resolved & Closed', `${policeName} confirmed closure for ${activeResolveCaseId}. Findings: ${notes}`);
-            closeResolveModal();
-            toast(`✅ ${activeResolveCaseId} officially resolved and archived!`, '🛡️');
+            try {
+                await apiCall(`/case/${activeResolveCaseId}/timeline`, 'POST', {
+                    timestamp: new Date().toISOString(),
+                    title: 'Incident Resolved & Closed',
+                    description: `Resolution logged by ${policeName}. Findings: ${notes}`,
+                    actor_role: 'police',
+                    actor_name: policeName
+                });
 
-            // Increment stat
-            let c = parseInt(document.getElementById('statCasesClosed').textContent) + 1;
-            document.getElementById('statCasesClosed').textContent = c;
+                addTimelineEntry('Case Resolved & Closed', `${policeName} confirmed closure for ${activeResolveCaseId}. Findings: ${notes}`);
+                closeResolveModal();
+                toast(`✅ ${activeResolveCaseId} officially resolved in database!`, '🛡️');
+
+                let cEl = document.getElementById('statCasesClosed');
+                if (cEl) {
+                    let c = parseInt(cEl.textContent) + 1;
+                    cEl.textContent = c;
+                }
+                await loadCasesAndAlerts();
+            } catch (err) {
+                toast(err.message || 'Could not resolve case.', '❌');
+            }
         }
 
-        // Broadcast Police Advisory
-        function publishPoliceAdvisory() {
+        async function publishPoliceAdvisory() {
             const input = document.getElementById('policeAdvisoryInput');
             const txt = input.value.trim();
             if (!txt) { toast('Please write an advisory message.', '⚠️'); return; }
 
-            addTimelineEntry('Official Police Advisory', `${policeName}: ${txt}`);
-            input.value = '';
-            toast('📢 Official Police Advisory broadcasted to all citizens & volunteers!', '👮');
+            try {
+                await apiCall('/feed/', 'POST', {
+                    author_name: policeName,
+                    author_role: 'police',
+                    title: 'Official City Police Security Advisory',
+                    content: txt,
+                    tag: 'POLICE_NOTICE',
+                    location_name: currentPoliceUser?.dynamic_field_2 || 'Citywide Command'
+                });
+
+                addTimelineEntry('Official Police Advisory', `${policeName}: ${txt}`);
+                input.value = '';
+                toast('📢 Official Police Advisory stored & broadcasted to all citizens!', '👮');
+            } catch (err) {
+                toast(err.message || 'Failed to broadcast advisory.', '❌');
+            }
         }
 
         function toast(msg, icon = '✨') {
-            const el = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            document.getElementById('toastIcon').textContent = icon;
-            el.classList.add('show');
-            setTimeout(() => { el.classList.remove('show'); }, 3000);
+            showToast(msg, icon);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            renderPoliceMap();
+            initPoliceDashboard();
         });
     </script>
 </body>

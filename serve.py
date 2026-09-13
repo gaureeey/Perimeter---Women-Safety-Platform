@@ -13,20 +13,19 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == "/" or self.path == "":
-            self.path = "/login.html"
+            self.path = "/index.html"
         return super().do_GET()
 
 def main():
     print("=" * 60)
     print(f"🛡️  PERIMETER Frontend Server (Python)")
     print(f"🔗 Local URL:  http://localhost:{PORT}/")
-    print(f"📄 Login:      http://localhost:{PORT}/login.html")
     print(f"📝 Register:   http://localhost:{PORT}/register.html")
     print("=" * 60)
     
     # Auto open browser
     try:
-        webbrowser.open(f"http://localhost:{PORT}/login.html")
+        webbrowser.open(f"http://localhost:{PORT}/register.html")
     except Exception:
         pass
 

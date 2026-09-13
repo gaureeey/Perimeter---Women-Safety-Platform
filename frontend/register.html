@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One-Time Registration — PERIMETER Safety Platform</title>
+    <title>One-Time Registration — PERIMETER Women Safety Platform</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -117,7 +117,7 @@
             max-width: 1080px;
             display: grid;
             grid-template-columns: 1.1fr 1.3fr;
-            background: rgba(17, 21, 40, 0.8);
+            background: rgba(17, 21, 40, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.12);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
@@ -252,24 +252,48 @@
             line-height: 1.4;
         }
 
-        /* Left footer */
-        .brand-footer {
+        /* Test Personas Section on Left */
+        .persona-quick-panel {
             margin-top: 24px;
-            font-size: 12.5px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .persona-quick-title {
+            font-size: 11.5px;
+            font-weight: 700;
             color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+        }
+
+        .persona-pills-row {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
         }
 
-        .brand-footer a {
-            color: #5EEAD4;
-            text-decoration: none;
+        .persona-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #F1F5F9;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 11.5px;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .brand-footer a:hover {
-            text-decoration: underline;
+        .persona-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #5EEAD4;
+            color: #5EEAD4;
+            transform: translateY(-1px);
         }
 
         /* Right Side: Registration Form */
@@ -285,7 +309,7 @@
         }
 
         .form-header {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .form-header h2 {
@@ -308,7 +332,7 @@
             background: #F1F5F9;
             padding: 4px;
             border-radius: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             overflow-x: auto;
         }
 
@@ -333,11 +357,27 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
-        .role-pill.active[data-role="user"] { color: var(--coral); }
-        .role-pill.active[data-role="volunteer"] { color: var(--gold); }
-        .role-pill.active[data-role="journalist"] { color: var(--teal); }
-        .role-pill.active[data-role="police"] { color: var(--police-blue); }
-        .role-pill.active[data-role="admin"] { color: var(--purple); }
+        .role-pill.active[data-role="user"] { color: var(--coral); font-weight: 700; }
+        .role-pill.active[data-role="volunteer"] { color: var(--gold); font-weight: 700; }
+        .role-pill.active[data-role="journalist"] { color: var(--teal); font-weight: 700; }
+        .role-pill.active[data-role="police"] { color: var(--police-blue); font-weight: 700; }
+        .role-pill.active[data-role="admin"] { color: var(--purple); font-weight: 700; }
+
+        /* Role Dynamic Info Banner */
+        .role-info-banner {
+            background: #F8FAFC;
+            border: 1px solid var(--line);
+            border-left: 4px solid var(--coral);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: 12px;
+            color: #475569;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
 
         /* Form Grid */
         .form-grid {
@@ -347,7 +387,7 @@
         }
 
         .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .form-group.full {
@@ -356,12 +396,12 @@
 
         .form-label {
             display: block;
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.04em;
             color: #475569;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .input-wrapper {
@@ -378,7 +418,7 @@
             pointer-events: none;
         }
 
-        .form-input, .form-select {
+        .form-input {
             width: 100%;
             padding: 10px 12px 10px 38px;
             background: #F8FAFC;
@@ -391,26 +431,10 @@
             transition: all 0.15s ease;
         }
 
-        .form-input:focus, .form-select:focus {
+        .form-input:focus {
             background: #FFFFFF;
             border-color: var(--coral);
             box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.12);
-        }
-
-        /* Role Dynamic Info Banner */
-        .role-info-banner {
-            background: #F8FAFC;
-            border: 1px solid var(--line);
-            border-left: 4px solid var(--coral);
-            border-radius: var(--radius-sm);
-            padding: 10px 14px;
-            font-size: 12px;
-            color: #475569;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.2s ease;
         }
 
         /* Submit Button */
@@ -438,55 +462,6 @@
             background: #252C50;
             transform: translateY(-1px);
             box-shadow: 0 12px 24px rgba(17, 21, 40, 0.25);
-        }
-
-        .btn-register:active {
-            transform: translateY(0);
-        }
-
-        /* Footer Links */
-        .form-footer {
-            margin-top: 18px;
-            text-align: center;
-            font-size: 12.5px;
-            color: var(--gray);
-        }
-
-        .form-footer a {
-            color: var(--coral);
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .form-footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Alert Toast */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #111528;
-            color: #FFFFFF;
-            padding: 12px 24px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 1000;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
         }
 
         @media (max-width: 960px) {
@@ -526,7 +501,7 @@
 
     <main class="reg-wrapper">
 
-        <!-- Left Side: Brand & Feature Highlights -->
+        <!-- Left Side: Brand & Quick Persona Access -->
         <section class="brand-panel">
             <div>
                 <header class="brand-header">
@@ -539,40 +514,47 @@
                         <span class="pulse-dot"></span>
                         One-Time Instant Setup
                     </div>
-                    <h1>Join the Multi-Tier Safety Network</h1>
-                    <p>Create your account once. Your profile and safety preferences are saved locally and synchronized across the platform with no biometric barriers.</p>
+                    <h1>Women Safety Community & Emergency Social Hub</h1>
+                    <p>Create your account once. Your profile, safety preferences, social connections, and active emergency radar are saved securely and persistently.</p>
                 </div>
 
                 <div class="perks-list">
                     <div class="perk-item">
                         <div class="perk-icon">⚡</div>
                         <div class="perk-content">
-                            <h4>Instant 1-Click Setup</h4>
-                            <p>No Aadhaar scan or facial camera needed. Simple credentials grant immediate access to your dashboard.</p>
+                            <h4>One-Time Setup, Always Connected</h4>
+                            <p>Persistent encrypted session. Never get locked out during an emergency.</p>
                         </div>
                     </div>
 
                     <div class="perk-item">
                         <div class="perk-icon">🗺️</div>
                         <div class="perk-content">
-                            <h4>5 km Geospatial Response Radar</h4>
-                            <p>Connect immediately to live neighborhood emergency dispatches, heatmaps, and verified alerts.</p>
+                            <h4>5 km Geospatial Safety Radar</h4>
+                            <p>Instant geofence dispatches, verified patrol beacons, and community routes.</p>
                         </div>
                     </div>
 
                     <div class="perk-item">
-                        <div class="perk-icon">🔒</div>
+                        <div class="perk-icon">📸</div>
                         <div class="perk-content">
-                            <h4>Privacy-First Safety</h4>
-                            <p>Encrypted local storage guarantees personal data integrity and persistent automatic login.</p>
+                            <h4>Safety Social & Reels</h4>
+                            <p>Community feed, 24-hour interactive safety stories, polls, and verified police updates.</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="brand-footer">
-                <span>Already registered?</span>
-                <a href="login.html">Sign In to Dashboard →</a>
+            <!-- Quick Switcher for Seeded Personas -->
+            <div class="persona-quick-panel">
+                <div class="persona-quick-title">Quick Test Personas (1-Click Login):</div>
+                <div class="persona-pills-row">
+                    <button type="button" class="persona-btn" onclick="quickLoginPersona('aarohi.sharma@perimeter.org')">👩 Aarohi (Citizen)</button>
+                    <button type="button" class="persona-btn" onclick="quickLoginPersona('priya.deshmukh@volunteers.perimeter.org')">🙋 Priya (Volunteer)</button>
+                    <button type="button" class="persona-btn" onclick="quickLoginPersona('patil.k@police.gov.in')">🚔 Insp. Patil (Police)</button>
+                    <button type="button" class="persona-btn" onclick="quickLoginPersona('rhea.nair@press.perimeter.org')">📰 Rhea (Press)</button>
+                    <button type="button" class="persona-btn" onclick="quickLoginPersona('admin.root@perimeter.org')">👑 Admin</button>
+                </div>
             </div>
         </section>
 
@@ -580,7 +562,7 @@
         <section class="form-panel">
             <div class="form-header">
                 <h2 id="regTitle">One-Time Registration</h2>
-                <p id="regSub">Select your role and complete your profile to access your tailored suite.</p>
+                <p id="regSub">Select your role and complete your profile to access your tailored platform.</p>
             </div>
 
             <!-- Role Selector -->
@@ -601,10 +583,18 @@
             <form id="registerForm" onsubmit="handleRegistration(event)">
                 <div class="form-grid">
                     <div class="form-group full">
-                        <label class="form-label" for="regFullName">Full Name / Identity</label>
+                        <label class="form-label" for="regFullName">Full Name</label>
                         <div class="input-wrapper">
                             <span class="input-icon">👤</span>
                             <input type="text" id="regFullName" class="form-input" placeholder="e.g. Aarohi Sharma" required autocomplete="name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="regUsername">Username (@handle)</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">@</span>
+                            <input type="text" id="regUsername" class="form-input" placeholder="e.g. aarohi_sharma" autocomplete="username">
                         </div>
                     </div>
 
@@ -625,11 +615,11 @@
                     </div>
 
                     <!-- Role Dynamic Field 1 -->
-                    <div class="form-group full" id="dynamicFieldGroup1">
+                    <div class="form-group" id="dynamicFieldGroup1">
                         <label class="form-label" for="regDynamic1" id="labelDynamic1">Primary Emergency Contact</label>
                         <div class="input-wrapper">
                             <span class="input-icon" id="iconDynamic1">📞</span>
-                            <input type="text" id="regDynamic1" class="form-input" placeholder="e.g. +91 98200 12345 (Family / Guardian)" required>
+                            <input type="text" id="regDynamic1" class="form-input" placeholder="e.g. +91 98200 12345 (Family)" required>
                         </div>
                     </div>
 
@@ -660,24 +650,15 @@
                 </div>
 
                 <button type="submit" class="btn-register" id="submitRegBtn">
-                    <span id="btnRegText">Complete Registration & Enter</span>
+                    <span id="btnRegText">Register & Open Dashboard</span>
                     <span>→</span>
                 </button>
             </form>
-
-            <div class="form-footer">
-                Already registered on this device? <a href="login.html">Sign in here</a>
-            </div>
         </section>
 
     </main>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <span id="toastIcon">✨</span>
-        <span id="toastMsg">Notification message</span>
-    </div>
-
+    <script src="js/api.js"></script>
     <script>
         const ROLE_CONFIG = {
             user: {
@@ -785,17 +766,23 @@
             document.getElementById('btnRegText').textContent = config.btnText;
         }
 
-        function handleRegistration(event) {
+        async function handleRegistration(event) {
             event.preventDefault();
             const password = document.getElementById('regPassword').value;
             const confirm = document.getElementById('regConfirmPassword').value;
 
             if (password !== confirm) {
-                toast('Passwords do not match! Please check again.', '⚠️');
+                showToast('Passwords do not match! Please check again.', '⚠️');
+                return;
+            }
+
+            if (password.length < 6) {
+                showToast('Password must be at least 6 characters long.', '⚠️');
                 return;
             }
 
             const fullName = document.getElementById('regFullName').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const phone = document.getElementById('regPhone').value.trim();
             const dynamic1 = document.getElementById('regDynamic1').value.trim();
@@ -804,77 +791,61 @@
 
             const btn = document.getElementById('submitRegBtn');
             btn.disabled = true;
-            btn.innerHTML = `<span>Registering profile...</span> <span>⏳</span>`;
+            btn.innerHTML = `<span>Registering profile with database...</span> <span>⏳</span>`;
 
-            // Prepare session data
-            const initials = fullName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'P';
-            const userSession = {
-                role: currentRole,
-                name: fullName,
-                email: email,
-                phone: phone,
-                dynamicField1: dynamic1,
-                dynamicField2: dynamic2,
-                badge: config.badge,
-                avatar: initials,
-                token: 'jwt_token_' + Date.now(),
-                registeredAt: new Date().toISOString(),
-                loginTime: new Date().toISOString()
-            };
-
-            // Save in universal session
-            localStorage.setItem('perimeter_session', JSON.stringify(userSession));
-
-            // Also save role-specific profile key so legacy/direct page loads work instantly
-            if (currentRole === 'user') {
-                localStorage.setItem('perimeter_user_profile', JSON.stringify({
-                    username: fullName,
+            try {
+                const payload = {
+                    name: fullName,
+                    username: username || null,
                     email: email,
                     phone: phone,
-                    emergencyContact: dynamic1,
-                    area: dynamic2,
-                    registeredAt: userSession.registeredAt
-                }));
-            } else if (currentRole === 'volunteer') {
-                localStorage.setItem('perimeter_vol_profile', JSON.stringify({
-                    name: fullName,
-                    volId: dynamic1,
-                    area: dynamic2,
-                    registeredAt: userSession.registeredAt
-                }));
-            } else if (currentRole === 'police') {
-                localStorage.setItem('perimeter_police_profile', JSON.stringify({
-                    name: fullName,
-                    badge: dynamic1,
-                    precinct: dynamic2,
-                    registeredAt: userSession.registeredAt
-                }));
-            } else if (currentRole === 'journalist') {
-                localStorage.setItem('perimeter_press_profile', JSON.stringify({
-                    name: fullName,
-                    pressId: dynamic1,
-                    outlet: dynamic2,
-                    registeredAt: userSession.registeredAt
-                }));
+                    password: password,
+                    role: currentRole,
+                    dynamic_field_1: dynamic1,
+                    dynamic_field_2: dynamic2
+                };
+
+                const res = await apiCall('/auth/register', 'POST', payload);
+                if (res && res.access_token && res.user) {
+                    saveSession(res.access_token, res.user);
+                    showToast(`Account registered in database for ${fullName}! Forwarding to dashboard...`, '🎉');
+                    setTimeout(() => {
+                        window.location.href = config.targetUrl;
+                    }, 600);
+                } else {
+                    throw new Error('Invalid response structure from backend.');
+                }
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerHTML = `<span id="btnRegText">${config.btnText}</span> <span>→</span>`;
+                showToast(err.message || 'Registration failed. Check network or duplicate email.', '❌');
             }
-
-            toast(`Account created for ${fullName}! Forwarding to dashboard...`, '🎉');
-
-            setTimeout(() => {
-                window.location.href = config.targetUrl;
-            }, 800);
         }
 
-        function toast(msg, icon = '✨') {
-            const el = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            document.getElementById('toastIcon').textContent = icon;
-            el.classList.add('show');
-            setTimeout(() => { el.classList.remove('show'); }, 3200);
+        async function quickLoginPersona(identity) {
+            showToast(`Logging in as ${identity.split('@')[0]}...`, '⚡');
+            try {
+                const res = await apiCall('/auth/login', 'POST', {
+                    identity: identity,
+                    password: 'password123'
+                });
+                if (res && res.access_token && res.user) {
+                    saveSession(res.access_token, res.user);
+                    showToast(`Logged in as ${res.user.name} (${res.user.badge_title})!`, '✅');
+                    const target = ROLE_DASHBOARDS[res.user.role] || 'user.html';
+                    setTimeout(() => {
+                        window.location.href = target;
+                    }, 500);
+                }
+            } catch (err) {
+                showToast(err.message || 'Quick login failed.', '❌');
+            }
         }
 
-        // Check if role passed via query parameter
+        // On load: check if already authenticated first
         window.addEventListener('DOMContentLoaded', () => {
+            if (guardPublicPage()) return;
+
             const params = new URLSearchParams(window.location.search);
             const roleParam = params.get('role');
             if (roleParam && ROLE_CONFIG[roleParam]) {
