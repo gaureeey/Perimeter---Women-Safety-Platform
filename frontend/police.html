@@ -666,7 +666,7 @@
 
             <div class="police-metrics-bar">
                 <div class="police-metric">Active SOS: <b style="color: var(--coral);" id="statActiveSos">2</b></div>
-                <div class="police-metric">Patrols Deployed: <b>8 Units</b></div>
+                <div class="police-metric">Patrols Deployed: <b id="statPatrolsDeployed">8</b> Units</div>
                 <div class="police-metric">Avg Response: <b>2.1 mins</b></div>
                 <div class="police-metric">Cases Closed: <b id="statCasesClosed">14</b></div>
             </div>
@@ -715,44 +715,10 @@
             <div id="incidentList">
 
                 <!-- Incident 1: SOS Beacon -->
-                <div class="incident-card critical" id="inc-card-1">
-                    <div class="inc-top">
-                        <span class="inc-tag red">🚨 SOS Distress · Case #2026-089</span>
-                        <span style="font-size: 12px; font-weight: 700; color: var(--gray); font-family: var(--mono);">Sector 4 Alleyway</span>
-                    </div>
-                    <div class="inc-title">Motion Sensor SOS (Shake x3) — Citizen Aarohi Sharma</div>
-                    <div class="inc-desc">
-                        Distress beacon active. Volunteer Priya D. arrived on scene. Immediate police presence requested to escort and secure perimeter.
-                    </div>
-                    <div class="inc-actions">
-                        <button class="btn-dispatch" id="btn-dispatch-1" onclick="dispatchPatrolUnit('CASE-2026-089', 'Patrol Unit #4', 'Sector 4 Alleyway')">
-                            🚔 Dispatch Patrol Unit #4 →
-                        </button>
-                        <button class="btn-resolve" onclick="openResolveModal('CASE-2026-089', 'Sector 4 Motion SOS')">
-                            ✔ Resolve & Archive Case
-                        </button>
-                    </div>
-                </div>
+                
 
                 <!-- Incident 2: Traffic Collision -->
-                <div class="incident-card" id="inc-card-2">
-                    <div class="inc-top">
-                        <span class="inc-tag accident">🚗 Vehicle Accident · Case #2026-094</span>
-                        <span style="font-size: 12px; font-weight: 700; color: var(--gray); font-family: var(--mono);">MG Road Junction</span>
-                    </div>
-                    <div class="inc-title">Accident Report: Two-Wheeler Collision & Traffic Jam</div>
-                    <div class="inc-desc">
-                        Citizen reported road blockage and minor injuries. Traffic patrol units and first responder ambulance required on site.
-                    </div>
-                    <div class="inc-actions">
-                        <button class="btn-dispatch" id="btn-dispatch-2" onclick="dispatchPatrolUnit('CASE-2026-094', 'Traffic Patrol #12', 'MG Road Junction')">
-                            🚔 Dispatch Traffic Unit #12 →
-                        </button>
-                        <button class="btn-resolve" onclick="openResolveModal('CASE-2026-094', 'MG Road Vehicle Accident')">
-                            ✔ Resolve & Archive Case
-                        </button>
-                    </div>
-                </div>
+                
 
             </div>
 
@@ -789,7 +755,24 @@
                 </div>
             </div>
 
-        </aside>
+        
+            <!-- Closed & Archived Cases -->
+            <div class="card" id="closedCasesCard">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                    <h3 style="margin-bottom:0;">📁 Closed & Archived Cases</h3>
+                    <span id="closedCasesCount"
+                          style="font-size:12px;font-weight:800;color:#059669;background:#ECFDF5;padding:4px 8px;border-radius:6px;">
+                        0 Closed
+                    </span>
+                </div>
+                <div id="closedCasesList" style="display:flex;flex-direction:column;gap:8px;">
+                    <div style="font-size:12px;color:#64748B;">
+                        No archived cases yet.
+                    </div>
+                </div>
+            </div>
+
+</aside>
 
     </main>
 
@@ -819,9 +802,9 @@
 
     <script src="js/api.js"></script>
     <script>
-        let currentPoliceUser = null;
-        let policeName = 'Inspector';
-        let policeAvatar = 'IP';
+        var currentPoliceUser = null;
+        var policeName = 'Inspector';
+        var policeAvatar = 'IP';
 
         async function initPoliceDashboard() {
             currentPoliceUser = await guardProtectedPage(['police']);
@@ -842,181 +825,732 @@
         }
 
         async function loadCasesAndAlerts() {
-            try {
-                const cases = await apiCall('/case/');
-                const caseList = document.querySelector('.case-list');
-                if (caseList && cases && cases.length > 0) {
-                    caseList.innerHTML = '';
-                    cases.forEach(c => {
-                        const card = document.createElement('div');
-                        card.className = 'case-card';
-                        card.id = `card_${c.case_id}`;
-                        const timeStr = new Date(c.opened_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                        const isResolved = c.status === 'RESOLVED';
+    try {
+        // ---------------------------------------------------------
+        // 1. Load cases
+        // ---------------------------------------------------------
+        const cases = await apiCall('/case/');
+        const allCases = Array.isArray(cases) ? cases : [];
 
-                        card.innerHTML = `
-                            <div class="case-header">
-                                <div>
-                                    <div class="case-id">${c.case_id} · ${c.victim_identifier}</div>
-                                    <div class="case-title">${c.title}</div>
-                                    <div class="case-meta">📍 ${c.location} · Opened: ${timeStr} · Precinct: ${c.assigned_precinct}</div>
-                                </div>
-                                <span class="case-badge ${isResolved ? 'resolved' : 'active'}">${c.status.replace('_', ' ')}</span>
-                            </div>
-                            <div class="case-actions">
-                                <button class="btn-police-act dispatch" onclick="dispatchPatrolUnit('${c.case_id}', 'Patrol Unit #04', '${c.location}')">
-                                    🚔 Dispatch Patrol Unit
-                                </button>
-                                ${!isResolved ? `
-                                <button class="btn-police-act resolve" onclick="openResolveModal('${c.case_id}', '${c.title}')">
-                                    ✔ Resolve & Close Case
-                                </button>` : `
-                                <span style="font-size: 12px; color: #10B981; font-weight: 600; padding: 6px 12px;">Case Verified & Resolved</span>
-                                `}
-                            </div>
-                        `;
-                        caseList.appendChild(card);
-                    });
+        // ---------------------------------------------------------
+        // 2. Load active SOS
+        // ---------------------------------------------------------
+        let sos = [];
+
+        try {
+            const response = await apiCall('/sos/active');
+
+            if (Array.isArray(response)) {
+                sos = response;
+            }
+        } catch (e) {
+            console.warn('SOS loading error:', e.message);
+
+            // IMPORTANT:
+            // Do NOT erase the existing queue if the SOS request
+            // temporarily fails.
+            return;
+        }
+
+        // ---------------------------------------------------------
+        // 3. Update Active SOS counter
+        // ---------------------------------------------------------
+        const activeSosEl =
+            document.getElementById('statActiveSos');
+
+        if (activeSosEl) {
+            activeSosEl.textContent = String(sos.length);
+        }
+
+        // ---------------------------------------------------------
+        // 4. Render LIVE SOS queue
+        // ---------------------------------------------------------
+        const incidentList =
+            document.getElementById('incidentList');
+
+        if (!incidentList) {
+            console.error(
+                'Police dashboard error: #incidentList not found.'
+            );
+            return;
+        }
+
+        // Build the new queue OFF-SCREEN first.
+        const fragment = document.createDocumentFragment();
+
+        if (sos.length === 0) {
+
+            const empty = document.createElement('div');
+
+            empty.style.cssText =
+                'padding:28px;text-align:center;color:#64748B;';
+
+            empty.textContent =
+                'No active emergency SOS alerts.';
+
+            fragment.appendChild(empty);
+
+        } else {
+
+            sos.forEach((item) => {
+
+                const incidentId =
+                    item.incident_id ||
+                    item.id ||
+                    'UNKNOWN-SOS';
+
+                const userName =
+                    item.user_name ||
+                    item.user ||
+                    item.name ||
+                    'Unknown Citizen';
+
+                const trigger =
+                    item.trigger ||
+                    item.trigger_type ||
+                    item.event_type ||
+                    'Emergency SOS';
+
+                let location =
+                    'Live SOS Location';
+
+                if (item.address) {
+
+                    location = item.address;
+
+                } else if (item.location) {
+
+                    if (typeof item.location === 'string') {
+
+                        location = item.location;
+
+                    } else if (
+                        item.location.latitude !== undefined &&
+                        item.location.longitude !== undefined
+                    ) {
+
+                        location =
+                            `${item.location.latitude}, ${item.location.longitude}`;
+                    }
+
+                } else if (
+                    item.latitude !== undefined &&
+                    item.longitude !== undefined
+                ) {
+
+                    location =
+                        `${item.latitude}, ${item.longitude}`;
                 }
-            } catch (err) {
-                console.warn('Could not load police cases:', err.message);
+
+                const caseId =
+                    item.case_id || '';
+
+                const safeIncidentId =
+                    String(incidentId)
+                        .replace(/[^a-zA-Z0-9_-]/g, '-');
+
+                const safeCaseId =
+                    String(caseId)
+                        .replace(/'/g, "\\'");
+
+                const safeLocation =
+                    String(location)
+                        .replace(/'/g, "\\'");
+
+                const safeIncident =
+                    String(incidentId)
+                        .replace(/'/g, "\\'");
+
+                const card =
+                    document.createElement('div');
+
+                card.className =
+                    'incident-card';
+
+                card.dataset.incidentId =
+                    String(incidentId);
+
+                card.dataset.caseId =
+                    String(caseId);
+
+                card.id =
+                    `real-sos-${safeIncidentId}`;
+
+                card.innerHTML = `
+                    <div class="incident-card-top">
+
+                        <span class="incident-badge">
+                            🚨 LIVE SOS · ${incidentId}
+                        </span>
+
+                        <span class="incident-location">
+                            ${location}
+                        </span>
+
+                    </div>
+
+                    <h3>
+                        Emergency SOS — ${userName}
+                    </h3>
+
+                    <p>
+                        ${trigger}.
+                        Real-time distress alert received from
+                        ${userName}.
+                        Immediate police response required.
+                    </p>
+
+                    <div class="incident-actions">
+
+                        <button
+                            class="btn-dispatch"
+                            onclick="dispatchPatrolUnit(
+                                '${safeCaseId}',
+                                'Patrol Unit #04',
+                                '${safeLocation}',
+                                '${safeIncident}'
+                            )">
+                            🚔 Dispatch Patrol
+                        </button>
+
+                        <button
+                            class="btn-resolve"
+                            onclick="openResolveModal(
+                                '${safeCaseId}',
+                                'Emergency SOS Alert',
+                                '${safeIncident}'
+                            )">
+                            ✓ Resolve & Archive
+                        </button>
+
+                    </div>
+                `;
+
+                fragment.appendChild(card);
+            });
+        }
+
+        // ---------------------------------------------------------
+        // 5. Atomically replace the queue
+        // ---------------------------------------------------------
+        incidentList.replaceChildren(fragment);
+
+        // ---------------------------------------------------------
+        // 6. Update incident count
+        // ---------------------------------------------------------
+        const incidentCount =
+            incidentList.querySelectorAll(
+                '.incident-card'
+            ).length;
+
+        const incidentCountEl =
+            document.getElementById('incidentCount');
+
+        if (incidentCountEl) {
+            incidentCountEl.textContent =
+                `${incidentCount} Priority Call${incidentCount === 1 ? '' : 's'}`;
+        }
+
+        // ---------------------------------------------------------
+        // 7. Patrol counter
+        // ---------------------------------------------------------
+        const patrolEl =
+            document.getElementById('statPatrolsDeployed');
+
+        if (patrolEl) {
+
+            const saved =
+                parseInt(
+                    localStorage.getItem(
+                        'perimeter_patrols_deployed'
+                    ) || '8',
+                    10
+                );
+
+            patrolEl.textContent =
+                Math.max(8, saved);
+        }
+
+        // ---------------------------------------------------------
+        // 8. Closed cases counter
+        // ---------------------------------------------------------
+        const closedEl =
+            document.getElementById('statCasesClosed');
+
+        if (closedEl) {
+
+            const saved =
+                parseInt(
+                    localStorage.getItem(
+                        'perimeter_cases_closed'
+                    ) || '14',
+                    10
+                );
+
+            closedEl.textContent =
+                Math.max(14, saved);
+        }
+
+        // ---------------------------------------------------------
+        // 9. Archived cases
+        // ---------------------------------------------------------
+        const closedCasesList =
+            document.getElementById('closedCasesList');
+
+        const closedCasesCount =
+            document.getElementById('closedCasesCount');
+
+        const resolvedCases =
+            allCases.filter(
+                c =>
+                    String(c.status || '')
+                        .toUpperCase() === 'RESOLVED'
+            );
+
+        if (closedCasesCount) {
+            closedCasesCount.textContent =
+                `${resolvedCases.length} Closed`;
+        }
+
+        if (closedCasesList) {
+
+            if (!resolvedCases.length) {
+
+                closedCasesList.innerHTML =
+                    '<div style="color:#64748B;">No archived cases yet.</div>';
+
+            } else {
+
+                closedCasesList.innerHTML =
+                    resolvedCases
+                        .map(c => `
+                            <div class="closed-case-item">
+                                <strong>${c.case_id || 'Case'}</strong>
+                                <div>${c.title || 'Resolved Incident'}</div>
+                            </div>
+                        `)
+                        .join('');
             }
         }
 
-        // Tactical Canvas
-        function renderPoliceMap() {
-            const c = document.getElementById('policeMapCanvas');
-            if (!c) return;
-            const ctx = c.getContext('2d');
-            const w = c.width;
-            const h = c.height;
+    } catch (err) {
 
-            ctx.fillStyle = '#060810';
-            ctx.fillRect(0, 0, w, h);
+        console.error(
+            'Police dashboard refresh failed:',
+            err
+        );
+    }
+}
+var activeResolveCaseId = '';
+var activeResolveIncidentId = '';
 
-            ctx.strokeStyle = '#151D33';
-            ctx.lineWidth = 1;
-            for (let x = 0; x < w; x += 35) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-            for (let y = 0; y < h; y += 35) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+window.dispatchPatrolUnit = async function dispatchPatrolUnit(
+    caseId,
+    unit,
+    loc,
+    incidentId = null
+) {
+    try {
+        const actor =
+            policeName ||
+            currentPoliceUser?.name ||
+            'Police Officer';
 
-            ctx.strokeStyle = '#0F6E6E';
-            ctx.lineWidth = 3;
-            ctx.beginPath(); ctx.moveTo(60, 220); ctx.lineTo(240, 100); ctx.lineTo(460, 150); ctx.stroke();
+        // LIVE SOS
+        if (incidentId) {
+            await SocialAPI.respondToSOS(
+                incidentId,
+                'pol_001',
+                actor,
+                'police'
+            );
 
-            ctx.fillStyle = '#3B82F6';
-            ctx.beginPath(); ctx.arc(140, 160, 8, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#FFFFFF'; ctx.font = '10px IBM Plex Mono'; ctx.fillText('🚔 PCR-04', 152, 164);
+            let deployed = parseInt(
+                localStorage.getItem(
+                    'perimeter_patrols_deployed'
+                ) || '8',
+                10
+            );
 
-            ctx.fillStyle = '#3B82F6';
-            ctx.beginPath(); ctx.arc(380, 80, 8, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#FFFFFF'; ctx.fillText('🚔 PCR-12', 392, 84);
+            deployed += 1;
 
-            let grad1 = ctx.createRadialGradient(280, 110, 2, 280, 110, 30);
-            grad1.addColorStop(0, 'rgba(239, 68, 68, 0.9)');
-            grad1.addColorStop(1, 'rgba(239, 68, 68, 0)');
-            ctx.fillStyle = grad1; ctx.beginPath(); ctx.arc(280, 110, 30, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#EF4444'; ctx.beginPath(); ctx.arc(280, 110, 6, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#FFFFFF'; ctx.fillText('🚨 SOS #089', 290, 114);
+            localStorage.setItem(
+                'perimeter_patrols_deployed',
+                String(deployed)
+            );
+
+            // Record patrol dispatch on the linked case.
+            if (caseId) {
+                try {
+                    await apiCall(
+    `/case/${encodeURIComponent(caseId)}/timeline`,
+    'POST',
+    {
+        title: 'Patrol Unit Dispatched',
+        description: `${unit} dispatched to ${loc}.`,
+        actor_role: 'POLICE',
+        actor_name: actor,
+        timestamp: new Date().toISOString()
+    }
+);
+                } catch (timelineErr) {
+                    console.warn(
+                        'Patrol timeline update failed:',
+                        timelineErr
+                    );
+                }
+            }
+
+            showToast(
+                `Patrol ${unit} dispatched to ${loc}.`,
+                '✓'
+            );
+
+            await loadCasesAndAlerts();
+            return;
         }
 
-        function addTimelineEntry(title, desc) {
-            const container = document.getElementById('timelineContainer');
-            if (!container) return;
-            const item = document.createElement('div');
-            item.className = 'timeline-item';
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            item.innerHTML = `
-                <div class="timeline-time">${timeStr} · POLICE ACTION</div>
-                <div><b>${title}:</b> ${desc}</div>
-            `;
-            container.insertBefore(item, container.firstChild);
+        // NORMAL CASE
+        const realCaseId =
+            await resolveRealCaseId(caseId);
+
+        if (!realCaseId) {
+            throw new Error(
+                `Case ID not found: ${caseId}`
+            );
         }
 
-        async function dispatchPatrolUnit(caseId, unit, loc) {
-            try {
-                await apiCall(`/case/${caseId}/timeline`, 'POST', {
-                    timestamp: new Date().toISOString(),
+        await apiCall(
+            `/case/${encodeURIComponent(realCaseId)}/timeline`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
                     title: 'Patrol Unit Dispatched',
-                    description: `${policeName} dispatched ${unit} to ${loc} with priority sirens.`,
-                    actor_role: 'police',
-                    actor_name: policeName
-                });
-                addTimelineEntry('Patrol Unit Dispatched', `${policeName} dispatched ${unit} to ${loc} with priority sirens.`);
-                toast(`🚔 ${unit} dispatched to ${caseId} with live sirens active!`, '🚨');
-            } catch (err) {
-                toast(`Could not dispatch unit: ${err.message}`, '⚠️');
+                    description:
+                        `${unit} dispatched to ${loc}.`,
+                    actor_role: 'POLICE',
+                    actor_name: actor,
+                    timestamp:
+                        new Date().toISOString()
+                })
+            }
+        );
+
+        let deployed = parseInt(
+            localStorage.getItem(
+                'perimeter_patrols_deployed'
+            ) || '8',
+            10
+        );
+
+        deployed += 1;
+
+        localStorage.setItem(
+            'perimeter_patrols_deployed',
+            String(deployed)
+        );
+
+        showToast(
+            `Patrol ${unit} dispatched to ${loc}.`,
+            '✓'
+        );
+
+        await loadCasesAndAlerts();
+
+    } catch (err) {
+        console.error(
+            'Dispatch error:',
+            err
+        );
+
+        showToast(
+            `Could not dispatch unit: ${err.message}`,
+            '✕'
+        );
+    }
+};
+
+
+window.openResolveModal = function openResolveModal(
+    caseId,
+    title,
+    incidentId = null
+) {
+    activeResolveCaseId = caseId;
+    activeResolveIncidentId = incidentId;
+
+    const titleEl =
+        document.getElementById(
+            'resolveModalTitle'
+        );
+
+    if (titleEl) {
+        titleEl.textContent =
+            `Resolve ${caseId} — ${title}`;
+    }
+
+    const notesEl =
+        document.getElementById(
+            'resolveNotes'
+        );
+
+    if (notesEl) {
+        notesEl.value =
+            'Police units verified citizen safety on site. Area secured and resolved.';
+    }
+
+    const modal =
+        document.getElementById(
+            'resolveModal'
+        );
+
+    if (modal) {
+        modal.classList.add('open');
+    }
+};
+
+
+function closeResolveModal() {
+    const modal =
+        document.getElementById(
+            'resolveModal'
+        );
+
+    if (modal) {
+        modal.classList.remove('open');
+    }
+}
+
+
+async function resolveRealCaseId(displayCaseId) {
+    const cases = await apiCall('/case/');
+
+    if (!Array.isArray(cases)) {
+        throw new Error(
+            'Could not load cases from backend.'
+        );
+    }
+
+    const aliases = {
+        'CASE-2026-089': {
+            victim: 'Citizen Aarohi Sharma'
+        },
+
+        'CASE-2026-094': {
+            title:
+                'Accident Report: Two-Wheeler Collision & Traffic Jam'
+        }
+    };
+
+    const alias =
+        aliases[displayCaseId];
+
+    if (alias) {
+
+        if (alias.victim) {
+            const match =
+                cases.find(
+                    c =>
+                        String(
+                            c.victim_identifier || ''
+                        )
+                            .trim()
+                            .toLowerCase() ===
+                        alias.victim
+                            .trim()
+                            .toLowerCase()
+                );
+
+            if (match) {
+                return match.case_id;
             }
         }
 
-        let activeResolveCaseId = '';
-        function openResolveModal(caseId, title) {
-            activeResolveCaseId = caseId;
-            document.getElementById('resolveModalTitle').textContent = `Resolve ${caseId} — ${title}`;
-            document.getElementById('resolveNotes').value = 'Police units verified citizen safety on site. Area secured and resolved.';
-            document.getElementById('resolveModal').classList.add('open');
+        if (alias.title) {
+            const match =
+                cases.find(
+                    c =>
+                        String(
+                            c.title || ''
+                        )
+                            .trim()
+                            .toLowerCase() ===
+                        alias.title
+                            .trim()
+                            .toLowerCase()
+                );
+
+            if (match) {
+                return match.case_id;
+            }
+        }
+    }
+
+    // Already a real backend case ID.
+    const direct =
+        cases.find(
+            c =>
+                String(c.case_id || '')
+                    .trim()
+                    .toLowerCase() ===
+                String(displayCaseId || '')
+                    .trim()
+                    .toLowerCase()
+        );
+
+    if (direct) {
+        return direct.case_id;
+    }
+
+    return null;
+}
+
+
+window.confirmResolveCase = async function confirmResolveCase() {
+    try {
+        const displayCaseId =
+            activeResolveCaseId;
+
+        const incidentId =
+            activeResolveIncidentId;
+
+        const notes =
+            document
+                .getElementById('resolveNotes')
+                ?.value
+                .trim() ||
+            'Incident resolved and closed.';
+
+        const actor =
+            policeName ||
+            currentPoliceUser?.name ||
+            'Police Officer';
+
+        if (!displayCaseId) {
+            throw new Error(
+                'No case selected.'
+            );
         }
 
-        function closeResolveModal() {
-            document.getElementById('resolveModal').classList.remove('open');
+        // Resolve the actual LIVE SOS.
+        if (incidentId) {
+            await SocialAPI.resolveSOS(
+                incidentId,
+                actor,
+                notes
+            );
         }
 
-        async function confirmResolveCase() {
-            const notes = document.getElementById('resolveNotes').value.trim();
-            try {
-                await apiCall(`/case/${activeResolveCaseId}/timeline`, 'POST', {
-                    timestamp: new Date().toISOString(),
-                    title: 'Incident Resolved & Closed',
-                    description: `Resolution logged by ${policeName}. Findings: ${notes}`,
-                    actor_role: 'police',
-                    actor_name: policeName
-                });
+        // Resolve linked backend case.
+        const realCaseId =
+            incidentId
+                ? displayCaseId
+                : await resolveRealCaseId(
+                    displayCaseId
+                );
 
-                addTimelineEntry('Case Resolved & Closed', `${policeName} confirmed closure for ${activeResolveCaseId}. Findings: ${notes}`);
-                closeResolveModal();
-                toast(`✅ ${activeResolveCaseId} officially resolved in database!`, '🛡️');
+        if (!realCaseId) {
+            throw new Error(
+                `Case ID not found: ${displayCaseId}`
+            );
+        }
 
-                let cEl = document.getElementById('statCasesClosed');
-                if (cEl) {
-                    let c = parseInt(cEl.textContent) + 1;
-                    cEl.textContent = c;
-                }
-                await loadCasesAndAlerts();
-            } catch (err) {
-                toast(err.message || 'Could not resolve case.', '❌');
+        const response = await apiCall(
+    `/case/${encodeURIComponent(realCaseId)}/timeline`,
+    'POST',
+    {
+        title: 'Incident Resolved & Closed',
+        description: notes,
+        actor_role: 'POLICE',
+        actor_name: actor,
+        timestamp: new Date().toISOString()
+    }
+);
+
+        
+        // Remove the live SOS card immediately.
+        if (incidentId) {
+            const card =
+                document.querySelector(
+                    `[data-incident-id="${CSS.escape(
+                        String(incidentId)
+                    )}"]`
+                );
+
+            if (card) {
+                card.remove();
             }
         }
 
-        async function publishPoliceAdvisory() {
-            const input = document.getElementById('policeAdvisoryInput');
-            const txt = input.value.trim();
-            if (!txt) { toast('Please write an advisory message.', '⚠️'); return; }
+        let closed =
+            parseInt(
+                localStorage.getItem(
+                    'perimeter_cases_closed'
+                ) || '14',
+                10
+            );
 
-            try {
-                await apiCall('/feed/', 'POST', {
-                    author_name: policeName,
-                    author_role: 'police',
-                    title: 'Official City Police Security Advisory',
-                    content: txt,
-                    tag: 'POLICE_NOTICE',
-                    location_name: currentPoliceUser?.dynamic_field_2 || 'Citywide Command'
-                });
+        closed += 1;
 
-                addTimelineEntry('Official Police Advisory', `${policeName}: ${txt}`);
-                input.value = '';
-                toast('📢 Official Police Advisory stored & broadcasted to all citizens!', '👮');
-            } catch (err) {
-                toast(err.message || 'Failed to broadcast advisory.', '❌');
-            }
-        }
+        localStorage.setItem(
+            'perimeter_cases_closed',
+            String(closed)
+        );
 
-        function toast(msg, icon = '✨') {
-            showToast(msg, icon);
-        }
+        showToast(
+            `Case ${realCaseId} resolved and archived.`,
+            '✓'
+        );
 
-        window.addEventListener('DOMContentLoaded', () => {
-            initPoliceDashboard();
-        });
+        closeResolveModal();
+
+        activeResolveCaseId = '';
+        activeResolveIncidentId = '';
+
+        await loadCasesAndAlerts();
+
+    } catch (err) {
+        console.error(
+            'Resolve error:',
+            err
+        );
+
+        showToast(
+            `Could not resolve case: ${err.message}`,
+            '✕'
+        );
+    }
+};
+let policeRefreshTimer = null;
+let policeRefreshInProgress = false;
+
+async function refreshPoliceDashboard() {
+    if (policeRefreshInProgress) {
+        return;
+    }
+
+    policeRefreshInProgress = true;
+
+    try {
+        await loadCasesAndAlerts();
+    } finally {
+        policeRefreshInProgress = false;
+    }
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+
+    await initPoliceDashboard();
+
+    policeRefreshTimer =
+        setInterval(
+            refreshPoliceDashboard,
+            2000
+        );
+});
     </script>
 </body>
 

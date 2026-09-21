@@ -823,28 +823,60 @@
         }
 
         async function quickLoginPersona(identity) {
-            showToast(`Logging in as ${identity.split('@')[0]}...`, '⚡');
-            try {
-                const res = await apiCall('/auth/login', 'POST', {
-                    identity: identity,
-                    password: 'password123'
-                });
-                if (res && res.access_token && res.user) {
-                    saveSession(res.access_token, res.user);
-                    showToast(`Logged in as ${res.user.name} (${res.user.badge_title})!`, '✅');
-                    const target = ROLE_DASHBOARDS[res.user.role] || 'user.html';
-                    setTimeout(() => {
-                        window.location.href = target;
-                    }, 500);
-                }
-            } catch (err) {
-                showToast(err.message || 'Quick login failed.', '❌');
-            }
-        }
+
+const notify = (message, icon = 'ℹ️') => {
+    if (typeof showToast === 'function') {
+        showToast(message, icon);
+    } else if (typeof toast === 'function') {
+        toast(message, icon);
+    } else {
+        console.log(`${icon} ${message}`);
+    }
+};
+
+// Clear any previous persona session before Quick Test Login.
+localStorage.removeItem('perimeter_token');
+localStorage.removeItem('perimeter_session');
+localStorage.removeItem('perimeter_user_profile');
+localStorage.removeItem('perimeter_vol_profile');
+localStorage.removeItem('perimeter_police_profile');
+localStorage.removeItem('perimeter_press_profile');
+
+notify(`Logging in as ${identity.split('@')[0]}...`, '↻');
+
+try {
+    const res = await apiCall('/auth/login', 'POST', {
+        identity: identity,
+        password: 'password123'
+    });
+
+    if (res && res.access_token && res.user) {
+
+        saveSession(res.access_token, res.user);
+
+        notify(
+            `Logged in as ${res.user.name} (${res.user.badge_title})`,
+            '✓'
+        );
+
+        const target =
+            ROLE_DASHBOARDS[res.user.role] || 'user.html';
+
+        setTimeout(() => {
+            window.location.href = target;
+        }, 500);
+    }
+
+} catch (err) {
+    notify(
+        err.message || 'Quick login failed.',
+        '✕'
+    );
+}
+}
 
         // On load: check if already authenticated first
         window.addEventListener('DOMContentLoaded', () => {
-            if (guardPublicPage()) return;
 
             const params = new URLSearchParams(window.location.search);
             const roleParam = params.get('role');

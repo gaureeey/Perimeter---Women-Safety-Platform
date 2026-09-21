@@ -1632,13 +1632,19 @@
             try {
                 const title = content.length > 50 ? content.substring(0, 48) + '...' : content;
                 await SocialAPI.createPost({
-                    title: title,
-                    content: content,
-                    tag: selectedCategory,
-                    location_name: currentUser.location || "Mumbai Metro Area",
-                    media_url: attachedMediaUrl,
-                    media_type: attachedMediaUrl ? 'image' : 'text'
-                });
+    author_id: currentUser.id,
+    author_name: currentUser.name,
+    author_role: currentUser.role,
+    author_badge: currentUser.badge_title || "Citizen User",
+    author_avatar: currentUser.avatar || "U",
+    title: title,
+    content: content,
+    tag: selectedCategory,
+    location_name: currentUser.location || "Mumbai Metro Area",
+    media_url: attachedMediaUrl,
+    media_type: attachedMediaUrl ? "image" : "text"
+});
+                
 
                 document.getElementById('postContentInput').value = '';
                 attachedMediaUrl = null;
@@ -1694,7 +1700,7 @@
 
                             <div class="post-interactions">
                                 <div class="interaction-left">
-                                    <button class="interact-btn ${p.is_liked ? 'liked' : ''}" onclick="toggleLike('${p.id}', this)">
+                                    <button type="button" class="interact-btn ${p.is_liked ? 'liked' : ''}" onclick="event.preventDefault(); event.stopPropagation(); toggleLike('${p.id}', this); return false;">
                                         <span>${p.is_liked ? '❤️' : '🤍'}</span>
                                         <span class="like-num">${p.upvotes || 0}</span>
                                     </button>
@@ -1983,7 +1989,7 @@
                             <div style="font-size: 11px; opacity: 0.8; margin-top: 6px;">🎵 ${r.audio_title}</div>
                         </div>
                         <div class="reel-actions-rail">
-                            <button class="reel-action-btn" onclick="likeReel('${r.id}', this)">
+                            <button type="button" class="reel-action-btn" onclick="event.preventDefault(); event.stopPropagation(); likeReel('${r.id}', this)">
                                 <span>❤️</span>
                                 <span style="font-size: 10px; font-weight: 700;">${r.likes_count || 0}</span>
                             </button>
@@ -2409,32 +2415,32 @@
         /* ------------------ EMERGENCY SOS & DISPATCH ------------------ */
 
         async function triggerSOSInstant() {
-            showToast('Triggering 5km Geofence Emergency SOS...', '🚨');
-            try {
-                const res = await SocialAPI.triggerSOS({
-                    user_name: currentUser.name,
-                    user_id: currentUser.id,
-                    phone: currentUser.phone,
-                    trigger_type: "MANUAL_HOLD",
-                    severity: "CRITICAL",
-                    location: {
-                        latitude: 19.0760,
-                        longitude: 72.8777,
-                        accuracy_meters: 6.5,
-                        address: currentUser.location || "SV Road, Bandra West, Mumbai"
-                    },
-                    notes: "High priority citizen SOS triggered via social platform header."
-                });
+    toast('Triggering 5km Geofence Emergency SOS...', '🚨');
 
-                showToast(`EMERGENCY SOS BROADCASTED! Case ID: ${res.case_id}`, '🚨', 6000);
-                switchNavView('profile');
-                setTimeout(() => {
-                    switchProfileActivity(null, 'my-cases');
-                }, 400);
-            } catch (err) {
-                showToast(err.message || 'SOS dispatch failed.', '❌');
-            }
-        }
+    try {
+        const res = await SocialAPI.triggerSOS({
+            user_name: currentUser.name,
+            user_id: currentUser.id,
+            phone: currentUser.phone,
+            trigger_type: "MANUAL_HOLD",
+            severity: "CRITICAL",
+            location: {
+                latitude: 19.0760,
+                longitude: 72.8777,
+                accuracy_meters: 6.5,
+                address: currentUser.location || "SV Road, Bandra West, Mumbai"
+            },
+            notes: "High priority citizen SOS triggered via social platform header."
+        });
+
+        toast(`EMERGENCY SOS BROADCASTED! Case ID: ${res.case_id}`, '🚨');
+
+        
+
+    } catch (err) {
+        toast(err.message || 'SOS dispatch failed.', '❌');
+    }
+}
 
         function openAccidentModal() {
             document.getElementById('accidentModal').classList.add('show');
