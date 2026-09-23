@@ -544,6 +544,8 @@
         .badge-role.verified { background: var(--teal-dim); color: var(--teal); }
         .badge-role.volunteer { background: var(--gold-dim); color: #B45309; }
         .badge-role.police { background: var(--police-dim); color: var(--police-blue); }
+        .badge-role.journalist { background: #E0F2FE; color: #0369A1; }
+        .badge-role.admin { background: #EDE9FE; color: #7C3AED; }
         .badge-role.user { background: #F1F5F9; color: var(--gray); }
 
         .post-meta-sub {
@@ -826,6 +828,77 @@
             background: #F1F5F9;
             color: var(--ink);
             border: 1px solid var(--line);
+        }
+
+        .role-filter-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .role-filter-pill {
+            padding: 6px 14px;
+            border-radius: 100px;
+            border: 1px solid var(--line);
+            background: #FFFFFF;
+            color: var(--ink);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .role-filter-pill:hover {
+            border-color: var(--coral);
+            background: #FFF5F5;
+        }
+
+        .role-filter-pill.active {
+            background: var(--coral);
+            color: #FFFFFF;
+            border-color: var(--coral);
+            box-shadow: 0 4px 12px var(--coral-glow);
+        }
+
+        .user-card-credential {
+            font-size: 11.5px;
+            color: #475569;
+            background: #F8FAFC;
+            border: 1px dashed var(--line);
+            border-radius: 8px;
+            padding: 6px 8px;
+            margin: 8px 0;
+            text-align: left;
+            word-break: break-word;
+        }
+
+        .user-card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn-card-view {
+            padding: 7px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid var(--line);
+            background: #F8FAFC;
+            color: var(--ink);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-card-view:hover {
+            background: #F1F5F9;
+            border-color: var(--coral);
+            color: var(--coral);
         }
 
         /* ================== REELS VIEW ================== */
@@ -1304,9 +1377,17 @@
             <div class="explore-header">
                 <div style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Explore Safety Community</div>
                 <div style="font-size: 13px; color: var(--gray); margin-bottom: 14px;">Find neighbors, verified emergency volunteers, police command precincts, and journalists.</div>
-                <div style="position: relative;">
+                <div style="position: relative; margin-bottom: 12px;">
                     <span style="position: absolute; left: 16px; top: 13px; font-size: 15px;">🔍</span>
                     <input type="text" class="search-input-big" id="exploreSearchInput" placeholder="Search by name, @username, role (volunteer/police), or location..." oninput="handleExploreSearch(this.value)">
+                </div>
+
+                <div class="role-filter-row">
+                    <button type="button" class="role-filter-pill active" data-role="all" onclick="filterExploreRole(this, 'all')">🌐 All Members</button>
+                    <button type="button" class="role-filter-pill" data-role="user" onclick="filterExploreRole(this, 'user')">👩 Citizens</button>
+                    <button type="button" class="role-filter-pill" data-role="volunteer" onclick="filterExploreRole(this, 'volunteer')">🙋 Verified Volunteers</button>
+                    <button type="button" class="role-filter-pill" data-role="police" onclick="filterExploreRole(this, 'police')">🚔 Police Command</button>
+                    <button type="button" class="role-filter-pill" data-role="journalist" onclick="filterExploreRole(this, 'journalist')">📰 Press Reporters</button>
                 </div>
             </div>
 
@@ -1559,6 +1640,52 @@
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
                 <button style="padding: 8px 16px; border-radius: 100px; border: 1px solid var(--line); background: #F1F5F9; font-weight: 600; cursor: pointer;" onclick="closeModal('accidentModal')">Cancel</button>
                 <button class="btn-sos-header" style="background: #DC2626;" onclick="submitAccidentReport()">Dispatch Emergency Units →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Profile Viewer Modal -->
+    <div class="modal-overlay" id="userProfileModal">
+        <div class="modal-card" style="max-width: 520px; position: relative;">
+            <button onclick="closeModal('userProfileModal')" style="position: absolute; right: 20px; top: 20px; border: none; background: #F1F5F9; border-radius: 50%; width: 32px; height: 32px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;">✕</button>
+            
+            <div style="text-align: center; margin-top: 10px;">
+                <div id="modalProfileAvatar" style="width: 80px; height: 80px; border-radius: 50%; background: var(--coral); color: white; font-size: 28px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; box-shadow: 0 8px 24px var(--coral-glow);">AS</div>
+                <h3 id="modalProfileName" style="font-size: 20px; font-weight: 800; margin-bottom: 2px;">User Name</h3>
+                <div id="modalProfileUsername" style="font-size: 13px; color: var(--gray); font-family: var(--mono); margin-bottom: 8px;">@handle</div>
+                <span id="modalProfileBadge" class="badge-role user" style="display: inline-block; padding: 4px 12px; font-size: 11.5px;">Citizen User</span>
+            </div>
+
+            <!-- Credentials Callout -->
+            <div id="modalProfileCredentials" style="margin: 16px 0; padding: 12px; background: #F8FAFC; border: 1px solid var(--line); border-radius: 10px; font-size: 12.5px; color: #334155;">
+                <!-- Filled dynamically -->
+            </div>
+
+            <p id="modalProfileBio" style="font-size: 13px; color: #475569; line-height: 1.5; margin-bottom: 16px; text-align: center;">Bio description...</p>
+
+            <div style="display: flex; justify-content: center; gap: 24px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 16px;">
+                <div style="text-align: center;">
+                    <div id="modalStatPosts" style="font-size: 16px; font-weight: 800; color: var(--ink);">0</div>
+                    <div style="font-size: 11px; color: var(--gray);">Posts</div>
+                </div>
+                <div style="text-align: center;">
+                    <div id="modalStatFollowers" style="font-size: 16px; font-weight: 800; color: var(--ink);">0</div>
+                    <div style="font-size: 11px; color: var(--gray);">Followers</div>
+                </div>
+                <div style="text-align: center;">
+                    <div id="modalStatFollowing" style="font-size: 16px; font-weight: 800; color: var(--ink);">0</div>
+                    <div style="font-size: 11px; color: var(--gray);">Following</div>
+                </div>
+            </div>
+
+            <div id="modalProfileMeta" style="font-size: 12px; color: var(--gray); margin-bottom: 20px; display: flex; flex-direction: column; gap: 6px;">
+                <div id="modalProfileLocation">📍 Location: Mumbai</div>
+                <div id="modalProfileEmail">✉️ Email: user@perimeter.org</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button id="modalFollowBtn" class="btn-follow" style="margin-top: 0;" onclick="toggleModalFollow()">+ Follow</button>
+                <button id="modalMessageBtn" class="btn-publish-post" style="background: var(--ink); justify-content: center;" onclick="openModalChat()">💬 Message</button>
             </div>
         </div>
     </div>
@@ -1905,32 +2032,73 @@
 
         /* ------------------ EXPLORE & FOLLOWS ------------------ */
 
-        async function loadExploreUsers(q = '') {
+        let currentExploreRole = 'all';
+        let currentExploreQuery = '';
+        let activeModalUser = null;
+
+        function filterExploreRole(btn, role) {
+            document.querySelectorAll('.role-filter-pill').forEach(p => p.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            currentExploreRole = role;
+            loadExploreUsers(currentExploreQuery, currentExploreRole);
+        }
+
+        async function loadExploreUsers(q = null, role = null) {
+            if (q !== null) currentExploreQuery = q;
+            if (role !== null) currentExploreRole = role;
+
             const grid = document.getElementById('exploreUsersGrid');
-            grid.innerHTML = '<div style="color: var(--gray);">Searching safety community... ⏳</div>';
+            grid.innerHTML = '<div style="color: var(--gray); grid-column: span 3; text-align: center; padding: 30px;">Searching safety community & accounts... ⏳</div>';
 
             try {
-                const users = q ? await SocialAPI.searchUsers(q) : await SocialAPI.searchUsers('a');
+                const users = await SocialAPI.searchUsers(currentExploreQuery, currentExploreRole);
                 if (!users || users.length === 0) {
-                    grid.innerHTML = '<div style="color: var(--gray); grid-column: span 3; text-align: center; padding: 30px;">No users found matching your search.</div>';
+                    const roleLabel = currentExploreRole !== 'all' ? ` in role '${currentExploreRole}'` : '';
+                    grid.innerHTML = `<div style="color: var(--gray); grid-column: span 3; text-align: center; padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line);">
+                        <div style="font-size: 28px; margin-bottom: 8px;">🔍</div>
+                        <div style="font-weight: 700; color: var(--ink);">No safety accounts found${roleLabel}</div>
+                        <div style="font-size: 13px; color: var(--gray); margin-top: 4px;">Try selecting "All Members" or clearing your search keywords.</div>
+                    </div>`;
                     return;
                 }
 
-                grid.innerHTML = users.map(u => `
+                grid.innerHTML = users.map(u => {
+                    let credHtml = '';
+                    if (u.role === 'volunteer') {
+                        credHtml = `<div class="user-card-credential">🪪 ${u.dynamic_field_1 || 'Verified Volunteer'} · 📍 ${u.dynamic_field_2 || 'Active Sector'}</div>`;
+                    } else if (u.role === 'police') {
+                        credHtml = `<div class="user-card-credential">🛡️ Badge: ${u.dynamic_field_1 || 'City Police'} · 🏢 ${u.dynamic_field_2 || 'Precinct'}</div>`;
+                    } else if (u.role === 'journalist') {
+                        credHtml = `<div class="user-card-credential">📰 Press ID: ${u.dynamic_field_1 || 'Accredited Press'} · ✍️ ${u.dynamic_field_2 || 'Bureau'}</div>`;
+                    } else if (u.role === 'user' && u.dynamic_field_2) {
+                        credHtml = `<div class="user-card-credential">📍 Zone: ${u.dynamic_field_2}</div>`;
+                    }
+
+                    return `
                     <div class="user-card">
                         <div class="user-card-avatar">${u.avatar || 'U'}</div>
                         <div style="font-weight: 800; font-size: 15px;">${u.name}</div>
                         <div style="font-size: 12px; color: var(--gray); font-family: var(--mono);">${u.username || '@member'}</div>
                         <span class="badge-role ${u.role}" style="display: inline-block; margin: 6px 0;">${u.badge_title}</span>
-                        <div style="font-size: 12px; color: #475569; margin: 6px 0; min-height: 36px;">${u.bio || 'Active safety network member.'}</div>
-                        <div style="font-size: 11.5px; color: var(--gray);">👥 ${u.followers_count || 0} followers</div>
-                        <button class="btn-follow ${u.is_following ? 'following' : ''}" onclick="toggleFollowUser('${u.id}', this)">
-                            ${u.is_following ? 'Following' : '+ Follow'}
-                        </button>
+                        ${credHtml}
+                        <div style="font-size: 12px; color: #475569; margin: 6px 0; min-height: 32px;">${u.bio || 'Active safety network member.'}</div>
+                        <div style="font-size: 11.5px; color: var(--gray); margin-bottom: 8px;">👥 ${u.followers_count || 0} followers</div>
+                        <div class="user-card-actions">
+                            <button class="btn-card-view" onclick="viewUserProfile('${u.id}')">
+                                👁️ Profile
+                            </button>
+                            <button class="btn-follow ${u.is_following ? 'following' : ''}" style="margin-top: 0;" onclick="toggleFollowUser('${u.id}', this)">
+                                ${u.is_following ? 'Following' : '+ Follow'}
+                            </button>
+                        </div>
                     </div>
-                `).join('');
+                    `;
+                }).join('');
             } catch (e) {
-                grid.innerHTML = `<div style="color: #DC2626;">Error: ${e.message}</div>`;
+                grid.innerHTML = `<div style="color: #DC2626; grid-column: span 3; text-align: center; padding: 30px; background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 12px;">
+                    <div style="font-weight: 700; margin-bottom: 6px;">Unable to fetch accounts:</div>
+                    <div>${e.message}</div>
+                </div>`;
             }
         }
 
@@ -1938,8 +2106,90 @@
         function handleExploreSearch(val) {
             clearTimeout(searchDebounce);
             searchDebounce = setTimeout(() => {
-                loadExploreUsers(val.trim());
+                loadExploreUsers(val.trim(), currentExploreRole);
             }, 300);
+        }
+
+        async function viewUserProfile(userId) {
+            try {
+                showToast('Fetching profile...', '⏳', 1500);
+                const prof = await SocialAPI.getUserProfile(userId);
+                activeModalUser = prof;
+
+                document.getElementById('modalProfileAvatar').textContent = prof.avatar || prof.name.substring(0, 2).toUpperCase();
+                document.getElementById('modalProfileName').textContent = prof.name;
+                document.getElementById('modalProfileUsername').textContent = prof.username || `@${prof.name.toLowerCase().replace(' ', '_')}`;
+                
+                const badgeEl = document.getElementById('modalProfileBadge');
+                badgeEl.className = `badge-role ${prof.role}`;
+                badgeEl.textContent = prof.badge_title;
+
+                let credText = '';
+                if (prof.role === 'volunteer') {
+                    credText = `<strong>Volunteer ID:</strong> ${prof.dynamic_field_1 || 'VOL-2026'} | <strong>Sector:</strong> ${prof.dynamic_field_2 || 'Zone'}`;
+                } else if (prof.role === 'police') {
+                    credText = `<strong>Badge #:</strong> ${prof.dynamic_field_1 || 'MH-CID'} | <strong>Precinct:</strong> ${prof.dynamic_field_2 || 'Command'}`;
+                } else if (prof.role === 'journalist') {
+                    credText = `<strong>Press ID:</strong> ${prof.dynamic_field_1 || 'PID-2026'} | <strong>Media House:</strong> ${prof.dynamic_field_2 || 'Bureau'}`;
+                } else {
+                    credText = `<strong>Primary Emergency Contact:</strong> ${prof.dynamic_field_1 || 'Configured'} | <strong>Safe Sector:</strong> ${prof.dynamic_field_2 || 'Metro Area'}`;
+                }
+                document.getElementById('modalProfileCredentials').innerHTML = credText;
+
+                document.getElementById('modalProfileBio').textContent = prof.bio || 'Active verified member of the PERIMETER safety platform.';
+                document.getElementById('modalStatPosts').textContent = prof.posts_count || 0;
+                document.getElementById('modalStatFollowers').textContent = prof.followers_count || 0;
+                document.getElementById('modalStatFollowing').textContent = prof.following_count || 0;
+                document.getElementById('modalProfileLocation').textContent = `📍 Location: ${prof.location || 'Mumbai Metro Area'}`;
+                document.getElementById('modalProfileEmail').textContent = `✉️ Registered Email: ${prof.email || 'Confidential'}`;
+
+                const followBtn = document.getElementById('modalFollowBtn');
+                followBtn.className = `btn-follow ${prof.is_following ? 'following' : ''}`;
+                followBtn.textContent = prof.is_following ? 'Following' : '+ Follow';
+
+                document.getElementById('userProfileModal').classList.add('show');
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        async function toggleModalFollow() {
+            if (!activeModalUser) return;
+            const btn = document.getElementById('modalFollowBtn');
+            const isFollowing = btn.classList.contains('following');
+
+            try {
+                if (isFollowing) {
+                    await SocialAPI.unfollowUser(activeModalUser.id);
+                    btn.classList.remove('following');
+                    btn.textContent = '+ Follow';
+                    activeModalUser.is_following = false;
+                    showToast(`Unfollowed ${activeModalUser.name}`, '👋');
+                } else {
+                    await SocialAPI.followUser(activeModalUser.id);
+                    btn.classList.add('following');
+                    btn.textContent = 'Following';
+                    activeModalUser.is_following = true;
+                    showToast(`Now following ${activeModalUser.name}!`, '🌟');
+                }
+                loadExploreUsers();
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
+        }
+
+        async function openModalChat() {
+            if (!activeModalUser) return;
+            closeModal('userProfileModal');
+            try {
+                const conv = await SocialAPI.startConversation(activeModalUser.id);
+                switchNavView('messages');
+                loadConversations();
+                selectConversation(conv.id, activeModalUser.name, activeModalUser.avatar);
+                showToast(`Opened chat with ${activeModalUser.name}!`, '💬');
+            } catch (err) {
+                showToast(err.message, '❌');
+            }
         }
 
         async function toggleFollowUser(userId, btn) {
@@ -2199,6 +2449,15 @@
         /* ------------------ PROFILE & 14-SECTION ACTIVITY ------------------ */
 
         async function loadProfileData() {
+            if (currentUser) {
+                if (document.getElementById('profileNameBig')) document.getElementById('profileNameBig').textContent = currentUser.name;
+                if (document.getElementById('profileAvatarBig')) document.getElementById('profileAvatarBig').textContent = currentUser.avatar || 'AS';
+                if (document.getElementById('profileRoleBadge')) document.getElementById('profileRoleBadge').textContent = currentUser.badge_title || 'Citizen User';
+                if (document.getElementById('profileUsername')) document.getElementById('profileUsername').textContent = currentUser.username || `@${currentUser.name.toLowerCase().replace(' ', '_')}`;
+                if (document.getElementById('profileBio')) document.getElementById('profileBio').textContent = currentUser.bio || 'Active community safety member.';
+                if (document.getElementById('profileLocation')) document.getElementById('profileLocation').textContent = currentUser.location || 'Mumbai Metro Area';
+            }
+
             try {
                 const prof = await SocialAPI.getMyProfile();
                 document.getElementById('profileNameBig').textContent = prof.name;
@@ -2214,7 +2473,9 @@
 
                 // Load initial activity tab
                 switchProfileActivity(document.querySelector('.activity-tab-btn.active') || document.querySelector('.activity-tab-btn'), 'my-posts');
-            } catch (e) {}
+            } catch (e) {
+                console.warn('[Profile Data Load]', e.message);
+            }
         }
 
         function openEditProfileModal() {

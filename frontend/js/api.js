@@ -144,6 +144,11 @@ async function apiCall(endpoint, method = 'GET', body = null) {
         }
         return data;
     } catch (err) {
+        if (err.name === 'TypeError' && err.message.includes('fetch')) {
+            console.error(`[PERIMETER Server Connection Error] Could not connect to API server at ${API_BASE}. Make sure the FastAPI backend is running on port 8000.`);
+            showToast('⚠️ Backend server (port 8000) not reachable. Please run: npm run backend', '🔌', 5000);
+            throw new Error(`Cannot connect to PERIMETER backend at ${API_BASE}. Please ensure port 8000 server is active.`);
+        }
         console.warn(`[PERIMETER API Error] ${method} ${endpoint}:`, err.message);
         throw err;
     }
@@ -248,8 +253,16 @@ const SocialAPI = {
     async getUserProfile(userId) {
         return await apiCall(`/social/users/${userId}/profile`);
     },
-    async searchUsers(query) {
-        return await apiCall(`/social/users/search?q=${encodeURIComponent(query)}`);
+    async searchUsers(query = '', role = '') {
+        const params = [];
+        if (query && query.trim()) params.push(`q=${encodeURIComponent(query.trim())}`);
+        if (role && role.trim() && role.trim().toLowerCase() !== 'all') params.push(`role=${encodeURIComponent(role.trim().toLowerCase())}`);
+        const qs = params.length > 0 ? `?${params.join('&')}` : '';
+        return await apiCall(`/social/users/search${qs}`);
+    },
+    async getAllUsers(role = '') {
+        const qs = role && role.trim() && role.trim().toLowerCase() !== 'all' ? `?role=${encodeURIComponent(role.trim().toLowerCase())}` : '';
+        return await apiCall(`/auth/users${qs}`);
     },
 
     // Follows

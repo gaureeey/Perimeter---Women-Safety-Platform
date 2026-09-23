@@ -1042,6 +1042,7 @@
             <div class="nav-tabs">
                 <button type="button" class="nav-tab-btn active" id="tabBtnTactical" onclick="switchVolunteerTab('tactical')">📡 Tactical Radar</button>
                 <button type="button" class="nav-tab-btn" id="tabBtnFeed" onclick="switchVolunteerTab('feed')">📱 Stories & Safety Feed</button>
+                <button type="button" class="nav-tab-btn" id="tabBtnDirectory" onclick="openVolDirectoryModal()">👥 Safety Directory</button>
             </div>
 
             <div class="vol-stats-bar">
@@ -1050,7 +1051,7 @@
                 <div class="vol-stat">Radius: <b>5.0 km</b></div>
             </div>
 
-            <div class="user-nav-profile" onclick="toast('Volunteer Badge #VOL-9022 (Verified Level 3)', '🎖️')">
+            <div class="user-nav-profile" onclick="openVolProfileModal()" title="View Volunteer Profile">
                 <div class="avatar-sm" id="volAvatar">PD</div>
                 <span style="font-size: 12.5px; font-weight: 700;" id="navVolName">Priya D.</span>
             </div>
@@ -1232,6 +1233,46 @@
         <span id="toastMsg">Notification message</span>
     </div>
 
+    <!-- Volunteer Profile Modal -->
+    <div id="volProfileModal" style="display:none; position:fixed; inset:0; background:rgba(10,14,30,0.8); z-index:99999; align-items:center; justify-content:center; padding:16px;">
+        <div style="background:#1E293B; color:#F8FAFC; border:1px solid #334155; border-radius:18px; width:100%; max-width:480px; padding:28px; position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.5);">
+            <button onclick="document.getElementById('volProfileModal').style.display='none'" style="position:absolute; right:16px; top:16px; background:#334155; border:none; color:#FFF; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button>
+            <div style="text-align:center;">
+                <div style="width:72px; height:72px; border-radius:50%; background:#D97706; color:#FFF; font-size:26px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;" id="vpAvatar">PD</div>
+                <h3 id="vpName" style="font-size:20px; font-weight:800;">Volunteer Name</h3>
+                <div id="vpHandle" style="font-size:13px; color:#94A3B8; font-family:monospace; margin-bottom:8px;">@handle</div>
+                <span style="background:#FEF3C7; color:#B45309; padding:4px 12px; border-radius:100px; font-size:11.5px; font-weight:700; text-transform:uppercase;">Verified Responder</span>
+            </div>
+            <div style="margin:20px 0; background:#0F172A; border:1px solid #334155; border-radius:12px; padding:14px; font-size:13px; display:flex; flex-direction:column; gap:8px;">
+                <div>🪪 <strong>Badge ID:</strong> <span id="vpBadgeId">VOL-MH-2026-089</span></div>
+                <div>📍 <strong>Assigned Patrol Sector:</strong> <span id="vpSector">Sector 4 - Central Zone</span></div>
+                <div>📱 <strong>Mobile:</strong> <span id="vpPhone">+91 98300 67890</span></div>
+                <div>✉️ <strong>Email:</strong> <span id="vpEmail">volunteer@perimeter.org</span></div>
+            </div>
+            <button onclick="document.getElementById('volProfileModal').style.display='none'" style="width:100%; padding:10px; background:#D97706; color:#FFF; border:none; border-radius:100px; font-weight:700; cursor:pointer;">Done</button>
+        </div>
+    </div>
+
+    <!-- Safety Directory Modal -->
+    <div id="volDirectoryModal" style="display:none; position:fixed; inset:0; background:rgba(10,14,30,0.8); z-index:99999; align-items:center; justify-content:center; padding:16px;">
+        <div style="background:#1E293B; color:#F8FAFC; border:1px solid #334155; border-radius:18px; width:100%; max-width:680px; max-height:85vh; display:flex; flex-direction:column; padding:24px; position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.5);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 style="font-size:18px; font-weight:800;">👥 Safety Community Directory</h3>
+                <button onclick="document.getElementById('volDirectoryModal').style.display='none'" style="background:#334155; border:none; color:#FFF; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button>
+            </div>
+            <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+                <button type="button" class="vol-dir-pill active" onclick="loadVolDirectory('all', this)" style="padding:5px 12px; border-radius:100px; background:#D97706; color:#FFF; border:none; font-size:12px; font-weight:700; cursor:pointer;">All</button>
+                <button type="button" class="vol-dir-pill" onclick="loadVolDirectory('user', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Citizens</button>
+                <button type="button" class="vol-dir-pill" onclick="loadVolDirectory('police', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Police</button>
+                <button type="button" class="vol-dir-pill" onclick="loadVolDirectory('volunteer', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Responders</button>
+                <button type="button" class="vol-dir-pill" onclick="loadVolDirectory('journalist', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Press</button>
+            </div>
+            <div id="volDirectoryList" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+                <div style="text-align:center; padding:30px; color:#94A3B8;">Loading community directory...</div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/api.js"></script>
     <script>
         let currentVolUser = null;
@@ -1255,6 +1296,60 @@
 
             await loadActiveIncidents();
             drawRadar();
+        }
+
+        function openVolProfileModal() {
+            if (!currentVolUser) return;
+            document.getElementById('vpName').textContent = currentVolUser.name;
+            document.getElementById('vpHandle').textContent = currentVolUser.username || `@${currentVolUser.name.toLowerCase().replace(' ', '_')}`;
+            document.getElementById('vpAvatar').textContent = volAvatar;
+            document.getElementById('vpBadgeId').textContent = currentVolUser.dynamic_field_1 || 'VOL-MH-2026';
+            document.getElementById('vpSector').textContent = currentVolUser.dynamic_field_2 || 'Sector 4';
+            document.getElementById('vpPhone').textContent = currentVolUser.phone || 'N/A';
+            document.getElementById('vpEmail').textContent = currentVolUser.email || 'N/A';
+            document.getElementById('volProfileModal').style.display = 'flex';
+        }
+
+        async function openVolDirectoryModal() {
+            document.getElementById('volDirectoryModal').style.display = 'flex';
+            await loadVolDirectory('all');
+        }
+
+        async function loadVolDirectory(role = 'all', btn = null) {
+            if (btn) {
+                document.querySelectorAll('.vol-dir-pill').forEach(b => {
+                    b.style.background = '#334155';
+                    b.style.color = '#CBD5E1';
+                });
+                btn.style.background = '#D97706';
+                btn.style.color = '#FFF';
+            }
+
+            const list = document.getElementById('volDirectoryList');
+            list.innerHTML = '<div style="text-align:center; padding:30px; color:#94A3B8;">Fetching accounts... ⏳</div>';
+
+            try {
+                const users = await SocialAPI.searchUsers('', role);
+                if (!users || users.length === 0) {
+                    list.innerHTML = '<div style="text-align:center; padding:30px; color:#94A3B8;">No members found in this category.</div>';
+                    return;
+                }
+
+                list.innerHTML = users.map(u => `
+                    <div style="background:#0F172A; border:1px solid #334155; border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:42px; height:42px; border-radius:50%; background:#334155; color:#FFF; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px;">${u.avatar || 'U'}</div>
+                            <div>
+                                <div style="font-weight:700; font-size:14px; color:#FFF;">${u.name} <span style="font-size:11px; padding:2px 8px; border-radius:100px; background:#334155; color:#94A3B8; margin-left:6px;">${u.badge_title}</span></div>
+                                <div style="font-size:12px; color:#94A3B8;">${u.dynamic_field_1 ? u.dynamic_field_1 + ' · ' : ''}${u.location || 'Metro Area'}</div>
+                            </div>
+                        </div>
+                        <button onclick="toast('Direct dispatch sync active with ${u.name.split(' ')[0]}', '📡')" style="padding:6px 12px; border-radius:100px; background:#D97706; color:#FFF; border:none; font-size:11px; font-weight:700; cursor:pointer;">Contact</button>
+                    </div>
+                `).join('');
+            } catch (err) {
+                list.innerHTML = `<div style="color:#EF4444; padding:20px; text-align:center;">Error: ${err.message}</div>`;
+            }
         }
 
         async function loadActiveIncidents() {

@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "dev:all": "python run_platform.py || py run_platform.py || node server.js",
     "serve:py": "python serve.py",
-    "backend": "cd backend && python -m uvicorn app.main:app --port 8000 --reload"
+    "backend": "cd backend && (\"%LOCALAPPDATA%\\Python\\bin\\python.exe\" -m uvicorn app.main:app --port 8000 --reload || python -m uvicorn app.main:app --port 8000 --reload || py -m uvicorn app.main:app --port 8000 --reload)"
   },
   "keywords": [
     "women-safety",

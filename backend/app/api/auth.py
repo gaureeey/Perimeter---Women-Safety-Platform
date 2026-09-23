@@ -3,7 +3,7 @@ PERIMETER Authentication & Profiles API
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 import uuid
 
 from app.db.session import get_db
@@ -150,9 +150,16 @@ def get_current_user_profile(
     return build_profile(current_user, db)
 
 @router.get("/users", response_model=List[UserProfileResponse])
-def get_all_users(db: Session = Depends(get_db)):
+def get_all_users(
+    role: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
     """
     Retrieve registered users across all roles for coordination and directory.
     """
-    users = db.query(User).order_by(User.created_at.desc()).all()
+    query = db.query(User)
+    if role and role.strip() and role.strip().lower() != 'all':
+        query = query.filter(User.role == role.strip().lower())
+    users = query.order_by(User.created_at.desc()).all()
     return [build_profile(u, db) for u in users]
+

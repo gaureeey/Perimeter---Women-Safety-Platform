@@ -556,6 +556,7 @@
             <span class="press-badge-pill">📰 <span id="topbarPressName">Rhea Nair (Press Reporter)</span></span>
         </div>
         <div class="press-topbar-right">
+            <button type="button" onclick="openPressDirectoryModal()" style="background:#0F6E6E; color:#FFF; border:none; padding:4px 12px; border-radius:100px; font-size:11.5px; font-weight:700; cursor:pointer;">👥 Community & Sources Directory</button>
             <span style="color: #5EEAD4; font-family: var(--mono); font-size: 11px;">OUTLET: THE DECCAN HERALD</span>
             <a href="register.html" onclick="logout(); return false;">Switch Persona / Logout →</a>
         </div>
@@ -573,7 +574,7 @@
                 <div class="press-stat">Citations: <b>420</b></div>
             </div>
 
-            <div class="user-nav-profile" onclick="toast('Press Credential #PRESS-IND-4091 (Verified Media)', '📰')">
+            <div class="user-nav-profile" onclick="openPressProfileModal()" title="View Journalist Profile">
                 <div class="avatar-sm" id="pressAvatar">RN</div>
                 <span style="font-size: 12.5px; font-weight: 700;" id="navPressName">Rhea N.</span>
             </div>
@@ -728,6 +729,46 @@
         <span id="toastMsg">Notification message</span>
     </div>
 
+    <!-- Journalist Profile Modal -->
+    <div id="pressProfileModal" style="display:none; position:fixed; inset:0; background:rgba(10,14,30,0.8); z-index:99999; align-items:center; justify-content:center; padding:16px;">
+        <div style="background:#1E293B; color:#F8FAFC; border:1px solid #334155; border-radius:18px; width:100%; max-width:480px; padding:28px; position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.5);">
+            <button onclick="document.getElementById('pressProfileModal').style.display='none'" style="position:absolute; right:16px; top:16px; background:#334155; border:none; color:#FFF; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button>
+            <div style="text-align:center;">
+                <div style="width:72px; height:72px; border-radius:50%; background:#0F6E6E; color:#FFF; font-size:26px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;" id="prAvatar">RN</div>
+                <h3 id="prName" style="font-size:20px; font-weight:800;">Journalist Name</h3>
+                <div id="prHandle" style="font-size:13px; color:#94A3B8; font-family:monospace; margin-bottom:8px;">@handle</div>
+                <span style="background:#CCFBF1; color:#0F766E; padding:4px 12px; border-radius:100px; font-size:11.5px; font-weight:700; text-transform:uppercase;">Press Reporter</span>
+            </div>
+            <div style="margin:20px 0; background:#0F172A; border:1px solid #334155; border-radius:12px; padding:14px; font-size:13px; display:flex; flex-direction:column; gap:8px;">
+                <div>📰 <strong>Press Accreditation ID:</strong> <span id="prPressId">PID-2026-044</span></div>
+                <div>🏢 <strong>Newsroom / Media House:</strong> <span id="prOutlet">The Deccan Herald</span></div>
+                <div>📱 <strong>Newsroom Direct:</strong> <span id="prPhone">+91 98444 55667</span></div>
+                <div>✉️ <strong>Press Email:</strong> <span id="prEmail">rhea.nair@press.perimeter.org</span></div>
+            </div>
+            <button onclick="document.getElementById('pressProfileModal').style.display='none'" style="width:100%; padding:10px; background:#0F6E6E; color:#FFF; border:none; border-radius:100px; font-weight:700; cursor:pointer;">Done</button>
+        </div>
+    </div>
+
+    <!-- Sources & Safety Directory Modal -->
+    <div id="pressDirectoryModal" style="display:none; position:fixed; inset:0; background:rgba(10,14,30,0.8); z-index:99999; align-items:center; justify-content:center; padding:16px;">
+        <div style="background:#1E293B; color:#F8FAFC; border:1px solid #334155; border-radius:18px; width:100%; max-width:680px; max-height:85vh; display:flex; flex-direction:column; padding:24px; position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.5);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 style="font-size:18px; font-weight:800;">📰 Official Sources & Community Directory</h3>
+                <button onclick="document.getElementById('pressDirectoryModal').style.display='none'" style="background:#334155; border:none; color:#FFF; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button>
+            </div>
+            <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+                <button type="button" class="prs-dir-pill active" onclick="loadPressDirectory('all', this)" style="padding:5px 12px; border-radius:100px; background:#0F6E6E; color:#FFF; border:none; font-size:12px; font-weight:700; cursor:pointer;">All Contacts</button>
+                <button type="button" class="prs-dir-pill" onclick="loadPressDirectory('police', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Police Command</button>
+                <button type="button" class="prs-dir-pill" onclick="loadPressDirectory('volunteer', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Verified Responders</button>
+                <button type="button" class="prs-dir-pill" onclick="loadPressDirectory('journalist', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Press Bureau</button>
+                <button type="button" class="prs-dir-pill" onclick="loadPressDirectory('user', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Citizens</button>
+            </div>
+            <div id="pressDirectoryList" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+                <div style="text-align:center; padding:30px; color:#94A3B8;">Loading official sources...</div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/api.js"></script>
     <script>
         let currentPressUser = null;
@@ -749,6 +790,60 @@
             if (avEl) avEl.textContent = pressAvatar;
 
             await loadPressCases();
+        }
+
+        function openPressProfileModal() {
+            if (!currentPressUser) return;
+            document.getElementById('prName').textContent = currentPressUser.name;
+            document.getElementById('prHandle').textContent = currentPressUser.username || `@${currentPressUser.name.toLowerCase().replace(' ', '_')}`;
+            document.getElementById('prAvatar').textContent = pressAvatar;
+            document.getElementById('prPressId').textContent = currentPressUser.dynamic_field_1 || 'PID-2026';
+            document.getElementById('prOutlet').textContent = currentPressUser.dynamic_field_2 || 'Media Bureau';
+            document.getElementById('prPhone').textContent = currentPressUser.phone || 'N/A';
+            document.getElementById('prEmail').textContent = currentPressUser.email || 'N/A';
+            document.getElementById('pressProfileModal').style.display = 'flex';
+        }
+
+        async function openPressDirectoryModal() {
+            document.getElementById('pressDirectoryModal').style.display = 'flex';
+            await loadPressDirectory('all');
+        }
+
+        async function loadPressDirectory(role = 'all', btn = null) {
+            if (btn) {
+                document.querySelectorAll('.prs-dir-pill').forEach(b => {
+                    b.style.background = '#334155';
+                    b.style.color = '#CBD5E1';
+                });
+                btn.style.background = '#0F6E6E';
+                btn.style.color = '#FFF';
+            }
+
+            const list = document.getElementById('pressDirectoryList');
+            list.innerHTML = '<div style="text-align:center; padding:30px; color:#94A3B8;">Fetching directory... ⏳</div>';
+
+            try {
+                const users = await SocialAPI.searchUsers('', role);
+                if (!users || users.length === 0) {
+                    list.innerHTML = '<div style="text-align:center; padding:30px; color:#94A3B8;">No contacts found.</div>';
+                    return;
+                }
+
+                list.innerHTML = users.map(u => `
+                    <div style="background:#0F172A; border:1px solid #334155; border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:42px; height:42px; border-radius:50%; background:#134E4A; color:#FFF; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px;">${u.avatar || 'U'}</div>
+                            <div>
+                                <div style="font-weight:700; font-size:14px; color:#FFF;">${u.name} <span style="font-size:11px; padding:2px 8px; border-radius:100px; background:#334155; color:#99F6E4; margin-left:6px;">${u.badge_title}</span></div>
+                                <div style="font-size:12px; color:#94A3B8;">${u.dynamic_field_1 ? u.dynamic_field_1 + ' · ' : ''}${u.location || 'Metro Area'}</div>
+                            </div>
+                        </div>
+                        <button onclick="toast('Press desk citation link copied for ${u.name.split(' ')[0]}', '📋')" style="padding:6px 12px; border-radius:100px; background:#0F6E6E; color:#FFF; border:none; font-size:11px; font-weight:700; cursor:pointer;">Cite / Contact</button>
+                    </div>
+                `).join('');
+            } catch (err) {
+                list.innerHTML = `<div style="color:#EF4444; padding:20px; text-align:center;">Error: ${err.message}</div>`;
+            }
         }
 
         async function loadPressCases() {

@@ -122,51 +122,71 @@ def update_my_profile(
 @router.get("/users/{user_id}/profile", response_model=UserProfileDetail)
 def get_user_profile(
     user_id: str,
-    current_user: User = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_optional_user),
     db: Session = Depends(get_db)
 ):
     u = db.query(User).filter(User.id == user_id).first()
     if not u:
         raise HTTPException(status_code=404, detail="User not found.")
-    return serialize_user_profile_detail(u, current_user.id, db)
+    current_user_id = current_user.id if current_user else None
+    return serialize_user_profile_detail(u, current_user_id, db)
 
 @router.get("/users/search", response_model=List[UserSearchItem])
 def search_users(
-    q: str = Query(..., min_length=1),
-    current_user: User = Depends(get_current_user),
+    q: Optional[str] = Query(None),
+    role: Optional[str] = Query(None),
+    current_user: Optional[User] = Depends(get_optional_user),
     db: Session = Depends(get_db)
 ):
-    query_str = f"%{q.strip().lower()}%"
-    users = db.query(User).filter(
-        User.id != current_user.id,
-        or_(
-            User.name.ilike(query_str),
-            User.username.ilike(query_str),
-            User.role.ilike(query_str),
-            User.location.ilike(query_str),
-            User.badge_title.ilike(query_str)
+    current_user_id = current_user.id if current_user else None
+    query = db.query(User)
+    if current_user_id:
+        query = query.filter(User.id != current_user_id)
+
+    if role and role.strip() and role.strip().lower() != 'all':
+        query = query.filter(User.role == role.strip().lower())
+
+    if q and q.strip():
+        query_str = f"%{q.strip().lower()}%"
+        query = query.filter(
+            or_(
+                User.name.ilike(query_str),
+                User.username.ilike(query_str),
+                User.role.ilike(query_str),
+                User.location.ilike(query_str),
+                User.badge_title.ilike(query_str),
+                User.dynamic_field_1.ilike(query_str),
+                User.dynamic_field_2.ilike(query_str)
+            )
         )
-    ).limit(30).all()
+
+    users = query.order_by(User.role.asc(), User.name.asc()).limit(60).all()
 
     results = []
     for u in users:
-        is_following = db.query(Follow).filter(
-            Follow.follower_id == current_user.id,
-            Follow.following_id == u.id
-        ).first() is not None
+        is_following = False
+        if current_user_id:
+            is_following = db.query(Follow).filter(
+                Follow.follower_id == current_user_id,
+                Follow.following_id == u.id
+            ).first() is not None
         followers = db.query(Follow).filter(Follow.following_id == u.id).count()
 
         results.append(UserSearchItem(
             id=u.id,
             name=u.name,
             username=u.username or f"@{u.name.lower().replace(' ', '_')}",
+            email=u.email,
+            phone=u.phone,
             role=u.role,
             badge_title=u.badge_title,
             avatar=u.avatar,
             bio=u.bio,
             location=u.location,
             followers_count=followers,
-            is_following=is_following
+            is_following=is_following,
+            dynamic_field_1=u.dynamic_field_1,
+            dynamic_field_2=u.dynamic_field_2
         ))
     return results
 
