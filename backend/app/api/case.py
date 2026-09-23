@@ -8,6 +8,7 @@ import uuid
 
 from app.db.session import get_db
 from app.models.case import IncidentCase, TimelineEvent, LinkedPressArticle
+from app.models.sos import SOSIncident
 from app.schemas.case import CaseResponse, TimelineEntry, PressArticleLink
 
 router = APIRouter(prefix="/case", tags=["Universal Case Timeline & Press Desk"])
@@ -82,9 +83,28 @@ def add_timeline_event(case_id: str, entry: TimelineEntry, db: Session = Depends
         actor_name=entry.actor_name,
         timestamp=entry.timestamp
     )
+
     db.add(event)
+
+        # Mark the case resolved when the police records the closure event.
+    if entry.title == "Incident Resolved & Closed":
+        c.status = "RESOLVED"
+
+        # Also resolve the SOS incident linked to this case.
+        sos = db.query(SOSIncident).filter(
+            SOSIncident.case_id == case_id
+        ).first()
+
+        if sos:
+            sos.status = "RESOLVED"
+
     db.commit()
-    return {"status": "success", "message": f"Timeline event added to {case_id}."}
+
+    return {
+        "status": "success",
+        "message": f"Timeline event added to {case_id}.",
+        "case_status": c.status
+    }
 
 @router.post("/{case_id}/link-press")
 def link_press_article(case_id: str, article: PressArticleLink, db: Session = Depends(get_db)):

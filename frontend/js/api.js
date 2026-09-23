@@ -83,7 +83,7 @@ function saveSession(token, user) {
             }));
         }
     }
-}
+}window.saveSession = saveSession;
 
 /**
  * Clear session and logout
@@ -102,47 +102,57 @@ function logout() {
  * Generic API Fetch helper
  */
 async function apiCall(endpoint, method = 'GET', body = null) {
-    const headers = {
-        'Accept': 'application/json'
-    };
-    
+    const headers = {};
+
     if (body && !(body instanceof FormData)) {
         headers['Content-Type'] = 'application/json';
     }
 
     const token = getAuthToken();
+
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
     const options = {
-        method: method,
+        method,
         headers: headers
     };
 
     if (body) {
-        options.body = (body instanceof FormData) ? body : JSON.stringify(body);
+        options.body = body instanceof FormData
+            ? body
+            : JSON.stringify(body);
     }
 
-    const url = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
+    const url = endpoint.startsWith('http')
+        ? endpoint
+        : `${API_BASE}${endpoint}`;
 
     try {
         const response = await fetch(url, options);
         const data = await response.json().catch(() => null);
 
-        if (!response.ok) {
-            if (response.status === 401) {
-                console.warn('[PERIMETER] Session expired or invalid token. Redirecting to registration...');
-                localStorage.removeItem(TOKEN_KEY);
-                localStorage.removeItem(SESSION_KEY);
-                if (!window.location.pathname.endsWith('register.html')) {
-                    window.location.href = 'register.html';
-                }
-            }
-            const errorMsg = data?.detail || `API request failed with status ${response.status}`;
+        if (response.status === 401) {
+            console.warn('PERIMETER API authentication failed.');
+
+            const errorMsg =
+                data?.detail ||
+                'Your session is no longer valid. Please log in again.';
+
             throw new Error(errorMsg);
         }
+
+        if (!response.ok) {
+            const errorMsg =
+                data?.detail ||
+                `API request failed with status ${response.status}`;
+
+            throw new Error(errorMsg);
+        }
+
         return data;
+
     } catch (err) {
         if (err.name === 'TypeError' && err.message.includes('fetch')) {
             console.error(`[PERIMETER Server Connection Error] Could not connect to API server at ${API_BASE}. Make sure the FastAPI backend is running on port 8000.`);
@@ -153,7 +163,7 @@ async function apiCall(endpoint, method = 'GET', body = null) {
         throw err;
     }
 }
-
+    window.apiCall = apiCall;
 /**
  * Page Auth Guard for Public Pages (register.html):
  * If user is already authenticated, automatically forwards to their role dashboard.
@@ -202,8 +212,10 @@ async function guardProtectedPage(allowedRoles = []) {
 }
 
 /**
- * Unified Toast Notification
- */
+/*Unified Toast Notification*/
+
+let toastTimer = null;
+
 function showToast(msg, icon = '✨', duration = 3200) {
     let el = document.getElementById('toast');
     if (!el) {
@@ -235,7 +247,8 @@ function showToast(msg, icon = '✨', duration = 3200) {
     }, duration);
 }
 
-// Global alias for compatibility
+/*Global alias for compatibility*/
+window.showToast = showToast;
 const toast = showToast;
 
 /* -------------------------------------------------------------
@@ -378,8 +391,41 @@ const SocialAPI = {
         return await apiCall('/social/profile/my-cases');
     },
 
-    // SOS Emergency Dispatch
-    async triggerSOS(sosData) {
-        return await apiCall('/sos/trigger', 'POST', sosData);
-    }
-};
+        // SOS Emergency Dispatch
+        async triggerSOS(sosData) {
+            return await apiCall('/sos/trigger', 'POST', sosData);
+        },
+    
+        async getActiveSOS() {
+            return await apiCall('/sos/active');
+        },
+    
+        async respondToSOS(incidentId, responderId, responderName, role) {
+            const params = new URLSearchParams({
+                responder_id: responderId,
+                responder_name: responderName,
+                role: role
+            });
+    
+            return await apiCall(
+                `/sos/${encodeURIComponent(incidentId)}/respond?${params.toString()}`,
+                'POST'
+            );
+        },
+    
+        async resolveSOS(incidentId, resolvedBy, notes = null) {
+            const params = new URLSearchParams({
+                resolved_by: resolvedBy
+            });
+    
+            if (notes) {
+                params.append('notes', notes);
+            }
+    
+            return await apiCall(
+                `/sos/${encodeURIComponent(incidentId)}/resolve?${params.toString()}`,
+                'POST'
+            );
+        }
+    };
+    window.SocialAPI = SocialAPI;

@@ -102,6 +102,16 @@ def get_active_incidents(db: Session = Depends(get_db)):
     ).order_by(SOSIncident.created_at.desc()).all()
 
     results = []
+    
+    """
+    Retrieve all active emergency SOS dispatches with live responder details.
+    """
+    incidents = db.query(SOSIncident).filter(
+        SOSIncident.status == "ACTIVE_DISPATCH"
+    ).order_by(SOSIncident.created_at.desc()).all()
+
+    results = []
+
     for inc in incidents:
         responders = [
             ResponderInfo(
@@ -114,6 +124,7 @@ def get_active_incidents(db: Session = Depends(get_db)):
             )
             for r in inc.responders
         ]
+
         results.append({
             "incident_id": inc.incident_id,
             "user_id": inc.user_id,
@@ -133,6 +144,7 @@ def get_active_incidents(db: Session = Depends(get_db)):
             "active_responders": responders,
             "case_id": inc.case_id
         })
+
     return results
 
 @router.post("/{incident_id}/respond")
