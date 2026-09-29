@@ -1042,7 +1042,6 @@
             <div class="nav-tabs">
                 <button type="button" class="nav-tab-btn active" id="tabBtnTactical" onclick="switchVolunteerTab('tactical')">📡 Tactical Radar</button>
                 <button type="button" class="nav-tab-btn" id="tabBtnFeed" onclick="switchVolunteerTab('feed')">📱 Stories & Safety Feed</button>
-                <button type="button" class="nav-tab-btn" id="tabBtnDirectory" onclick="openVolDirectoryModal()">👥 Safety Directory</button>
             </div>
 
             <div class="vol-stats-bar">
@@ -1051,7 +1050,7 @@
                 <div class="vol-stat">Radius: <b>5.0 km</b></div>
             </div>
 
-            <div class="user-nav-profile" onclick="openVolProfileModal()" title="View Volunteer Profile">
+            <div class="user-nav-profile" onclick="toast('Volunteer Badge #VOL-9022 (Verified Level 3)', '🎖️')">
                 <div class="avatar-sm" id="volAvatar">PD</div>
                 <span style="font-size: 12.5px; font-weight: 700;" id="navVolName">Priya D.</span>
             </div>
@@ -1202,6 +1201,23 @@
 
     </main>
 
+
+        <!-- ================= VOLUNTEER COMMUNITY FEED ================= -->
+        <section id="volunteerFeedView" style="display:none; max-width:1200px; margin:24px auto; padding:0 24px;">
+            <div style="background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow-subtle);">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;">
+                    <div>
+                        <h2 style="margin:0;font-size:20px;font-weight:850;">📱 Community Safety Feed</h2>
+                        <p style="margin:5px 0 0;color:var(--gray);font-size:12px;">
+                            Live citizen, volunteer, journalist and police safety updates.
+                        </p>
+                    </div>
+                    <button type="button" class="btn-broadcast" onclick="loadVolunteerFeed()">↻ Refresh</button>
+                </div>
+                <div id="volunteerFeedList"></div>
+            </div>
+        </section>
+
     <!-- LIVE ESCORT NAVIGATION HUD MODAL -->
     <div class="hud-overlay" id="hudModal">
         <div class="hud-box">
@@ -1233,52 +1249,88 @@
         <span id="toastMsg">Notification message</span>
     </div>
 
-    <!-- Volunteer Profile Modal -->
-    <div id="volProfileModal" style="display:none; position:fixed; inset:0; background:rgba(10,14,30,0.8); z-index:99999; align-items:center; justify-content:center; padding:16px;">
-        <div style="background:#1E293B; color:#F8FAFC; border:1px solid #334155; border-radius:18px; width:100%; max-width:480px; padding:28px; position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.5);">
-            <button onclick="document.getElementById('volProfileModal').style.display='none'" style="position:absolute; right:16px; top:16px; background:#334155; border:none; color:#FFF; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button>
-            <div style="text-align:center;">
-                <div style="width:72px; height:72px; border-radius:50%; background:#D97706; color:#FFF; font-size:26px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;" id="vpAvatar">PD</div>
-                <h3 id="vpName" style="font-size:20px; font-weight:800;">Volunteer Name</h3>
-                <div id="vpHandle" style="font-size:13px; color:#94A3B8; font-family:monospace; margin-bottom:8px;">@handle</div>
-                <span style="background:#FEF3C7; color:#B45309; padding:4px 12px; border-radius:100px; font-size:11.5px; font-weight:700; text-transform:uppercase;">Verified Responder</span>
-            </div>
-            <div style="margin:20px 0; background:#0F172A; border:1px solid #334155; border-radius:12px; padding:14px; font-size:13px; display:flex; flex-direction:column; gap:8px;">
-                <div>🪪 <strong>Badge ID:</strong> <span id="vpBadgeId">VOL-MH-2026-089</span></div>
-                <div>📍 <strong>Assigned Patrol Sector:</strong> <span id="vpSector">Sector 4 - Central Zone</span></div>
-                <div>📱 <strong>Mobile:</strong> <span id="vpPhone">+91 98300 67890</span></div>
-                <div>✉️ <strong>Email:</strong> <span id="vpEmail">volunteer@perimeter.org</span></div>
-            </div>
-            <button onclick="document.getElementById('volProfileModal').style.display='none'" style="width:100%; padding:10px; background:#D97706; color:#FFF; border:none; border-radius:100px; font-weight:700; cursor:pointer;">Done</button>
-        </div>
-    </div>
-
-    <!-- Safety Directory Modal -->
-    <div id="volDirectoryModal" style="display:none; position:fixed; inset:0; background:rgba(10,14,30,0.8); z-index:99999; align-items:center; justify-content:center; padding:16px;">
-        <div style="background:#1E293B; color:#F8FAFC; border:1px solid #334155; border-radius:18px; width:100%; max-width:680px; max-height:85vh; display:flex; flex-direction:column; padding:24px; position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.5);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                <h3 style="font-size:18px; font-weight:800;">👥 Safety Community Directory</h3>
-                <button onclick="document.getElementById('volDirectoryModal').style.display='none'" style="background:#334155; border:none; color:#FFF; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button>
-            </div>
-            <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
-                <button type="button" class="vol-dir-pill active" onclick="loadVolDirectory('all', this)" style="padding:5px 12px; border-radius:100px; background:#D97706; color:#FFF; border:none; font-size:12px; font-weight:700; cursor:pointer;">All</button>
-                <button type="button" class="vol-dir-pill" onclick="loadVolDirectory('user', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Citizens</button>
-                <button type="button" class="vol-dir-pill" onclick="loadVolDirectory('police', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Police</button>
-                <button type="button" class="vol-dir-pill" onclick="loadVolDirectory('volunteer', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Responders</button>
-                <button type="button" class="vol-dir-pill" onclick="loadVolDirectory('journalist', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Press</button>
-            </div>
-            <div id="volDirectoryList" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
-                <div style="text-align:center; padding:30px; color:#94A3B8;">Loading community directory...</div>
-            </div>
-        </div>
-    </div>
-
     <script src="js/api.js"></script>
     <script>
         let currentVolUser = null;
         let volName = 'Volunteer';
         let volAvatar = 'PD';
+        // Must be declared before acceptDispatch() or any click handler can run.
         let currentIncidentId = null;
+
+
+        function escapeFeedText(value) {
+            return String(value ?? '').replace(/[&<>"']/g, ch => ({
+                '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+            }[ch]));
+        }
+
+        function renderVolunteerFeed(posts) {
+            const box = document.getElementById('volunteerFeedList');
+            if (!box) return;
+
+            if (!posts || !posts.length) {
+                box.innerHTML = `
+                    <div style="padding:28px;text-align:center;color:var(--gray);
+                                border:1px dashed var(--line);border-radius:14px;">
+                        No safety posts yet.
+                    </div>`;
+                return;
+            }
+
+            box.innerHTML = posts.map(p => `
+                <article style="border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;background:#FAFAFA;">
+                    <div style="display:flex;justify-content:space-between;gap:10px;">
+                        <div>
+                            <b>${escapeFeedText(p.author_name || 'Citizen')}</b>
+                            <span style="font-size:11px;color:var(--gray);margin-left:6px;">
+                                ${escapeFeedText(p.author_role || 'user')}
+                            </span>
+                        </div>
+                        <span style="font-size:11px;color:var(--gray);">
+                            ${p.created_at ? new Date(p.created_at).toLocaleString() : ''}
+                        </span>
+                    </div>
+                    <div style="font-weight:800;margin-top:9px;">${escapeFeedText(p.title || 'Safety Update')}</div>
+                    <div style="font-size:13px;line-height:1.55;margin-top:5px;">
+                        ${escapeFeedText(p.content || '')}
+                    </div>
+                    <div style="font-size:11px;color:var(--gray);margin-top:9px;">
+                        📍 ${escapeFeedText(p.location_name || 'Local area')}
+                        · #${escapeFeedText(p.tag || 'COMMUNITY_UPDATE')}
+                    </div>
+                    ${p.media_url ? `<div style="margin-top:10px;"><a href="${escapeFeedText(p.media_url)}" target="_blank" rel="noopener">View attached media</a></div>` : ''}
+                </article>
+            `).join('');
+        }
+
+        async function loadVolunteerFeed() {
+            try {
+                const posts = await SocialAPI.getFeed('ALL');
+                renderVolunteerFeed(Array.isArray(posts) ? posts : []);
+            } catch (err) {
+                const box = document.getElementById('volunteerFeedList');
+                if (box) {
+                    box.innerHTML = `<div style="padding:18px;color:#B91C1C;background:#FEF2F2;border-radius:12px;">
+                        Failed to load community feed: ${escapeFeedText(err.message)}
+                    </div>`;
+                }
+            }
+        }
+
+        function switchVolunteerTab(tab) {
+            const tactical = document.getElementById('tacticalContainer');
+            const feed = document.getElementById('volunteerFeedView');
+            const tacticalBtn = document.getElementById('tabBtnTactical');
+            const feedBtn = document.getElementById('tabBtnFeed');
+
+            const showFeed = tab === 'feed';
+            if (tactical) tactical.style.display = showFeed ? 'none' : '';
+            if (feed) feed.style.display = showFeed ? '' : 'none';
+            if (tacticalBtn) tacticalBtn.classList.toggle('active', !showFeed);
+            if (feedBtn) feedBtn.classList.toggle('active', showFeed);
+
+            if (showFeed) loadVolunteerFeed();
+        }
 
         async function initVolunteerDashboard() {
             currentVolUser = await guardProtectedPage(['volunteer']);
@@ -1295,103 +1347,187 @@
             if (avEl) avEl.textContent = volAvatar;
 
             await loadActiveIncidents();
+            startVolunteerPolling();
+            connectVolunteerSOSChannel();
+            loadVolunteerFeed();
+            setInterval(() => {
+                if (document.visibilityState !== 'hidden') loadVolunteerFeed();
+            }, 5000);
             drawRadar();
         }
 
-        function openVolProfileModal() {
-            if (!currentVolUser) return;
-            document.getElementById('vpName').textContent = currentVolUser.name;
-            document.getElementById('vpHandle').textContent = currentVolUser.username || `@${currentVolUser.name.toLowerCase().replace(' ', '_')}`;
-            document.getElementById('vpAvatar').textContent = volAvatar;
-            document.getElementById('vpBadgeId').textContent = currentVolUser.dynamic_field_1 || 'VOL-MH-2026';
-            document.getElementById('vpSector').textContent = currentVolUser.dynamic_field_2 || 'Sector 4';
-            document.getElementById('vpPhone').textContent = currentVolUser.phone || 'N/A';
-            document.getElementById('vpEmail').textContent = currentVolUser.email || 'N/A';
-            document.getElementById('volProfileModal').style.display = 'flex';
+        function escapeDispatchHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, ch => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;',
+                '"': '&quot;', "'": '&#039;'
+            }[ch]));
         }
 
-        async function openVolDirectoryModal() {
-            document.getElementById('volDirectoryModal').style.display = 'flex';
-            await loadVolDirectory('all');
-        }
+        function updateActiveIncidentCount(count) {
+            const el = document.getElementById('activeIncidentCount');
+            if (el) el.textContent = `${count} Pending`;
 
-        async function loadVolDirectory(role = 'all', btn = null) {
-            if (btn) {
-                document.querySelectorAll('.vol-dir-pill').forEach(b => {
-                    b.style.background = '#334155';
-                    b.style.color = '#CBD5E1';
-                });
-                btn.style.background = '#D97706';
-                btn.style.color = '#FFF';
+            const radarMeta = document.querySelector('.radar-meta-row span:last-child');
+            if (radarMeta) {
+                radarMeta.textContent =
+                    `${count} ACTIVE DISTRESS SIGNAL${count === 1 ? '' : 'S'} WITHIN RADIUS`;
             }
+        }
 
-            const list = document.getElementById('volDirectoryList');
-            list.innerHTML = '<div style="text-align:center; padding:30px; color:#94A3B8;">Fetching accounts... ⏳</div>';
+        function buildLiveIncidentCard(inc) {
+            const card = document.createElement('div');
+            const severity = String(inc.severity || 'MEDIUM').toUpperCase();
+            const urgent = severity === 'HIGH' || severity === 'CRITICAL';
+            const responders = Array.isArray(inc.active_responders) ? inc.active_responders : [];
+            const isAccepted = responders.some(
+                r => String(r.responder_id) === String(currentVolUser?.id)
+            );
 
-            try {
-                const users = await SocialAPI.searchUsers('', role);
-                if (!users || users.length === 0) {
-                    list.innerHTML = '<div style="text-align:center; padding:30px; color:#94A3B8;">No members found in this category.</div>';
-                    return;
-                }
+            const name = escapeDispatchHtml(inc.user_name || 'Citizen');
+            const incidentId = String(inc.incident_id || inc.id || '');
+            const trigger = escapeDispatchHtml(
+                String(inc.trigger_type || 'SOS_REQUEST').replace(/_/g, ' ')
+            );
+            const addressRaw = inc.location?.address || 'Live GPS location';
+            const address = escapeDispatchHtml(addressRaw);
+            const notes = escapeDispatchHtml(
+                inc.notes || 'Emergency broadcast received via 5 km geofence.'
+            );
+            const accuracy = inc.location?.accuracy_meters != null
+                ? `±${Math.round(Number(inc.location.accuracy_meters))}m`
+                : 'GPS available';
+            const timeStr = inc.created_at
+                ? new Date(inc.created_at).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+                : 'Just now';
+            const distance = inc.distance_km != null
+                ? `${Number(inc.distance_km).toFixed(1)} km away`
+                : 'Within 5 km';
 
-                list.innerHTML = users.map(u => `
-                    <div style="background:#0F172A; border:1px solid #334155; border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <div style="width:42px; height:42px; border-radius:50%; background:#334155; color:#FFF; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px;">${u.avatar || 'U'}</div>
-                            <div>
-                                <div style="font-weight:700; font-size:14px; color:#FFF;">${u.name} <span style="font-size:11px; padding:2px 8px; border-radius:100px; background:#334155; color:#94A3B8; margin-left:6px;">${u.badge_title}</span></div>
-                                <div style="font-size:12px; color:#94A3B8;">${u.dynamic_field_1 ? u.dynamic_field_1 + ' · ' : ''}${u.location || 'Metro Area'}</div>
-                            </div>
-                        </div>
-                        <button onclick="toast('Direct dispatch sync active with ${u.name.split(' ')[0]}', '📡')" style="padding:6px 12px; border-radius:100px; background:#D97706; color:#FFF; border:none; font-size:11px; font-weight:700; cursor:pointer;">Contact</button>
+            const safeId = escapeDispatchHtml(incidentId);
+            const safePerson = escapeDispatchHtml(String(inc.user_name || 'Citizen'));
+            const safeAddress = escapeDispatchHtml(String(addressRaw));
+            const buttonId = `btn-${incidentId}`;
+
+            card.className = `dispatch-card ${urgent ? 'urgent' : ''}`;
+            card.id = `dispatch_${incidentId}`;
+
+            card.innerHTML = `
+                <div class="dispatch-top">
+                    <span class="dispatch-tag sos">
+                        🚨 SOS Assistance (${escapeDispatchHtml(severity)})
+                    </span>
+                    <span class="dispatch-distance">${escapeDispatchHtml(distance)} · ETA 3 mins</span>
+                </div>
+
+                <div class="dispatch-title">
+                    ${name} · ${trigger}
+                </div>
+
+                <div class="dispatch-desc">
+                    Citizen <b>${name}</b> requested verified volunteer assistance.
+                    📍 <b>${address}</b> · Triggered at ${escapeDispatchHtml(timeStr)}.
+                    <br>
+                    <span style="font-family:var(--mono);font-size:11px;color:#64748B;">
+                        GPS accuracy: ${escapeDispatchHtml(accuracy)}
+                    </span>
+                    <br>${notes}
+                </div>
+
+                <div class="dispatch-footer">
+                    <div class="dispatch-caller">
+                        <span>👤 ${name}</span>
+                        <span>· ${safeId}</span>
                     </div>
-                `).join('');
-            } catch (err) {
-                list.innerHTML = `<div style="color:#EF4444; padding:20px; text-align:center;">Error: ${err.message}</div>`;
-            }
+
+                    <button
+                        class="btn-accept-dispatch ${isAccepted ? 'accepted' : ''}"
+                        id="${escapeDispatchHtml(buttonId)}"
+                        onclick="acceptDispatch('${safeId}', '${safePerson}', '${safeAddress}', '${escapeDispatchHtml(distance)}')">
+                        ${isAccepted ? '✔ Dispatch Active · En Route' : 'Accept & Share Live Route →'}
+                    </button>
+                </div>
+            `;
+
+            return card;
         }
 
         async function loadActiveIncidents() {
+            const dispatchList = document.getElementById('dispatchList');
+            if (!dispatchList) return;
+
             try {
+                // Always replace the demo cards with the real API result.
                 const incidents = await apiCall('/sos/active');
-                const dispatchList = document.querySelector('.dispatch-list');
-                if (!dispatchList || !incidents || incidents.length === 0) return;
+                const liveIncidents = Array.isArray(incidents) ? incidents : [];
 
-                // Render dynamic dispatches from DB
                 dispatchList.innerHTML = '';
-                incidents.forEach(inc => {
-                    const card = document.createElement('div');
-                    card.className = 'dispatch-card';
-                    card.id = `dispatch_${inc.incident_id}`;
-                    const timeStr = new Date(inc.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-                    const isAccepted = inc.active_responders.some(r => r.responder_id === currentVolUser?.id);
-
-                    card.innerHTML = `
-                        <div class="dispatch-header">
-                            <div>
-                                <span class="priority-tag ${inc.severity === 'CRITICAL' ? 'critical' : 'high'}">${inc.severity || 'HIGH PRIORITY'}</span>
-                                <div class="incident-title">${inc.user_name} · ${inc.trigger_type.replace('_', ' ')}</div>
-                                <div class="incident-meta">📍 ${inc.location.address} · Time: ${timeStr}</div>
+                if (liveIncidents.length === 0) {
+                    dispatchList.innerHTML = `
+                        <div id="noLiveDispatches" style="
+                            background:#FFFFFF;
+                            border:1px solid var(--line);
+                            border-radius:var(--radius-lg);
+                            padding:28px;
+                            text-align:center;
+                            color:var(--gray);
+                            box-shadow:var(--shadow-subtle);
+                        ">
+                            <div style="font-size:28px;margin-bottom:8px;">🟢</div>
+                            <b style="color:var(--ink);">No active volunteer dispatches</b>
+                            <div style="font-size:12px;margin-top:5px;">
+                                Waiting for a MEDIUM or MINOR SOS within the volunteer queue.
                             </div>
-                            <span class="distance-badge">🚨 ~0.8 km</span>
-                        </div>
-                        <div style="font-size: 13px; color: #CBD5E1; margin: 8px 0;">
-                            ${inc.notes || 'Emergency broadcast received via 5km Geofence spatial mesh.'}
-                        </div>
-                        <div class="dispatch-actions">
-                            <button id="btn-${inc.incident_id}" class="btn-dispatch ${isAccepted ? 'accepted' : 'accept'}" 
-                                onclick="acceptDispatch('${inc.incident_id}', '${inc.user_name}', '${inc.location.address}', '0.8km')">
-                                ${isAccepted ? '✔ Dispatch Active · En Route' : 'Accept Geofence Dispatch'}
-                            </button>
-                        </div>
-                    `;
-                    dispatchList.appendChild(card);
-                });
+                        </div>`;
+                } else {
+                    liveIncidents.forEach(inc => {
+                        dispatchList.appendChild(buildLiveIncidentCard(inc));
+                    });
+                }
+
+                updateActiveIncidentCount(liveIncidents.length);
+
+                // Remove any previous API error indicator.
+                document.getElementById('volApiStatus')?.remove();
             } catch (err) {
-                console.warn('Could not load active incidents:', err.message);
+                console.error('PERIMETER /sos/active failed:', err);
+
+                // Make the failure visible instead of silently leaving fake demo cards.
+                dispatchList.innerHTML = `
+                    <div id="volApiStatus" style="
+                        background:#FFF7ED;
+                        border:1px solid #FDBA74;
+                        border-left:4px solid #F97316;
+                        border-radius:14px;
+                        padding:18px;
+                        color:#9A3412;
+                        margin-bottom:18px;
+                    ">
+                        <b>⚠ Volunteer dispatch API error</b>
+                        <div style="font-size:12px;margin-top:6px;">
+                            ${escapeDispatchHtml(err?.message || 'Unable to load /sos/active')}
+                        </div>
+                        <div style="font-size:11px;margin-top:8px;color:#7C2D12;">
+                            Open F12 → Console/Network to see the exact request and HTTP status.
+                        </div>
+                    </div>`;
+
+                updateActiveIncidentCount(0);
             }
+        }
+
+        // Keep the volunteer queue live even when WebSocket is unavailable.
+        let volunteerPollTimer = null;
+        function startVolunteerPolling() {
+            clearInterval(volunteerPollTimer);
+            volunteerPollTimer = setInterval(() => {
+                if (document.visibilityState !== 'hidden' && currentVolUser) {
+                    loadActiveIncidents();
+                }
+            }, 3000);
         }
 
         let isOnDuty = true;
@@ -1556,9 +1692,80 @@
                 toast(err.message || 'Could not publish notice.', '❌');
             }
         }
+        // Live SOS channel: volunteers receive every SOS; severity controls priority.
+        let volunteerSOSSocket = null;
+        function connectVolunteerSOSChannel() {
+            const token = getAuthToken();
+            if (!token || !currentVolUser) return;
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsHost = location.hostname || '127.0.0.1';
+            const wsUrl = `${wsProtocol}//${wsHost}:8000/api/v1/sos/ws?role=volunteer&token=${encodeURIComponent(token)}`;
+            try {
+                volunteerSOSSocket = new WebSocket(wsUrl);
+                volunteerSOSSocket.onmessage = async (event) => {
+                    try {
+                        const msg = JSON.parse(event.data);
+                        if (msg.type === 'connected') {
+                            console.log('PERIMETER: Live volunteer SOS channel connected.');
+                            return;
+                        }
 
-        function toast(msg, icon = '✨') {
-            showToast(msg, icon);
+                        if (msg.type === 'new_sos') {
+                            const inc = msg.incident || {};
+                            const dispatchList = document.getElementById('dispatchList');
+
+                            if (dispatchList && inc.incident_id) {
+                                // Prevent duplicate cards if the same event arrives twice.
+                                const existing = document.getElementById(`dispatch_${inc.incident_id}`);
+                                if (existing) existing.remove();
+
+                                const card = buildLiveIncidentCard(inc);
+                                if (inc.audio_proof_url || inc.video_proof_url) {
+                                    const proof = document.createElement('div');
+                                    proof.style.cssText = 'margin-top:10px;padding:8px;border-radius:10px;background:#FFF7ED;font-size:11px;';
+                                    proof.innerHTML = `${inc.audio_proof_url ? `<a href="${inc.audio_proof_url}" target="_blank" rel="noopener">🎙️ Audio proof</a>` : ''}${inc.audio_proof_url && inc.video_proof_url ? ' · ' : ''}${inc.video_proof_url ? `<a href="${inc.video_proof_url}" target="_blank" rel="noopener">🎥 Video proof</a>` : ''}`;
+                                    card.appendChild(proof);
+                                }
+                                dispatchList.prepend(card);
+                                updateActiveIncidentCount(
+                                    dispatchList.querySelectorAll('.dispatch-card').length
+                                );
+                            }
+
+                            addTimelineEntry(
+                                'NEW SOS ASSISTANCE REQUEST',
+                                `${inc.user_name || 'Citizen'} requested verified volunteer assistance (${inc.severity || 'MEDIUM'}).`
+                            );
+
+                            showToast(
+                                `🟢 NEW SOS: ${inc.user_name || 'Citizen'} needs assistance`,
+                                '🚨',
+                                6000
+                            );
+
+                            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+                            // Re-sync with the database so the feed is authoritative.
+                            await loadActiveIncidents();
+
+                        } else if (msg.type === 'incident_updated' || msg.type === 'incident_resolved') {
+                            await loadActiveIncidents();
+                        }
+                    } catch (e) {
+                        console.warn('Volunteer live SOS message error:', e);
+                    }
+                };
+                volunteerSOSSocket.onclose = () => {
+                    setTimeout(() => {
+                        if (document.visibilityState !== 'hidden') connectVolunteerSOSChannel();
+                    }, 3000);
+                };
+                volunteerSOSSocket.onerror = () => {
+                    try { volunteerSOSSocket.close(); } catch (e) {}
+                };
+            } catch (e) {
+                console.warn('Could not connect volunteer live SOS channel:', e);
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
