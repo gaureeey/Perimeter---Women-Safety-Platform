@@ -1,0 +1,82 @@
+{
+  "Mumbai Suburban, Maharashtra": {
+    "state": "Maharashtra",
+    "district": "Mumbai Suburban",
+    "latest_year": 2023,
+    "latest_rate": 9.4,
+    "pct_change": -84.15,
+    "trend": "DECREASING"
+  },
+  "Mumbai City, Maharashtra": {
+    "state": "Maharashtra",
+    "district": "Mumbai City",
+    "latest_year": 2023,
+    "latest_rate": 53.8,
+    "pct_change": 11.62,
+    "trend": "INCREASING"
+  },
+  "Pune, Maharashtra": {
+    "state": "Maharashtra",
+    "district": "Pune",
+    "latest_year": 2023,
+    "latest_rate": 49.2,
+    "pct_change": 15.76,
+    "trend": "INCREASING"
+  },
+  "Thane, Maharashtra": {
+    "state": "Maharashtra",
+    "district": "Thane",
+    "latest_year": 2023,
+    "latest_rate": 57.1,
+    "pct_change": 5.35,
+    "trend": "INCREASING"
+  },
+  "South Delhi, Delhi": {
+    "state": "Delhi",
+    "district": "South Delhi",
+    "latest_year": 2023,
+    "latest_rate": 147.8,
+    "pct_change": 11.63,
+    "trend": "INCREASING"
+  },
+  "Central Delhi, Delhi": {
+    "state": "Delhi",
+    "district": "Central Delhi",
+    "latest_year": 2023,
+    "latest_rate": 123.5,
+    "pct_change": 4.66,
+    "trend": "INCREASING"
+  },
+  "Bengaluru Urban, Karnataka": {
+    "state": "Karnataka",
+    "district": "Bengaluru Urban",
+    "latest_year": 2023,
+    "latest_rate": 41.2,
+    "pct_change": 20.47,
+    "trend": "INCREASING"
+  },
+  "Hyderabad, Telangana": {
+    "state": "Telangana",
+    "district": "Hyderabad",
+    "latest_year": 2023,
+    "latest_rate": 51.2,
+    "pct_change": 18.79,
+    "trend": "INCREASING"
+  },
+  "Chennai, Tamil Nadu": {
+    "state": "Tamil Nadu",
+    "district": "Chennai",
+    "latest_year": 2023,
+    "latest_rate": 18.6,
+    "pct_change": 14.81,
+    "trend": "INCREASING"
+  },
+  "Kolkata, West Bengal": {
+    "state": "West Bengal",
+    "district": "Kolkata",
+    "latest_year": 2023,
+    "latest_rate": 42.8,
+    "pct_change": 12.34,
+    "trend": "INCREASING"
+  }
+}

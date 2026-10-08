@@ -37,5 +37,13 @@ class SOSIncidentResponse(BaseModel):
     created_at: datetime
     location: LocationCoords
     geofence_radius_km: float = 5.0
+    distance_km: Optional[float] = None
     active_responders: List[ResponderInfo] = []
     case_id: str
+
+class SOSLocationUpdate(BaseModel):
+    latitude: float
+    longitude: float
+    accuracy_meters: Optional[float] = 10.0
+    address: Optional[str] = None
+

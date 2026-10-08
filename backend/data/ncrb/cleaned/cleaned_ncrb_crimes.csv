@@ -1,0 +1,32 @@
+state,district,city,year,crime_category,crime_count,crime_rate,latitude,longitude
+Maharashtra,Mumbai Suburban,Mumbai,2021,Crimes Against Women,5543,59.3,19.0596,72.8295
+Maharashtra,Mumbai Suburban,Mumbai,2022,Crimes Against Women,5890,62.8,19.0596,72.8295
+Maharashtra,Mumbai Suburban,Mumbai,2023,Crimes Against Women,6112,65.1,19.0596,72.8295
+Maharashtra,Mumbai City,Mumbai,2021,Crimes Against Women,2120,48.2,18.9388,72.8354
+Maharashtra,Mumbai City,Mumbai,2022,Crimes Against Women,2280,51.4,18.9388,72.8354
+Maharashtra,Mumbai City,Mumbai,2023,Crimes Against Women,2390,53.8,18.9388,72.8354
+Maharashtra,Mumbai Suburban,Mumbai,2023,Assault on Women with Intent to Outrage Modesty,1945,20.7,19.0596,72.8295
+Maharashtra,Mumbai Suburban,Mumbai,2023,Kidnapping and Abduction of Women,1680,17.9,19.0596,72.8295
+Maharashtra,Mumbai Suburban,Mumbai,2023,Rape,880,9.4,19.0596,72.8295
+Maharashtra,Pune,Pune,2021,Crimes Against Women,2105,42.5,18.5204,73.8567
+Maharashtra,Pune,Pune,2022,Crimes Against Women,2310,46.1,18.5204,73.8567
+Maharashtra,Pune,Pune,2023,Crimes Against Women,2490,49.2,18.5204,73.8567
+Maharashtra,Thane,Thane,2022,Crimes Against Women,3420,54.2,19.2183,72.9781
+Maharashtra,Thane,Thane,2023,Crimes Against Women,3650,57.1,19.2183,72.9781
+Delhi,South Delhi,New Delhi,2021,Crimes Against Women,3890,132.4,28.54,77.21
+Delhi,South Delhi,New Delhi,2022,Crimes Against Women,4210,141.2,28.54,77.21
+Delhi,South Delhi,New Delhi,2023,Crimes Against Women,4450,147.8,28.54,77.21
+Delhi,Central Delhi,New Delhi,2022,Crimes Against Women,2150,118.0,28.6448,77.2167
+Delhi,Central Delhi,New Delhi,2023,Crimes Against Women,2280,123.5,28.6448,77.2167
+Karnataka,Bengaluru Urban,Bengaluru,2021,Crimes Against Women,3100,34.2,12.9716,77.5946
+Karnataka,Bengaluru Urban,Bengaluru,2022,Crimes Against Women,3450,37.8,12.9716,77.5946
+Karnataka,Bengaluru Urban,Bengaluru,2023,Crimes Against Women,3780,41.2,12.9716,77.5946
+Telangana,Hyderabad,Hyderabad,2021,Crimes Against Women,2400,43.1,17.385,78.4867
+Telangana,Hyderabad,Hyderabad,2022,Crimes Against Women,2680,47.9,17.385,78.4867
+Telangana,Hyderabad,Hyderabad,2023,Crimes Against Women,2890,51.2,17.385,78.4867
+Tamil Nadu,Chennai,Chennai,2021,Crimes Against Women,850,16.2,13.0827,80.2707
+Tamil Nadu,Chennai,Chennai,2022,Crimes Against Women,920,17.4,13.0827,80.2707
+Tamil Nadu,Chennai,Chennai,2023,Crimes Against Women,990,18.6,13.0827,80.2707
+West Bengal,Kolkata,Kolkata,2021,Crimes Against Women,1890,38.1,22.5726,88.3639
+West Bengal,Kolkata,Kolkata,2022,Crimes Against Women,2010,40.4,22.5726,88.3639
+West Bengal,Kolkata,Kolkata,2023,Crimes Against Women,2150,42.8,22.5726,88.3639

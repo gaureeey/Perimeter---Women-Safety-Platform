@@ -1,5 +1,8 @@
 from app.db.session import engine, Base, SessionLocal
 from app.models.user import User
+from app.models.location import UserLocation
+from app.models.crime import CrimeStatistic, AreaSafetyScore
+from app.models.notification import Notification
 from app.models.sos import SOSIncident, Responder
 from app.models.feed import FeedPost, Story
 from app.models.case import IncidentCase, TimelineEvent, LinkedPressArticle
@@ -12,7 +15,42 @@ from app.models.social import (
 from app.core.security import get_password_hash
 from datetime import datetime, timedelta
 
+from sqlalchemy import inspect, text
+
+def migrate_columns():
+    """Ensure missing columns in existing tables are migrated safely."""
+    try:
+        inspector = inspect(engine)
+        tables = inspector.get_table_names()
+        with engine.connect() as conn:
+            if "users" in tables:
+                user_cols = {c["name"] for c in inspector.get_columns("users")}
+                if "is_active" not in user_cols:
+                    conn.execute(text("ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT 1"))
+                if "last_active_at" not in user_cols:
+                    conn.execute(text("ALTER TABLE users ADD COLUMN last_active_at TIMESTAMP"))
+
+            if "sos_incidents" in tables:
+                sos_cols = {c["name"] for c in inspector.get_columns("sos_incidents")}
+                if "location_point" not in sos_cols:
+                    conn.execute(text("ALTER TABLE sos_incidents ADD COLUMN location_point TEXT"))
+                if "resolved_at" not in sos_cols:
+                    conn.execute(text("ALTER TABLE sos_incidents ADD COLUMN resolved_at TIMESTAMP"))
+                if "resolved_by" not in sos_cols:
+                    conn.execute(text("ALTER TABLE sos_incidents ADD COLUMN resolved_by TEXT"))
+
+            if "case_timeline_events" in tables:
+                tle_cols = {c["name"] for c in inspector.get_columns("case_timeline_events")}
+                if "event_type" not in tle_cols:
+                    conn.execute(text("ALTER TABLE case_timeline_events ADD COLUMN event_type TEXT DEFAULT 'TIMELINE_EVENT'"))
+
+            conn.commit()
+    except Exception as e:
+        print(f"[Migration Note] Column check completed: {e}")
+
 def init_db():
+    # Safely migrate existing tables first
+    migrate_columns()
     # Create all tables in the database
     Base.metadata.create_all(bind=engine)
 

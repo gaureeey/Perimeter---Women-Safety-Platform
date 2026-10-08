@@ -19,6 +19,8 @@ class User(Base):
     location = Column(String, nullable=True, default="Mumbai Metro Area")
     profile_image_url = Column(String, nullable=True)
     is_private = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
+    last_active_at = Column(DateTime, default=datetime.utcnow)
     
     # Social counters
     followers_count = Column(Integer, default=0)

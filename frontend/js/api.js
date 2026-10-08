@@ -399,6 +399,23 @@ const SocialAPI = {
         async getActiveSOS() {
             return await apiCall('/sos/active');
         },
+
+        async getSOS(incidentId) {
+            return await apiCall(`/sos/${encodeURIComponent(incidentId)}`);
+        },
+
+        async acknowledgeSOS(incidentId) {
+            return await apiCall(`/sos/${encodeURIComponent(incidentId)}/acknowledge`, 'POST');
+        },
+
+        async dispatchSOS(incidentId, responderId, responderName, role = 'police') {
+            const params = new URLSearchParams({
+                responder_id: responderId,
+                responder_name: responderName,
+                role: role
+            });
+            return await apiCall(`/sos/${encodeURIComponent(incidentId)}/dispatch?${params.toString()}`, 'POST');
+        },
     
         async respondToSOS(incidentId, responderId, responderName, role) {
             const params = new URLSearchParams({
@@ -426,6 +443,169 @@ const SocialAPI = {
                 `/sos/${encodeURIComponent(incidentId)}/resolve?${params.toString()}`,
                 'POST'
             );
+        },
+
+        async updateSOSLocation(incidentId, locationData) {
+            return await apiCall(
+                `/sos/${encodeURIComponent(incidentId)}/location`,
+                'POST',
+                locationData
+            );
         }
     };
     window.SocialAPI = SocialAPI;
+    window.SOSAPI = SocialAPI; // Alias
+
+/* -------------------------------------------------------------
+   LOCATION & GEOFENCE API
+------------------------------------------------------------- */
+const LocationAPI = {
+    async updateLocation(data) {
+        return await apiCall('/location/update', 'POST', data);
+    },
+    async getMyLocation() {
+        return await apiCall('/location/me');
+    },
+    async getResponders() {
+        return await apiCall('/location/responders');
+    },
+    async getNearbyVolunteers(lat, lng, radiusKm = 5.0) {
+        return await apiCall(`/location/nearby-volunteers?lat=${lat}&lng=${lng}&radius_km=${radiusKm}`);
+    }
+};
+window.LocationAPI = LocationAPI;
+
+/* -------------------------------------------------------------
+   HEATMAP & SAFE ROUTING API
+------------------------------------------------------------- */
+const SafetyMapAPI = {
+    async getHeatmap(city = 'Mumbai') {
+        return await apiCall(`/heatmap?city=${encodeURIComponent(city)}`);
+    },
+    async getSafetyScore(lat, lng) {
+        return await apiCall(`/safety-score?lat=${lat}&lng=${lng}`);
+    },
+    async getSafeRoutes(fromLat, fromLng, toLat, toLng) {
+        return await apiCall(`/safe-routes/?from_lat=${fromLat}&from_lng=${fromLng}&to_lat=${toLat}&to_lng=${toLng}`);
+    }
+};
+window.SafetyMapAPI = SafetyMapAPI;
+
+/* -------------------------------------------------------------
+   NOTIFICATIONS API & REAL-TIME WEBSOCKET
+------------------------------------------------------------- */
+const NotificationAPI = {
+    async getNotifications(limit = 20) {
+        return await apiCall(`/notifications/?limit=${limit}`);
+    },
+    async markRead(notificationId) {
+        return await apiCall(`/notifications/${notificationId}/read`, 'POST');
+    },
+    connectWebSocket(role, onMessageCallback) {
+        try {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const host = '127.0.0.1:8000';
+            const ws = new WebSocket(`${protocol}//${host}/api/v1/notifications/ws/${role}`);
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (onMessageCallback) onMessageCallback(data);
+                } catch(e) {}
+            };
+            ws.onerror = (e) => {
+                console.warn('[WS Alert Error] Fallback polling active.', e);
+            };
+            return ws;
+        } catch (e) {
+            console.warn('[WS Alert Exception]', e);
+            return null;
+        }
+    }
+};
+window.NotificationAPI = NotificationAPI;
+
+/* -------------------------------------------------------------
+   ADMIN GOVERNANCE & DATABASE AUDIT API
+------------------------------------------------------------- */
+const AdminAPI = {
+    async getUsers(role = '') {
+        const qs = role && role !== 'all' ? `?role=${encodeURIComponent(role)}` : '';
+        return await apiCall(`/admin/users${qs}`);
+    },
+    async getDetailedStats() {
+        return await apiCall('/admin/statistics');
+    },
+    async getIncidents(status = '') {
+        const qs = status && status !== 'all' ? `?status_filter=${encodeURIComponent(status)}` : '';
+        return await apiCall(`/admin/incidents${qs}`);
+    },
+    async getSOSEvents() {
+        return await apiCall('/admin/sos');
+    },
+    async getLocations() {
+        return await apiCall('/admin/locations');
+    },
+    async deleteUser(userId) {
+        return await apiCall(`/admin/users/${userId}`, 'DELETE');
+    },
+    async toggleUserStatus(userId, isActive) {
+        return await apiCall(`/admin/users/${userId}/status`, 'PUT', { is_active: isActive });
+    },
+    async updateUserRole(userId, role) {
+        return await apiCall(`/admin/users/${userId}/role`, 'PUT', { role });
+    },
+    async getContentPosts() {
+        return await apiCall('/admin/content/posts');
+    },
+    async deleteContentPost(postId) {
+        return await apiCall(`/admin/content/posts/${postId}`, 'DELETE');
+    }
+};
+window.AdminAPI = AdminAPI;
+
+/* -------------------------------------------------------------
+   DEVICE MEDIA UPLOAD API (Camera / Gallery / File Picker)
+------------------------------------------------------------- */
+const MediaAPI = {
+    async uploadSingle(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        const token = getAuthToken();
+        const headers = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const res = await fetch(`${API_BASE_URL}/media/upload`, {
+            method: 'POST',
+            headers: headers,
+            body: formData
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Failed to upload media file.');
+        }
+        return await res.json();
+    },
+
+    async uploadMultiple(files) {
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
+        }
+        const token = getAuthToken();
+        const headers = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const res = await fetch(`${API_BASE_URL}/media/upload-multiple`, {
+            method: 'POST',
+            headers: headers,
+            body: formData
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Failed to upload media files.');
+        }
+        return await res.json();
+    }
+};
+window.MediaAPI = MediaAPI;
+

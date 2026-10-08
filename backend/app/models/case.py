@@ -25,6 +25,7 @@ class TimelineEvent(Base):
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     case_id = Column(String, ForeignKey("cases.case_id"), nullable=False)
+    event_type = Column(String, default="TIMELINE_EVENT")  # SOS_TRIGGERED, LOCATION_CAPTURED, INCIDENT_CREATED, POLICE_NOTIFIED, VOLUNTEERS_NOTIFIED, POLICE_ACKNOWLEDGED, RESPONDER_DISPATCHED, INCIDENT_UPDATED, INCIDENT_RESOLVED
     title = Column(String, nullable=False)
     description = Column(String, nullable=False)
     actor_role = Column(String, nullable=False)  # citizen, volunteer, police, journalist

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile — PERIMETER Women Safety Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #111528;
+            --paper: #F8FAFC;
+            --paper-2: #EEF2F6;
+            --coral: #FF5A5F;
+            --coral-glow: rgba(255, 90, 95, 0.25);
+            --teal: #0F6E6E;
+            --teal-dim: #E0F2F1;
+            --gold: #D97706;
+            --gold-dim: #FEF3C7;
+            --police-blue: #2563EB;
+            --police-dim: #DBEAFE;
+            --purple: #8B5CF6;
+            --purple-dim: #EDE9FE;
+            --gray: #64748B;
+            --line: #E2E8F0;
+            --white: #FFFFFF;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+            --shadow-subtle: 0 4px 20px -2px rgba(17, 21, 40, 0.06);
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--line);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            backdrop-filter: blur(12px);
+        }
+
+        .header-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn-back-hub {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ink);
+            text-decoration: none;
+            background: var(--paper-2);
+            padding: 6px 14px;
+            border-radius: 100px;
+            border: 1px solid var(--line);
+            transition: all 0.15s;
+        }
+
+        .btn-back-hub:hover {
+            background: #E2E8F0;
+        }
+
+        .profile-container {
+            max-width: 900px;
+            margin: 28px auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Card */
+        .profile-card {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 24px;
+        }
+
+        .profile-cover {
+            height: 140px;
+            background: linear-gradient(135deg, #111528 0%, #1E293B 50%, #334155 100%);
+            position: relative;
+        }
+
+        .profile-header-body {
+            padding: 0 32px 28px;
+            position: relative;
+        }
+
+        .avatar-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: -50px;
+            margin-bottom: 18px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--coral);
+            color: white;
+            font-size: 34px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #FFFFFF;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+
+        .profile-action-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-follow {
+            background: var(--coral);
+            color: white;
+        }
+        .btn-follow:hover { background: #E02424; }
+
+        .btn-following {
+            background: var(--paper-2);
+            color: var(--ink);
+            border: 1px solid var(--line);
+        }
+
+        .btn-msg {
+            background: var(--paper-2);
+            color: var(--ink);
+            border: 1px solid var(--line);
+        }
+        .btn-msg:hover { background: #E2E8F0; }
+
+        .profile-names {
+            margin-bottom: 12px;
+        }
+
+        .profile-name-title {
+            font-size: 22px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--ink);
+        }
+
+        .profile-username {
+            font-size: 14px;
+            color: var(--gray);
+            font-family: var(--mono);
+        }
+
+        .role-badge-pill {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .role-user { background: #F1F5F9; color: #475569; }
+        .role-volunteer { background: var(--gold-dim); color: #B45309; border: 1px solid rgba(217,119,6,0.3); }
+        .role-police { background: var(--police-dim); color: var(--police-blue); border: 1px solid rgba(37,99,235,0.3); }
+        .role-journalist { background: #E0F2FE; color: #0369A1; border: 1px solid rgba(3,105,161,0.3); }
+        .role-admin { background: var(--purple-dim); color: #7C3AED; border: 1px solid rgba(124,58,237,0.3); }
+
+        .profile-bio {
+            font-size: 14px;
+            color: #334155;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            max-width: 650px;
+        }
+
+        .profile-credentials-box {
+            background: var(--paper);
+            border: 1px dashed var(--line);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 12px;
+            color: #475569;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .profile-stats-bar {
+            display: flex;
+            gap: 28px;
+            padding-top: 14px;
+            border-top: 1px solid var(--line);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .stat-item b {
+            font-size: 16px;
+            color: var(--ink);
+        }
+
+        .stat-item span {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        /* Activity Tabs */
+        .tabs-header {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .tab-btn:hover { color: var(--ink); }
+        .tab-btn.active {
+            color: var(--coral);
+            border-bottom-color: var(--coral);
+            font-weight: 700;
+        }
+
+        /* Post Card */
+        .post-card {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .post-title { font-size: 16px; font-weight: 800; margin-bottom: 6px; color: var(--ink); }
+        .post-content { font-size: 14px; color: #334155; line-height: 1.6; margin-bottom: 12px; }
+        .post-footer { display: flex; justify-content: space-between; font-size: 12px; color: var(--gray); }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(17,21,40,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+
+        .modal-box {
+            background: #FFFFFF;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 480px;
+            padding: 28px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+        }
+
+        .form-group { margin-bottom: 14px; }
+        .form-label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; color: var(--gray); }
+        .form-input { width: 100%; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; outline: none; }
+        .form-input:focus { border-color: var(--coral); }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="user.html" class="btn-back-hub">← Community Feed</a>
+            <div id="roleDeskLink"></div>
+        </div>
+    </header>
+
+    <main class="profile-container">
+
+        <!-- Universal Profile Hero Card -->
+        <div class="profile-card">
+            <div class="profile-cover"></div>
+            <div class="profile-header-body">
+                <div class="avatar-row">
+                    <div class="profile-avatar" id="profAvatar">U</div>
+                    <div class="profile-action-btns" id="profActions">
+                        <!-- Loaded dynamically based on logged in user vs profile target -->
+                    </div>
+                </div>
+
+                <div class="profile-names">
+                    <div class="profile-name-title">
+                        <span id="profName">Loading User...</span>
+                        <span id="profRoleBadge" class="role-badge-pill role-user">Citizen</span>
+                    </div>
+                    <div class="profile-username" id="profUsername">@loading</div>
+                </div>
+
+                <p class="profile-bio" id="profBio">Community member of Perimeter platform.</p>
+
+                <div class="profile-credentials-box" id="profCredsBox" style="display: none;">
+                    📍 <span id="profLocation">Location</span> · 🎖️ <span id="profCreds">Verified Credential</span>
+                </div>
+
+                <div class="profile-stats-bar">
+                    <div class="stat-item" onclick="showFollowersModal()">
+                        <b id="profFollowersCount">0</b>
+                        <span>followers</span>
+                    </div>
+                    <div class="stat-item" onclick="showFollowingModal()">
+                        <b id="profFollowingCount">0</b>
+                        <span>following</span>
+                    </div>
+                    <div class="stat-item">
+                        <b id="profPostsCount">0</b>
+                        <span>posts</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Navigation Tabs -->
+        <div class="tabs-header">
+            <button class="tab-btn active" id="tab-posts" onclick="switchProfileTab('posts')">📝 Posts</button>
+            <button class="tab-btn" id="tab-media" onclick="switchProfileTab('media')">🖼️ Media</button>
+            <button class="tab-btn" id="tab-likes" onclick="switchProfileTab('likes')">⭐ Liked Posts</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="tabContentPosts">
+            <div id="profilePostsList">
+                <div style="text-align: center; padding: 40px; color: var(--gray);">Loading posts... ⏳</div>
+            </div>
+        </div>
+
+        <div id="tabContentMedia" style="display: none;">
+            <div id="profileMediaList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px;"></div>
+        </div>
+
+        <div id="tabContentLikes" style="display: none;">
+            <div id="profileLikesList"></div>
+        </div>
+
+    </main>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" id="editProfileModal">
+        <div class="modal-box">
+            <h3 style="margin-bottom: 16px; font-size: 18px;">✏️ Edit Profile</h3>
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input class="form-input" id="editName">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Bio</label>
+                <textarea class="form-input" id="editBio" rows="3" style="resize: vertical;"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Location / Neighborhood</label>
+                <input class="form-input" id="editLocation">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-action btn-follow" style="flex: 1;" onclick="saveProfileChanges()">Save Changes</button>
+                <button class="btn-action btn-msg" onclick="document.getElementById('editProfileModal').classList.remove('show')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #111528; color: white; padding: 12px 24px; border-radius: 100px; font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 9999;">
+        <span id="toastIcon">✨</span> <span id="toastMsg">Message</span>
+    </div>
+
+    <script src="js/location.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        let currentUser = null;
+        let profileUser = null;
+        let targetUserId = null;
+
+        const ROLE_BADGES = {
+            'user': { text: '🛡️ Citizen User', class: 'role-user' },
+            'volunteer': { text: '🙋 Verified Volunteer', class: 'role-volunteer' },
+            'police': { text: '🚔 City Police Command', class: 'role-police' },
+            'journalist': { text: '📰 Verified Press', class: 'role-journalist' },
+            'admin': { text: '👑 Administrator', class: 'role-admin' }
+        };
+
+        const ROLE_DESKS = {
+            'police': { label: '🚔 Police Command Desk ↗', href: 'police.html' },
+            'volunteer': { label: '🙋 Volunteer Desk ↗', href: 'volunteer.html' },
+            'journalist': { label: '📰 Press Desk ↗', href: 'journalist.html' },
+            'admin': { label: '👑 Admin Portal ↗', href: 'admin.html' }
+        };
+
+        async function initProfilePage() {
+            currentUser = await guardProtectedPage();
+            if (!currentUser) return;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            targetUserId = urlParams.get('id') || currentUser.id;
+
+            // Load header role desk button
+            if (ROLE_DESKS[currentUser.role]) {
+                const desk = ROLE_DESKS[currentUser.role];
+                document.getElementById('roleDeskLink').innerHTML = `
+                    <a href="${desk.href}" class="btn-back-hub" style="color: var(--coral); border-color: var(--coral);">${desk.label}</a>
+                `;
+            }
+
+            await loadProfileData();
+            loadProfilePosts();
+        }
+
+        async function loadProfileData() {
+            try {
+                if (targetUserId === currentUser.id) {
+                    profileUser = await SocialAPI.getMyProfile();
+                } else {
+                    profileUser = await SocialAPI.getUserProfile(targetUserId);
+                }
+
+                document.getElementById('profName').textContent = profileUser.name;
+                document.getElementById('profUsername').textContent = profileUser.username || `@${profileUser.name.toLowerCase().replace(/ /g, '_')}`;
+                document.getElementById('profBio').textContent = profileUser.bio || "Active community safety member.";
+                document.getElementById('profAvatar').textContent = profileUser.avatar || profileUser.name[0];
+                document.getElementById('profFollowersCount').textContent = profileUser.followers_count || 0;
+                document.getElementById('profFollowingCount').textContent = profileUser.following_count || 0;
+                document.getElementById('profPostsCount').textContent = profileUser.posts_count || 0;
+
+                // Role Badge
+                const badgeInfo = ROLE_BADGES[profileUser.role] || ROLE_BADGES['user'];
+                const badgeEl = document.getElementById('profRoleBadge');
+                badgeEl.textContent = badgeInfo.text;
+                badgeEl.className = `role-badge-pill ${badgeInfo.class}`;
+
+                // Credentials box
+                const credsBox = document.getElementById('profCredsBox');
+                if (profileUser.location || profileUser.dynamic_field_1) {
+                    credsBox.style.display = 'inline-block';
+                    document.getElementById('profLocation').textContent = profileUser.location || 'Local Sector';
+                    document.getElementById('profCreds').textContent = profileUser.dynamic_field_1 || profileUser.badge_title || 'Verified Member';
+                }
+
+                // Action buttons
+                const actionsBox = document.getElementById('profActions');
+                if (profileUser.id === currentUser.id) {
+                    actionsBox.innerHTML = `
+                        <button class="btn-action btn-msg" onclick="openEditModal()">✏️ Edit Profile</button>
+                        <button class="btn-action btn-msg" onclick="shareProfile()">📤 Share</button>
+                    `;
+                } else {
+                    const isFollowing = profileUser.is_following;
+                    actionsBox.innerHTML = `
+                        <button class="btn-action ${isFollowing ? 'btn-following' : 'btn-follow'}" id="btnFollowToggle" onclick="toggleFollowUser()">
+                            ${isFollowing ? '✓ Following' : '+ Follow'}
+                        </button>
+                        <button class="btn-action btn-msg" onclick="sendMessageToUser('${profileUser.id}')">💬 Message</button>
+                        <button class="btn-action btn-msg" onclick="shareProfile()">📤 Share</button>
+                    `;
+                }
+            } catch (err) {
+                showToast(err.message || 'Could not load profile.', '❌');
+            }
+        }
+
+        async function toggleFollowUser() {
+            const btn = document.getElementById('btnFollowToggle');
+            try {
+                if (profileUser.is_following) {
+                    await SocialAPI.unfollowUser(profileUser.id);
+                    profileUser.is_following = false;
+                    profileUser.followers_count = Math.max(0, (profileUser.followers_count || 1) - 1);
+                    btn.className = 'btn-action btn-follow';
+                    btn.textContent = '+ Follow';
+                    showToast(`Unfollowed @${profileUser.name}`, '👋');
+                } else {
+                    await SocialAPI.followUser(profileUser.id);
+                    profileUser.is_following = true;
+                    profileUser.followers_count = (profileUser.followers_count || 0) + 1;
+                    btn.className = 'btn-action btn-following';
+                    btn.textContent = '✓ Following';
+                    showToast(`Now following @${profileUser.name}`, '🤝');
+                }
+                document.getElementById('profFollowersCount').textContent = profileUser.followers_count;
+            } catch (err) {
+                showToast(err.message || 'Follow action failed.', '❌');
+            }
+        }
+
+        async function loadProfilePosts() {
+            const container = document.getElementById('profilePostsList');
+            try {
+                const posts = await apiCall(`/feed/?author_id=${profileUser.id}`);
+                const userPosts = Array.isArray(posts) ? posts.filter(p => p.author_id === profileUser.id || p.author_name === profileUser.name) : [];
+
+                if (userPosts.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--gray);">No posts shared yet.</div>';
+                    return;
+                }
+
+                container.innerHTML = userPosts.map(p => `
+                    <div class="post-card">
+                        <div class="post-title">${p.title || 'Safety Post'}</div>
+                        <div class="post-content">${p.content}</div>
+                        ${p.media_url ? `<div style="margin: 12px 0;"><img src="${p.media_url}" style="max-width: 100%; border-radius: 10px; max-height: 360px;" /></div>` : ''}
+                        <div class="post-footer">
+                            <span>📍 ${p.location_name || 'Corridor'} · #${p.tag || 'UPDATE'}</span>
+                            <span>👍 ${p.upvotes || 0} Upvotes · 💬 ${p.comments_count || 0} Comments</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = `<div style="padding: 20px; color: #DC2626;">Failed to load user posts: ${err.message}</div>`;
+            }
+        }
+
+        function switchProfileTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+
+            document.getElementById('tabContentPosts').style.display = tab === 'posts' ? 'block' : 'none';
+            document.getElementById('tabContentMedia').style.display = tab === 'media' ? 'block' : 'none';
+            document.getElementById('tabContentLikes').style.display = tab === 'likes' ? 'block' : 'none';
+        }
+
+        function openEditModal() {
+            document.getElementById('editName').value = profileUser.name || '';
+            document.getElementById('editBio').value = profileUser.bio || '';
+            document.getElementById('editLocation').value = profileUser.location || '';
+            document.getElementById('editProfileModal').classList.add('show');
+        }
+
+        async function saveProfileChanges() {
+            const name = document.getElementById('editName').value.trim();
+            const bio = document.getElementById('editBio').value.trim();
+            const loc = document.getElementById('editLocation').value.trim();
+
+            try {
+                await SocialAPI.updateMyProfile({ name, bio, location: loc });
+                showToast('Profile updated successfully!', '🎉');
+                document.getElementById('editProfileModal').classList.remove('show');
+                await loadProfileData();
+            } catch (err) {
+                showToast(err.message || 'Failed to update profile.', '❌');
+            }
+        }
+
+        function shareProfile() {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('Profile link copied to clipboard!', '📋');
+            } else {
+                showToast('Share link: ' + window.location.href, '📋');
+            }
+        }
+
+        function sendMessageToUser(userId) {
+            window.location.href = `user.html?dm=${encodeURIComponent(userId)}`;
+        }
+
+        window.addEventListener('DOMContentLoaded', initProfilePage);
+    </script>
+</body>
+</html>

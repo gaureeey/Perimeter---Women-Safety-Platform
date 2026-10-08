@@ -1,0 +1,58 @@
+# PERIMETER Women Safety Platform — 80% Production-Ready Implementation Plan
+
+## Phase 1: Repository Audit & Architecture Summary
+- **Backend**: FastAPI with SQLAlchemy, JWT Auth (jose/passlib), SQLite/PostgreSQL support.
+- **Frontend**: Vanilla HTML/CSS/JS with multi-role dashboards (`user.html`, `police.html`, `volunteer.html`, `journalist.html`, `admin.html`).
+- **Gaps Identified**:
+  - Missing PostGIS spatial columns (`location_point`), `user_locations`, `crime_statistics`, and `notifications` tables.
+  - Missing real browser Geolocation abstraction with privacy states.
+  - Missing authoritative backend PostGIS radius dispatch for volunteers (currently simulated).
+  - Missing real Heatmap engine combining Perimeter incidents and official NCRB crime statistics.
+  - Missing Safe Route analysis comparing Fastest vs Lower Reported Risk routes.
+  - Missing Admin user management with `last_active_at` and database inspection tools.
+  - Missing SOS view and trigger hooks in `user.html`.
+
+## Phased Implementation Roadmap
+1. **Phase 2: PostgreSQL + PostGIS Schema & Models**
+   - Update `models/user.py` (add `is_active`, `last_active_at`).
+   - Create `models/location.py` (`UserLocation` with spatial POINT, accuracy, source, privacy_level).
+   - Create `models/crime.py` (`CrimeStatistic`, `AreaSafetyScore`).
+   - Create `models/notification.py` (`Notification` for police/volunteer/journalist alerts).
+   - Update `models/sos.py` (spatial point column, PostGIS GIST index).
+   - Configure dual support: PostgreSQL + PostGIS with GeoAlchemy2 AND SQLite spatial math fallback so platform runs 100% out of the box in any environment.
+   - Provide `docker-compose.yml` for PostgreSQL 16 + PostGIS 3.4.
+
+2. **Phase 3: GPS & Location Service**
+   - Frontend `frontend/js/location.js`: Clean browser Geolocation API abstraction with permission querying, accuracy checks, and privacy modes (Normal, Map, SOS).
+   - Backend `backend/app/api/location.py`: `POST /api/v1/location/update`, `GET /api/v1/location/me`, `GET /api/v1/location/responders`.
+
+3. **Phase 4 & 5: SOS Lifecycle, Proximity Dispatch & Role Notifications**
+   - Enhance `backend/app/api/sos.py`:
+     - Real GPS capture on SOS button press.
+     - Link to `IncidentCase` and `TimelineEvent`.
+     - Authoritative PostGIS proximity search (`ST_DWithin` or Haversine fallback) for active volunteers within 5km.
+     - Role-filtered notifications for Police (full data), Volunteers (dispatch info), Journalists (approximate area).
+     - Full police actions: Acknowledge, Dispatch, Assign, Resolve with DB persistence.
+   - Create `backend/app/api/notifications.py`: Polling and live event feed for dashboards.
+
+4. **Phase 6 & 7: Heatmap Engine, NCRB Crime Data Pipeline & Attribution**
+   - Directory `backend/data/ncrb/` with raw, cleaned, and processed datasets (Crimes against women, violent crimes across districts and years 2021-2023).
+   - Script `backend/scripts/import_ncrb_data.py`: Preprocessing, normalization, trend calculation.
+   - `backend/app/services/safety_score.py`: `SafetyScoreService` combining NCRB baseline + Perimeter incidents with recency decay (exponential decay) + crime trend score -> Perimeter Safety Risk Score (0-100).
+   - Backend `backend/app/api/heatmap.py`: `GET /api/v1/heatmap`, `GET /api/v1/safety-score`.
+   - Real interactive Leaflet map integration with heatmap layers and color legend (Lower Reported Risk, Moderate, Higher).
+
+5. **Phase 8: Safe Route Analysis**
+   - Backend `backend/app/api/routes.py`: `GET /api/v1/safe-routes`.
+   - Free routing engine integration (OSRM API + intelligent fallback waypoints) calculating segment risk.
+   - UI comparison: Fastest Route vs Lower Reported Risk Route with distance, time, and safety risk score.
+
+6. **Phase 9: Admin Management & DB Visibility**
+   - Backend `backend/app/api/admin.py`: Real DB metrics, user management with `last_active_at`, incidents and SOS queries.
+   - Admin UI in `admin.html`: Live table views, user list, SOS status, database inspection docs.
+
+7. **Phase 10: Security, Verification & Documentation**
+   - RBAC enforcement, coordinate validation, rate limiting.
+   - Seed script `backend/scripts/seed_demo_data.py`.
+   - Comprehensive test suite `backend/test_complete_integration.py`.
+   - Documentation updates in `README.md`, `IMPLEMENTATION_STATUS.md`, `.env.example`.

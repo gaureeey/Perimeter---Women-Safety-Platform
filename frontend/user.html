@@ -10,6 +10,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         :root {
             --ink: #111528;
@@ -1318,12 +1320,25 @@
                             <button type="button" class="tag-pill" data-cat="HELP_REQUEST" onclick="selectPostCategory(this, 'HELP_REQUEST')">🙋 Help Request</button>
                             <button type="button" class="tag-pill" data-cat="POLICE_NOTICE" onclick="selectPostCategory(this, 'POLICE_NOTICE')">🚔 Police Notice</button>
                         </div>
-                        <div class="create-post-footer">
-                            <div style="display: flex; gap: 10px; font-size: 12px; color: var(--gray);">
-                                <span style="cursor: pointer;" onclick="promptMediaUrl()">📷 Add Photo URL</span>
-                                <span id="attachedMediaIndicator" style="display: none; color: var(--teal); font-weight: 700;">✓ Media Attached</span>
+                        <!-- Device Media Preview Carousel Container -->
+                        <div id="postMediaPreviewContainer" style="display: none; margin: 12px 0; padding: 12px; background: #0B0E1B; border-radius: 14px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-size: 11.5px; font-weight: 800; color: #94A3B8; text-transform: uppercase;">Device Media (<span id="previewCountText">0</span>/10 items)</span>
+                                <button type="button" onclick="clearSelectedMedia()" style="background: none; border: none; color: #FF5A5F; font-size: 11.5px; font-weight: 700; cursor: pointer;">Remove All</button>
                             </div>
-                            <button class="btn-publish-post" onclick="publishPost()">Post Update →</button>
+                            <div id="postMediaPreviewGrid" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px;"></div>
+                        </div>
+
+                        <div class="create-post-footer">
+                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                <input type="file" id="postDeviceFileInput" accept="image/*,video/*" multiple style="display: none;" onchange="handlePostDeviceFiles(event)">
+                                <button type="button" onclick="document.getElementById('postDeviceFileInput').click()" style="background: var(--paper-2); border: 1px solid var(--line); border-radius: 100px; padding: 6px 14px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--ink);">
+                                    <span>📷 Add Photo/Video</span>
+                                </button>
+                                <span style="cursor: pointer; font-size: 11.5px; color: var(--gray);" onclick="promptMediaUrl()">🔗 Image URL</span>
+                                <span id="attachedMediaIndicator" style="display: none; color: var(--teal); font-weight: 700; font-size: 12px;">✓ <span id="attachedCount">0</span> Attached</span>
+                            </div>
+                            <button class="btn-publish-post" id="btnPublishPost" onclick="publishPost()">Post Update →</button>
                         </div>
                     </div>
 
@@ -1522,6 +1537,131 @@
             </div>
         </section>
 
+        <!-- ==================== 7. SOS & SAFETY MAP VIEW ==================== -->
+        <section class="view-panel" id="view-sos">
+            <div style="background: white; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-card); margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 18px;">
+                    <div>
+                        <h2 style="font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px;">
+                            <span>🚨 Live Safety Map & Geofence Radar</span>
+                            <span style="font-size: 11px; background: #DC2626; color: white; padding: 2px 8px; border-radius: 100px; text-transform: uppercase;">Active 5 km</span>
+                        </h2>
+                        <p style="font-size: 13px; color: var(--gray); margin-top: 4px;">
+                            Real-time GPS geofence connected to City Police Command, verified volunteers, and NCRB crime statistics.
+                        </p>
+                    </div>
+
+                    <!-- Top Action Controls -->
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="nav-tab-btn" style="background: #F1F5F9; border: 1px solid var(--line);" onclick="locateUserOnMap()">
+                            📍 Use My Location
+                        </button>
+                        <button class="nav-tab-btn" style="background: #F1F5F9; border: 1px solid var(--line);" onclick="toggleHeatmapLayer()">
+                            🗺️ Safety Heatmap
+                        </button>
+                        <button class="nav-tab-btn" style="background: #F1F5F9; border: 1px solid var(--line);" onclick="openModal('accidentModal')">
+                            🚗 Report Incident
+                        </button>
+                        <button class="btn-sos-header" onclick="triggerSOSInstant()">
+                            ⚡ TRIGGER SOS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Emergency State Banner (active during distress) -->
+                <div id="activeEmergencyBanner" style="display: none; background: linear-gradient(135deg, #DC2626, #991B1B); color: white; padding: 14px 20px; border-radius: var(--radius-md); margin-bottom: 18px; align-items: center; justify-content: space-between; animation: pulse-sos 2s infinite;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="font-size: 24px;">🚨</span>
+                        <div>
+                            <div style="font-weight: 800; font-size: 15px;">EMERGENCY BROADCAST ACTIVE</div>
+                            <div style="font-size: 12.5px; opacity: 0.95;">Your real-time GPS coordinates are being transmitted to authorized emergency responders (Police & 5km Volunteers).</div>
+                        </div>
+                    </div>
+                    <button onclick="cancelActiveEmergency()" style="background: white; color: #DC2626; border: none; padding: 6px 14px; border-radius: 100px; font-weight: 700; cursor: pointer; font-size: 12px;">Resolve Distress</button>
+                </div>
+
+                <!-- User Location Consent Banner -->
+                <div id="locationConsentBanner" style="display: none; background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 12px; padding: 12px 18px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 20px;">📍</span>
+                        <div>
+                            <strong style="color: #92400E; font-size: 13px;">Location Permission</strong>
+                            <div style="font-size: 12px; color: #78350F;">Perimeter wants to access your location to provide live safety and route recommendations.</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="requestUserLocationConsent(true)" style="background: #D97706; color: white; border: none; padding: 6px 14px; border-radius: 100px; font-weight: 700; font-size: 12px; cursor: pointer;">Allow Location</button>
+                        <button onclick="requestUserLocationConsent(false)" style="background: transparent; color: #78350F; border: 1px solid #D97706; padding: 6px 12px; border-radius: 100px; font-weight: 600; font-size: 12px; cursor: pointer;">Not Now</button>
+                    </div>
+                </div>
+
+                <!-- Live GPS Status Readout -->
+                <div id="liveGpsStatusRow" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #F8FAFC; border: 1px solid var(--line); border-radius: 10px; margin-bottom: 12px; font-size: 12px; flex-wrap: wrap; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span style="color: var(--teal); font-weight: 800;">📍 Your Current Location:</span>
+                        <span id="liveGpsCoordsText" style="font-family: var(--mono); color: var(--ink); font-weight: 600;">Detecting GPS...</span>
+                        <span id="liveGpsAccuracyBadge" style="background: #E2E8F0; color: #334155; padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 700;">± -- m</span>
+                    </div>
+                    <div id="liveGpsUpdatedText" style="color: var(--gray); font-size: 11.5px;">Updated: just now</div>
+                </div>
+
+                <!-- Interactive Leaflet Map Container -->
+                <div id="userSafetyMap" style="height: 480px; width: 100%; border-radius: 14px; border: 1px solid var(--line); z-index: 10;"></div>
+
+                <!-- Map Legend & Data Attribution -->
+                <div style="margin-top: 14px; padding: 12px 16px; background: #F8FAFC; border: 1px solid var(--line); border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 12px;">
+                    <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-weight: 600;">
+                        <span><b style="color: #10B981;">●</b> Lower reported risk (0–40)</span>
+                        <span><b style="color: #F59E0B;">●</b> Moderate reported risk (41–65)</span>
+                        <span><b style="color: #EF4444;">●</b> Higher reported risk (66–100)</span>
+                        <span>🚨 Active SOS</span>
+                        <span>🚔 Police Command</span>
+                        <span>🙋 Volunteer Unit</span>
+                    </div>
+                    <div style="color: var(--gray); font-size: 11.5px; font-style: italic;">
+                        Risk estimation uses Perimeter incident reports and publicly available NCRB crime statistics.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Safe Route Analysis Card -->
+            <div style="background: white; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-card);">
+                <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                    <span>🚶 Find Safer Route (AI Corridor Risk Analysis)</span>
+                </h3>
+                <p style="font-size: 13px; color: var(--gray); margin-bottom: 16px;">
+                    Compare the fastest route with patrolled, lower reported risk alternatives.
+                </p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; margin-bottom: 16px;">
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--gray);">Origin</label>
+                        <input type="text" id="routeOriginInput" class="search-input-big" value="My Current GPS Location" style="border-radius: 8px; padding-left: 12px;" readonly>
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--gray);">Destination (Safe Transit Corridor)</label>
+                        <select id="routeDestSelect" class="search-input-big" style="border-radius: 8px; padding-left: 12px;">
+                            <option value="19.1136,72.8697">Andheri East Metro Interchange (19.1136, 72.8697)</option>
+                            <option value="19.0657,72.8687">Bandra Kurla Complex (BKC) (19.0657, 72.8687)</option>
+                            <option value="19.0178,72.8478">Dadar Central Station Hub (19.0178, 72.8478)</option>
+                            <option value="18.9067,72.8147">Colaba Gateway Terminal (18.9067, 72.8147)</option>
+                            <option value="19.1257,72.9090">Powai Lake Safe Corridor (19.1257, 72.9090)</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; align-items: flex-end;">
+                        <button class="btn-publish-post" style="height: 44px; padding: 0 20px;" onclick="calculateSafeRoutes()">
+                            Analyze Routes →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Evaluated Route Cards Container -->
+                <div id="routeResultsContainer" style="display: none; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px;">
+                    <!-- Rendered dynamically -->
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- ==================== MODALS ==================== -->
@@ -1691,28 +1831,50 @@
     </div>
 
     <script src="js/api.js"></script>
+    <script src="js/location.js"></script>
     <script>
         let currentUser = null;
         let selectedCategory = 'COMMUNITY_UPDATE';
         let attachedMediaUrl = null;
+        let selectedDeviceFiles = [];
         let activeStoryId = null;
         let activeConvId = null;
+        let userSafetyMap = null;
+        let userMarker = null;
+        let heatLayerGroup = null;
+        let routeLayerGroup = null;
+        let activeEmergencyIncidentId = null;
 
         window.addEventListener('DOMContentLoaded', async () => {
-            currentUser = await guardProtectedPage(['user', 'admin']);
+            currentUser = await guardProtectedPage();
             if (!currentUser) return;
 
             // Render user badge & header info
             document.getElementById('navUserName').textContent = currentUser.name.split(' ')[0];
             document.getElementById('navUserAvatar').textContent = currentUser.avatar || 'AS';
             document.getElementById('createPostAvatar').textContent = currentUser.avatar || 'AS';
-            document.getElementById('userBadgeTop').textContent = `🛡️ ${currentUser.badge_title || 'Citizen Member'}`;
+            
+            const roleBadgeMap = {
+                'user': '🛡️ Citizen Member',
+                'volunteer': '🙋 Verified Volunteer Responder',
+                'police': '🚔 City Police Command',
+                'journalist': '📰 Accredited Press Reporter',
+                'admin': '⚙️ Super Administrator'
+            };
+            document.getElementById('userBadgeTop').textContent = roleBadgeMap[currentUser.role] || `🛡️ ${currentUser.badge_title || 'Citizen Member'}`;
 
             // Load initial data
             loadFeed('ALL');
             loadStories();
             loadSidebarChannels();
             loadProfileData();
+
+            // Connect real-time alert websocket
+            NotificationAPI.connectWebSocket(currentUser.role || 'user', (alert) => {
+                if (alert.type === 'NEW_SOS_INCIDENT') {
+                    showToast(`🚨 Active Emergency Alert in your area: ${alert.incident_id}`, '🚨', 6000);
+                }
+            });
         });
 
         /* View Navigation Switcher */
@@ -1730,9 +1892,10 @@
             else if (viewName === 'messages') loadConversations();
             else if (viewName === 'channels') loadChannelsView();
             else if (viewName === 'profile') loadProfileData();
+            else if (viewName === 'sos') initUserSafetyMap();
         }
 
-        /* ------------------ FEED & STORIES ------------------ */
+        /* ------------------ FEED & DEVICE MEDIA UPLOAD ------------------ */
 
         function selectPostCategory(el, cat) {
             document.querySelectorAll('.category-select-row .tag-pill').forEach(p => p.classList.remove('active'));
@@ -1740,46 +1903,158 @@
             selectedCategory = cat;
         }
 
+        function handlePostDeviceFiles(event) {
+            const files = Array.from(event.target.files || []);
+            if (!files.length) return;
+
+            const allowedTotal = 10;
+            if (selectedDeviceFiles.length + files.length > allowedTotal) {
+                showToast(`Maximum ${allowedTotal} media items allowed per post.`, '⚠️');
+            }
+
+            const availableSlots = allowedTotal - selectedDeviceFiles.length;
+            const toAdd = files.slice(0, availableSlots);
+
+            for (const f of toAdd) {
+                const isImage = f.type.startsWith('image/');
+                const isVideo = f.type.startsWith('video/');
+                if (!isImage && !isVideo) {
+                    showToast(`File ${f.name} is not an image or video. Skipped.`, '⚠️');
+                    continue;
+                }
+                if (isImage && f.size > 10 * 1024 * 1024) {
+                    showToast(`${f.name} exceeds 10MB limit for images.`, '⚠️');
+                    continue;
+                }
+                if (isVideo && f.size > 50 * 1024 * 1024) {
+                    showToast(`${f.name} exceeds 50MB limit for videos.`, '⚠️');
+                    continue;
+                }
+                selectedDeviceFiles.push(f);
+            }
+
+            renderMediaPreviews();
+            event.target.value = '';
+        }
+
+        function renderMediaPreviews() {
+            const container = document.getElementById('postMediaPreviewContainer');
+            const grid = document.getElementById('postMediaPreviewGrid');
+            const countText = document.getElementById('previewCountText');
+            const indicator = document.getElementById('attachedMediaIndicator');
+            const attachedCount = document.getElementById('attachedCount');
+
+            if (selectedDeviceFiles.length === 0) {
+                container.style.display = 'none';
+                indicator.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            indicator.style.display = 'inline';
+            if (countText) countText.textContent = selectedDeviceFiles.length;
+            if (attachedCount) attachedCount.textContent = selectedDeviceFiles.length;
+
+            grid.innerHTML = selectedDeviceFiles.map((f, idx) => {
+                const url = URL.createObjectURL(f);
+                const isVideo = f.type.startsWith('video/');
+                const sizeMb = (f.size / (1024 * 1024)).toFixed(1);
+                return `
+                    <div style="position: relative; flex-shrink: 0; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); background: #1E293B;">
+                        ${isVideo 
+                            ? `<video src="${url}" style="width: 100%; height: 100%; object-fit: cover;"></video><div style="position: absolute; bottom: 4px; left: 4px; font-size: 9px; background: rgba(0,0,0,0.7); color: white; padding: 1px 4px; border-radius: 4px;">▶ Video</div>`
+                            : `<img src="${url}" style="width: 100%; height: 100%; object-fit: cover;">`
+                        }
+                        <button type="button" onclick="removeSelectedFile(${idx})" title="Remove item" style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(220, 38, 38, 0.9); color: white; border: none; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1;">✕</button>
+                        <div style="position: absolute; bottom: 2px; right: 4px; font-size: 8.5px; color: #CBD5E1; text-shadow: 0 1px 2px black;">${sizeMb}MB</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function removeSelectedFile(index) {
+            if (index >= 0 && index < selectedDeviceFiles.length) {
+                selectedDeviceFiles.splice(index, 1);
+                renderMediaPreviews();
+            }
+        }
+
+        function clearSelectedMedia() {
+            selectedDeviceFiles = [];
+            attachedMediaUrl = null;
+            renderMediaPreviews();
+            const fileInput = document.getElementById('postDeviceFileInput');
+            if (fileInput) fileInput.value = '';
+        }
+
         function promptMediaUrl() {
             const url = prompt("Enter Image URL (e.g. Unsplash URL or hosted photo):");
             if (url && url.trim()) {
                 attachedMediaUrl = url.trim();
                 document.getElementById('attachedMediaIndicator').style.display = 'inline';
-                showToast('Media attached to post!', '📷');
+                if (document.getElementById('attachedCount')) document.getElementById('attachedCount').textContent = '1';
+                showToast('Media URL attached to post!', '📷');
             }
         }
 
         async function publishPost() {
             const content = document.getElementById('postContentInput').value.trim();
-            if (!content) {
-                showToast('Please enter post text before sharing.', '⚠️');
+            if (!content && selectedDeviceFiles.length === 0) {
+                showToast('Please enter post text or attach media before sharing.', '⚠️');
                 return;
             }
 
+            const btn = document.getElementById('btnPublishPost');
+            const originalBtnText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = 'Publishing... ⏳';
+
             try {
-                const title = content.length > 50 ? content.substring(0, 48) + '...' : content;
+                let mediaUrl = attachedMediaUrl;
+                let mediaUrlsList = [];
+                let mediaType = "text";
+
+                // Multipart upload for device media files
+                if (selectedDeviceFiles.length > 0) {
+                    btn.innerHTML = `Uploading ${selectedDeviceFiles.length} item(s)... ⏳`;
+                    const uploadRes = await MediaAPI.uploadMultiple(selectedDeviceFiles);
+                    if (uploadRes && uploadRes.urls && uploadRes.urls.length > 0) {
+                        mediaUrl = uploadRes.urls[0];
+                        mediaUrlsList = uploadRes.urls;
+                        mediaType = uploadRes.items[0]?.media_type || (selectedDeviceFiles[0].type.startsWith('video/') ? 'video' : 'image');
+                        if (uploadRes.urls.length > 1) {
+                            mediaType = 'carousel';
+                        }
+                    }
+                } else if (attachedMediaUrl) {
+                    mediaType = 'image';
+                }
+
+                const title = content.length > 50 ? content.substring(0, 48) + '...' : (content || 'Safety Media Update');
                 await SocialAPI.createPost({
-    author_id: currentUser.id,
-    author_name: currentUser.name,
-    author_role: currentUser.role,
-    author_badge: currentUser.badge_title || "Citizen User",
-    author_avatar: currentUser.avatar || "U",
-    title: title,
-    content: content,
-    tag: selectedCategory,
-    location_name: currentUser.location || "Mumbai Metro Area",
-    media_url: attachedMediaUrl,
-    media_type: attachedMediaUrl ? "image" : "text"
-});
-                
+                    author_id: currentUser.id,
+                    author_name: currentUser.name,
+                    author_role: currentUser.role,
+                    author_badge: currentUser.badge_title || "Citizen User",
+                    author_avatar: currentUser.avatar || "U",
+                    title: title,
+                    content: content || "Attached media update from local device.",
+                    tag: selectedCategory,
+                    location_name: currentUser.location || "Mumbai Metro Area",
+                    media_url: mediaUrl,
+                    media_type: mediaType,
+                    media_urls: mediaUrlsList.length > 0 ? JSON.stringify(mediaUrlsList) : null
+                });
 
                 document.getElementById('postContentInput').value = '';
-                attachedMediaUrl = null;
-                document.getElementById('attachedMediaIndicator').style.display = 'none';
+                clearSelectedMedia();
                 showToast('Safety update published to live feed!', '🎉');
                 loadFeed('ALL');
             } catch (err) {
                 showToast(err.message || 'Failed to post update.', '❌');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnText;
             }
         }
 
@@ -1800,10 +2075,40 @@
                     return;
                 }
 
-                container.innerHTML = posts.map(p => `
+                container.innerHTML = posts.map(p => {
+                    let mediaMarkup = '';
+                    if (p.media_urls) {
+                        try {
+                            const urls = typeof p.media_urls === 'string' ? JSON.parse(p.media_urls) : p.media_urls;
+                            if (Array.isArray(urls) && urls.length > 1) {
+                                mediaMarkup = `
+                                    <div class="post-media-gallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 4px; max-height: 440px; overflow: hidden; background: #0B0E1B;">
+                                        ${urls.slice(0, 4).map((u, i) => `
+                                            <div style="position: relative; height: ${urls.length > 2 ? '180px' : '300px'}; overflow: hidden;">
+                                                <img src="${u}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">
+                                                ${(i === 3 && urls.length > 4) ? `<div style="position: absolute; inset:0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: 800;">+${urls.length - 4}</div>` : ''}
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                `;
+                            }
+                        } catch(e) {}
+                    }
+                    if (!mediaMarkup && p.media_url) {
+                        mediaMarkup = `
+                            <div class="post-media-container">
+                                ${p.media_type === 'video' 
+                                    ? `<video src="${p.media_url}" controls style="width: 100%; max-height: 440px;"></video>`
+                                    : `<img src="${p.media_url}" alt="Post Media" loading="lazy" onerror="this.style.display='none'">`
+                                }
+                            </div>
+                        `;
+                    }
+
+                    return `
                     <div class="feed-post-card">
                         <div class="post-header">
-                            <div class="post-author-box">
+                            <div class="post-author-box" style="cursor: pointer;" onclick="window.location.href='profile.html?id=${p.author_id || ''}'" title="View Profile">
                                 <div class="post-author-avatar">${p.author_avatar || 'U'}</div>
                                 <div>
                                     <div class="post-author-name">
@@ -1815,15 +2120,13 @@
                             </div>
                         </div>
 
-                        ${p.media_url ? `
-                            <div class="post-media-container">
-                                <img src="${p.media_url}" alt="Post Media" loading="lazy" onerror="this.style.display='none'">
-                            </div>
-                        ` : ''}
+                        ${mediaMarkup}
 
                         <div class="post-body">
                             <div class="post-title">${p.title}</div>
                             <div class="post-content">${p.content}</div>
+`;
+                }).join('');
 
                             <div class="post-interactions">
                                 <div class="interaction-left">
@@ -2673,35 +2976,84 @@
             }
         }
 
-        /* ------------------ EMERGENCY SOS & DISPATCH ------------------ */
+        /* ------------------ EMERGENCY SOS & LIVE TRACKING ------------------ */
 
         async function triggerSOSInstant() {
-    toast('Triggering 5km Geofence Emergency SOS...', '🚨');
+            showToast('Acquiring high-accuracy GPS coordinates for SOS...', '🚨');
+            const pos = await LocationService.getCurrentPosition(true);
 
-    try {
-        const res = await SocialAPI.triggerSOS({
-            user_name: currentUser.name,
-            user_id: currentUser.id,
-            phone: currentUser.phone,
-            trigger_type: "MANUAL_HOLD",
-            severity: "CRITICAL",
-            location: {
-                latitude: 19.0760,
-                longitude: 72.8777,
-                accuracy_meters: 6.5,
-                address: currentUser.location || "SV Road, Bandra West, Mumbai"
-            },
-            notes: "High priority citizen SOS triggered via social platform header."
-        });
+            try {
+                const res = await SocialAPI.triggerSOS({
+                    user_name: currentUser.name,
+                    user_id: currentUser.id,
+                    phone: currentUser.phone,
+                    trigger_type: "MANUAL_HOLD",
+                    severity: "CRITICAL",
+                    location: {
+                        latitude: pos.latitude,
+                        longitude: pos.longitude,
+                        accuracy_meters: pos.accuracy,
+                        address: pos.address || currentUser.location || "Live GPS Coordinates"
+                    },
+                    notes: "High priority citizen SOS triggered via social platform header."
+                });
 
-        toast(`EMERGENCY SOS BROADCASTED! Case ID: ${res.case_id}`, '🚨');
+                activeEmergencyIncidentId = res.incident_id;
+                showToast(`EMERGENCY SOS BROADCASTED! Case ID: ${res.case_id}`, '🚨', 8000);
 
-        
+                // Reveal active emergency banner
+                const emergencyBanner = document.getElementById('activeEmergencyBanner');
+                if (emergencyBanner) emergencyBanner.style.display = 'flex';
 
-    } catch (err) {
-        toast(err.message || 'SOS dispatch failed.', '❌');
-    }
-}
+                // Switch to SOS Safety Map so user sees their beacon
+                switchNavView('sos');
+
+                // Continuous Live Location Streaming to Police Command
+                LocationService.startEmergencyTracking(async (updatedPos) => {
+                    if (activeEmergencyIncidentId) {
+                        try {
+                            await SocialAPI.updateSOSLocation(activeEmergencyIncidentId, {
+                                latitude: updatedPos.latitude,
+                                longitude: updatedPos.longitude,
+                                accuracy_meters: updatedPos.accuracy,
+                                address: updatedPos.address || `GPS Lat ${updatedPos.latitude.toFixed(4)}, Lng ${updatedPos.longitude.toFixed(4)}`
+                            });
+                            console.log(`[SOS Live GPS] Location synced to Police: (${updatedPos.latitude.toFixed(4)}, ${updatedPos.longitude.toFixed(4)})`);
+                        } catch (e) {
+                            console.warn('[SOS Live GPS] Location update failed:', e.message);
+                        }
+                    }
+                });
+
+            } catch (err) {
+                showToast(err.message || 'SOS dispatch failed.', '❌');
+            }
+        }
+
+        async function cancelActiveEmergency() {
+            if (!activeEmergencyIncidentId) return;
+            try {
+                showToast('Resolving distress broadcast...', '⏳');
+                await SocialAPI.resolveSOS(activeEmergencyIncidentId, currentUser.name, 'Citizen marked safe and cancelled distress beacon.');
+                LocationService.stopEmergencyTracking();
+                activeEmergencyIncidentId = null;
+                const emergencyBanner = document.getElementById('activeEmergencyBanner');
+                if (emergencyBanner) emergencyBanner.style.display = 'none';
+                showToast('Emergency SOS resolved. Live location streaming stopped.', '✅', 5000);
+            } catch (err) {
+                showToast(err.message || 'Failed to resolve emergency.', '❌');
+            }
+        }
+
+        function requestUserLocationConsent(granted) {
+            const banner = document.getElementById('locationConsentBanner');
+            if (banner) banner.style.display = 'none';
+            if (granted) {
+                locateUserOnMap();
+            } else {
+                showToast('Location permission skipped. Default regional map displayed.', '📍');
+            }
+        }
 
         function openAccidentModal() {
             document.getElementById('accidentModal').classList.add('show');
@@ -2711,6 +3063,9 @@
             const severity = document.getElementById('accidentSeverity').value;
             const notes = document.getElementById('accidentNotes').value.trim();
 
+            showToast('Acquiring incident GPS coordinates...', '📍');
+            const pos = await LocationService.getCurrentPosition(true);
+
             try {
                 const res = await SocialAPI.triggerSOS({
                     user_name: currentUser.name,
@@ -2719,20 +3074,17 @@
                     trigger_type: "ACCIDENT_REPORT",
                     severity: severity,
                     location: {
-                        latitude: 19.0760,
-                        longitude: 72.8777,
-                        accuracy_meters: 8.0,
-                        address: currentUser.location || "Metro Corridor Junction"
+                        latitude: pos.latitude,
+                        longitude: pos.longitude,
+                        accuracy_meters: pos.accuracy,
+                        address: pos.address || "Collision Scene"
                     },
                     notes: notes || "Accident report submitted by citizen."
                 });
 
                 closeModal('accidentModal');
                 showToast(`Accident dispatch sent! Case ID: ${res.case_id}`, '🚑', 5000);
-                switchNavView('profile');
-                setTimeout(() => {
-                    switchProfileActivity(null, 'my-cases');
-                }, 400);
+                switchNavView('sos');
             } catch (err) {
                 showToast(err.message, '❌');
             }
@@ -2740,6 +3092,280 @@
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('show');
+        }
+
+        /* ------------------ LEAFLET SAFETY MAP & SAFE ROUTING ------------------ */
+
+        let currentEvaluatedRoutes = [];
+
+        async function initUserSafetyMap() {
+            const mapEl = document.getElementById('userSafetyMap');
+            if (!mapEl) return;
+
+            // Check location permission and display consent banner if prompt
+            const perm = await LocationService.queryPermission();
+            const consentBanner = document.getElementById('locationConsentBanner');
+            if (perm === 'prompt' && consentBanner) {
+                consentBanner.style.display = 'flex';
+            }
+
+            if (!userSafetyMap) {
+                userSafetyMap = L.map('userSafetyMap').setView([19.0596, 72.8295], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap contributors | PERIMETER Safety Map'
+                }).addTo(userSafetyMap);
+
+                heatLayerGroup = L.layerGroup().addTo(userSafetyMap);
+                routeLayerGroup = L.layerGroup().addTo(userSafetyMap);
+            }
+
+            setTimeout(() => {
+                userSafetyMap.invalidateSize();
+            }, 250);
+
+            await locateUserOnMap();
+            await loadHeatmapData();
+        }
+
+        async function locateUserOnMap() {
+            if (!userSafetyMap) return;
+            showToast('Acquiring high-accuracy GPS position...', '📍');
+            const pos = await LocationService.getCurrentPosition(true);
+
+            // Update Live GPS Status Row
+            const coordsEl = document.getElementById('liveGpsCoordsText');
+            const accEl = document.getElementById('liveGpsAccuracyBadge');
+            const updatedEl = document.getElementById('liveGpsUpdatedText');
+            if (coordsEl) coordsEl.textContent = `${pos.latitude.toFixed(5)}, ${pos.longitude.toFixed(5)}`;
+            if (accEl) accEl.textContent = `± ${Math.round(pos.accuracy)}m`;
+            if (updatedEl) updatedEl.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+
+            if (userMarker) {
+                userSafetyMap.removeLayer(userMarker);
+            }
+
+            const userIcon = L.divIcon({
+                className: 'custom-user-marker',
+                html: `<div style="background: #2563EB; width: 18px; height: 18px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 12px rgba(37,99,235,0.8); animation: pulse-sos 2s infinite;"></div>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+
+            userMarker = L.marker([pos.latitude, pos.longitude], { icon: userIcon }).addTo(userSafetyMap)
+                .bindPopup(`<b>📍 Your Current Location</b><br>${pos.address}<br>Accuracy: ±${Math.round(pos.accuracy)}m`)
+                .openPopup();
+
+            userSafetyMap.setView([pos.latitude, pos.longitude], 14);
+
+            const originInput = document.getElementById('routeOriginInput');
+            if (originInput) {
+                originInput.value = `${pos.latitude.toFixed(4)}, ${pos.longitude.toFixed(4)} (My Current GPS)`;
+            }
+        }
+
+        async function loadHeatmapData() {
+            if (!userSafetyMap || !heatLayerGroup) return;
+            heatLayerGroup.clearLayers();
+
+            try {
+                const data = await SafetyMapAPI.getHeatmap('Mumbai');
+                if (!data) return;
+
+                if (data.areas) {
+                    data.areas.forEach(area => {
+                        const color = area.risk_level === 'HIGH_REPORTED_RISK' ? '#EF4444' :
+                                      (area.risk_level === 'MODERATE_REPORTED_RISK' ? '#F59E0B' : '#10B981');
+
+                        const circle = L.circle([area.latitude, area.longitude], {
+                            color: color,
+                            fillColor: color,
+                            fillOpacity: 0.22,
+                            radius: 900
+                        }).addTo(heatLayerGroup);
+
+                        circle.bindPopup(`
+                            <div style="font-size:13px; font-family:var(--sans);">
+                                <b style="font-size:14px;">${area.area}</b><br>
+                                <span style="display:inline-block; margin:4px 0; padding:2px 8px; border-radius:100px; background:${color}; color:white; font-size:11px; font-weight:700;">
+                                    ${area.risk_level.replace(/_/g, ' ')}
+                                </span><br>
+                                Perimeter Safety Risk Score: <b>${area.risk_score} / 100</b><br>
+                                Crime Trend: <b>${area.crime_trend}</b><br>
+                                <small style="color:#64748B;">Data Sources: ${area.data_sources.join(', ')}</small>
+                            </div>
+                        `);
+                    });
+                }
+
+                if (data.incidents) {
+                    data.incidents.forEach(inc => {
+                        const incIcon = L.divIcon({
+                            className: 'incident-marker-icon',
+                            html: `<div style="background:#DC2626; color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; border:2px solid white; box-shadow:0 4px 10px rgba(0,0,0,0.3);">🚨</div>`,
+                            iconSize: [26, 26],
+                            iconAnchor: [13, 13]
+                        });
+
+                        L.marker([inc.latitude, inc.longitude], { icon: incIcon }).addTo(heatLayerGroup)
+                            .bindPopup(`
+                                <div style="font-size:13px;">
+                                    <b style="color:#DC2626;">🚨 ${inc.type.replace(/_/g, ' ')}</b><br>
+                                    Case: <b>${inc.incident_id}</b> (${inc.severity})<br>
+                                    Status: <b>${inc.status}</b><br>
+                                    Location: ${inc.address}
+                                </div>
+                            `);
+                    });
+                }
+            } catch (err) {
+                console.warn('Could not load safety heatmap:', err.message);
+            }
+        }
+
+        let heatmapVisible = true;
+        function toggleHeatmapLayer() {
+            if (!userSafetyMap || !heatLayerGroup) return;
+            if (heatmapVisible) {
+                userSafetyMap.removeLayer(heatLayerGroup);
+                heatmapVisible = false;
+                showToast('Safety Heatmap layer hidden.', '🗺️');
+            } else {
+                userSafetyMap.addLayer(heatLayerGroup);
+                heatmapVisible = true;
+                showToast('Safety Heatmap layer enabled.', '🗺️');
+            }
+        }
+
+        async function triggerSOSInstant() {
+            if (!currentUser) return;
+            showToast('Acquiring live GPS coordinates for emergency dispatch...', '📡');
+
+            const pos = await LocationService.getCurrentPosition();
+
+            try {
+                const res = await SOSAPI.triggerSOS({
+                    user_name: currentUser.name,
+                    user_id: currentUser.id,
+                    phone: currentUser.phone,
+                    trigger_type: "MANUAL_HOLD",
+                    severity: "CRITICAL",
+                    location: {
+                        latitude: pos.latitude,
+                        longitude: pos.longitude,
+                        accuracy_meters: pos.accuracy,
+                        address: pos.address
+                    },
+                    notes: "Emergency SOS distress beacon activated by Citizen from PERIMETER Hub."
+                });
+
+                activeEmergencyIncidentId = res.incident_id;
+
+                const banner = document.getElementById('activeEmergencyBanner');
+                if (banner) banner.style.display = 'flex';
+
+                LocationService.startEmergencyTracking((updatedPos) => {
+                    console.log('[SOS Tracking] Live position update sent to responders:', updatedPos);
+                });
+
+                showToast(`🚨 EMERGENCY DISPATCH SENT! Case: ${res.case_id}. Police & nearby volunteers alerted!`, '🚨', 8000);
+
+                switchNavView('sos');
+                if (userSafetyMap) {
+                    userSafetyMap.setView([pos.latitude, pos.longitude], 15);
+                    L.popup()
+                        .setLatLng([pos.latitude, pos.longitude])
+                        .setContent(`<b>🚨 Active SOS Dispatched</b><br>Your location is live-shared with City Police & Volunteers.`)
+                        .openOn(userSafetyMap);
+                }
+            } catch (err) {
+                showToast(`SOS dispatch error: ${err.message}`, '⚠️', 6000);
+            }
+        }
+
+        async function cancelActiveEmergency() {
+            LocationService.stopEmergencyTracking();
+            const banner = document.getElementById('activeEmergencyBanner');
+            if (banner) banner.style.display = 'none';
+
+            if (activeEmergencyIncidentId) {
+                try {
+                    await SOSAPI.resolveSOS(activeEmergencyIncidentId, currentUser.name, "Distress cancelled by user.");
+                } catch(e) {}
+                activeEmergencyIncidentId = null;
+            }
+            showToast('Emergency tracking stopped and distress status resolved.', '✔', 4000);
+        }
+
+        async function calculateSafeRoutes() {
+            showToast('Analyzing road corridors & safety risks...', '🚶');
+            const pos = await LocationService.getCurrentPosition();
+            const destVal = document.getElementById('routeDestSelect').value;
+            const [destLat, destLng] = destVal.split(',').map(Number);
+
+            try {
+                const data = await SafetyMapAPI.getSafeRoutes(pos.latitude, pos.longitude, destLat, destLng);
+                if (!data || !data.routes || data.routes.length === 0) {
+                    showToast('Could not calculate routes for this destination.', '⚠️');
+                    return;
+                }
+
+                currentEvaluatedRoutes = data.routes;
+                const container = document.getElementById('routeResultsContainer');
+                container.style.display = 'grid';
+
+                container.innerHTML = data.routes.map((r, idx) => `
+                    <div style="background:#F8FAFC; border:2px solid ${r.is_recommended_safety ? '#10B981' : (r.is_fastest ? '#3B82F6' : '#E2E8F0')}; border-radius:14px; padding:18px; position:relative; box-shadow:var(--shadow-subtle);">
+                        ${r.is_recommended_safety ? `<span style="position:absolute; top:-10px; right:16px; background:#10B981; color:white; font-size:10.5px; font-weight:800; padding:2px 10px; border-radius:100px; text-transform:uppercase;">★ Recommended Lower Risk</span>` : ''}
+                        ${r.is_fastest && !r.is_recommended_safety ? `<span style="position:absolute; top:-10px; right:16px; background:#3B82F6; color:white; font-size:10.5px; font-weight:800; padding:2px 10px; border-radius:100px; text-transform:uppercase;">⚡ Fastest</span>` : ''}
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <h4 style="font-size:16px; font-weight:800;">${r.name}</h4>
+                            <span style="font-size:12px; font-weight:700; color:${r.color_hex};">${r.badge_icon} ${r.risk_label}</span>
+                        </div>
+
+                        <div style="display:flex; gap:16px; margin:10px 0; font-size:14px; font-weight:700;">
+                            <div>📏 <span>${r.distance_km} km</span></div>
+                            <div>⏱️ <span>${r.duration_mins} min</span></div>
+                            <div>🛡️ Risk Score: <span style="color:${r.color_hex};">${r.safety_risk_score} / 100</span></div>
+                        </div>
+
+                        <p style="font-size:12px; color:var(--gray); margin-bottom:12px; line-height:1.4;">
+                            ${r.description}
+                        </p>
+
+                        <button class="nav-tab-btn" style="width:100%; justify-content:center; background:${r.is_recommended_safety ? '#10B981' : '#1E293B'}; color:white; font-weight:700;" onclick="selectRoute('${r.route_id}')">
+                            Display & Navigate This Route →
+                        </button>
+                    </div>
+                `).join('');
+
+                selectRoute(data.routes[0].route_id);
+                showToast('Route options analyzed: Fastest vs Lower Reported Risk corridor.', '🟢');
+            } catch (err) {
+                showToast(`Route analysis error: ${err.message}`, '⚠️');
+            }
+        }
+
+        function selectRoute(routeId) {
+            if (!userSafetyMap || !routeLayerGroup) return;
+            routeLayerGroup.clearLayers();
+
+            const route = currentEvaluatedRoutes.find(r => r.route_id === routeId);
+            if (!route || !route.path_coordinates) return;
+
+            const latLngs = route.path_coordinates.map(pt => [pt[1], pt[0]]);
+            const color = route.color_hex || '#10B981';
+
+            const polyline = L.polyline(latLngs, {
+                color: color,
+                weight: 6,
+                opacity: 0.85,
+                dashArray: route.is_recommended_safety ? null : '8, 8'
+            }).addTo(routeLayerGroup);
+
+            userSafetyMap.fitBounds(polyline.getBounds(), { padding: [50, 50] });
+            showToast(`Selected: ${route.name} (${route.risk_label})`, '🗺️');
         }
     </script>
 </body>

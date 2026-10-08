@@ -5,16 +5,22 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from contextlib import asynccontextmanager
+from fastapi.staticfiles import StaticFiles
 from app.core.config import settings
 from app.db.init_db import init_db
 
 # Import API Routers
 from app.api.auth import router as auth_router
 from app.api.sos import router as sos_router
+from app.api.location import router as location_router
+from app.api.notification import router as notification_router
+from app.api.heatmap import router as heatmap_router
+from app.api.routes import router as routes_router
 from app.api.feed import router as feed_router
 from app.api.case import router as case_router
 from app.api.admin import router as admin_router
 from app.api.social import router as social_router
+from app.api.media import router as media_router, UPLOAD_DIR
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,6 +37,9 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Mount static uploads directory for device media
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+
 # Set all CORS enabled origins
 app.add_middleware(
     CORSMiddleware,
@@ -43,10 +52,15 @@ app.add_middleware(
 # Register Routers
 app.include_router(auth_router, prefix=settings.API_V1_STR)
 app.include_router(sos_router, prefix=settings.API_V1_STR)
+app.include_router(location_router, prefix=settings.API_V1_STR)
+app.include_router(notification_router, prefix=settings.API_V1_STR)
+app.include_router(heatmap_router, prefix=settings.API_V1_STR)
+app.include_router(routes_router, prefix=settings.API_V1_STR)
 app.include_router(feed_router, prefix=settings.API_V1_STR)
 app.include_router(case_router, prefix=settings.API_V1_STR)
 app.include_router(admin_router, prefix=settings.API_V1_STR)
 app.include_router(social_router, prefix=settings.API_V1_STR)
+app.include_router(media_router, prefix=settings.API_V1_STR)
 
 @app.get(f"{settings.API_V1_STR}/docs", include_in_schema=False)
 def redirect_to_docs():
