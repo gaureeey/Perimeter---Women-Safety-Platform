@@ -4,58 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PERIMETER — Journalist Press Desk & Social Hub</title>
+    <title>Journalist Press Desk — PERIMETER Women Safety</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <style>
-        :root {
-            --ink: #0D1B1E;
-            --ink-secondary: #1E3034;
-            --paper: #F7FAFA;
-            --paper-2: #EDF4F4;
-            --card-bg: #FFFFFF;
-            --coral: #FF5A5F;
-            --coral-glow: rgba(255, 90, 95, 0.25);
-            --coral-dim: #FFE4E6;
-            --teal: #0F6E6E;
-            --teal-bright: #0D9488;
-            --teal-dim: #D1FAE5;
-            --gold: #D97706;
-            --gold-dim: #FEF3C7;
-            --police-blue: #2563EB;
-            --police-dim: #DBEAFE;
-            --purple: #8B5CF6;
-            --purple-dim: #EDE9FE;
-            --gray: #64748B;
-            --line: #E2E8F0;
-            --white: #FFFFFF;
-            --radius-lg: 20px;
-            --radius-md: 14px;
-            --radius-sm: 8px;
-            --shadow-subtle: 0 4px 20px -2px rgba(13, 27, 30, 0.06);
-            --shadow-card: 0 10px 30px -4px rgba(13, 27, 30, 0.08);
-            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            --mono: 'IBM Plex Mono', monospace;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: var(--sans);
-            background: var(--paper);
-            color: var(--ink);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-        }
-
         /* ── ONE-TIME REGISTRATION OVERLAY ── */
         #regOverlay {
             display: none; position: fixed; inset: 0;
@@ -94,23 +49,65 @@
             color:#5EEAD4;border-radius:8px;padding:10px 14px;
             font-size:13px;font-weight:600;margin-bottom:12px;
         }
+        :root {
+            --ink: #0D1B1E;
+            --ink-surface: #15282B;
+            --paper: #F7FAFA;
+            --paper-2: #EDF4F4;
+            --teal: #0F6E6E;
+            --teal-bright: #0D9488;
+            --teal-glow: rgba(13, 148, 136, 0.25);
+            --teal-dim: #D1FAE5;
+            --coral: #FF5A5F;
+            --gold: #D97706;
+            --police-blue: #2563EB;
+            --gray: #64748B;
+            --line: #E2E8F0;
+            --white: #FFFFFF;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+            --shadow-subtle: 0 4px 20px -2px rgba(13, 27, 30, 0.06);
+            --shadow-card: 0 10px 30px -4px rgba(13, 27, 30, 0.08);
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
 
-        /* Top Role Banner */
-        .user-topbar {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Topbar */
+        .press-topbar {
             background: #0B191B;
             color: white;
-            padding: 6px 24px;
+            padding: 8px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 12px;
+            font-size: 12.5px;
             position: sticky;
             top: 0;
             z-index: 100;
             border-bottom: 1px solid rgba(13, 148, 136, 0.35);
         }
 
-        .user-badge-pill {
+        .press-badge-pill {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -124,41 +121,38 @@
             text-transform: uppercase;
         }
 
-        .user-topbar-right {
+        .press-topbar-right {
             display: flex;
             align-items: center;
             gap: 16px;
         }
 
-        .user-topbar-right a {
+        .press-topbar-right a {
             color: #94A3B8;
-            text-decoration: none;
             transition: color 0.15s;
         }
 
-        .user-topbar-right a:hover {
+        .press-topbar-right a:hover {
             color: #FFFFFF;
         }
 
-        /* Main Nav Header */
+        /* Header */
         header {
             position: sticky;
-            top: 33px;
+            top: 37px;
             z-index: 90;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--line);
         }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 10px 24px;
+        .nav {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            padding: 12px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .logo {
@@ -169,107 +163,42 @@
             font-size: 22px;
             color: var(--ink);
             letter-spacing: -0.03em;
-            text-decoration: none;
-            cursor: pointer;
         }
 
         .logo span {
             color: var(--teal-bright);
         }
 
-        /* Nav View Switcher Pills */
-        .nav-tabs {
+        .press-stats-bar {
             display: flex;
-            align-items: center;
-            gap: 4px;
-            background: var(--paper-2);
-            padding: 4px;
-            border-radius: 100px;
-            overflow-x: auto;
+            gap: 20px;
+            font-size: 12px;
         }
 
-        .nav-tab-btn {
-            background: none;
-            border: none;
-            padding: 7px 14px;
-            border-radius: 100px;
-            font-size: 12.5px;
-            font-weight: 600;
+        .press-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             color: var(--gray);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.18s ease;
-            white-space: nowrap;
         }
 
-        .nav-tab-btn:hover {
+        .press-stat b {
             color: var(--ink);
+            font-family: var(--mono);
         }
 
-        .nav-tab-btn.active {
-            background: #FFFFFF;
-            color: var(--ink);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            font-weight: 700;
-        }
-
-        .nav-tab-btn.active.press-tab {
-            background: var(--teal);
-            color: #FFFFFF;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-sos-header {
-            background: var(--coral);
-            color: #FFFFFF;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-size: 12.5px;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 15px var(--coral-glow);
-            transition: all 0.2s;
-            animation: pulse-sos 3s infinite;
-        }
-
-        @keyframes pulse-sos {
-            0%, 100% { box-shadow: 0 4px 15px var(--coral-glow); }
-            50% { box-shadow: 0 4px 25px rgba(255, 90, 95, 0.55); }
-        }
-
-        .btn-sos-header:hover {
-            background: #E02424;
-            transform: translateY(-1px);
-        }
-
-        .user-nav-pill {
+        .user-nav-profile {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 4px 12px 4px 5px;
-            background: var(--paper-2);
-            border: 1px solid var(--line);
+            padding: 4px 12px 4px 6px;
+            background: var(--teal-dim);
             border-radius: 100px;
+            border: 1px solid rgba(13, 148, 136, 0.3);
             cursor: pointer;
-            transition: all 0.15s;
         }
 
-        .user-nav-pill:hover {
-            background: #E2E8F0;
-        }
-
-        .avatar-circle {
+        .avatar-sm {
             width: 28px;
             height: 28px;
             border-radius: 50%;
@@ -282,635 +211,127 @@
             justify-content: center;
         }
 
-        /* Layout Container */
-        .app-container {
+        /* Layout */
+        .container {
             max-width: 1200px;
             margin: 24px auto;
             padding: 0 24px;
-        }
-
-        /* View Panels */
-        .view-panel {
-            display: none;
-            animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .view-panel.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ================== 1. FEED VIEW ================== */
-        .feed-grid {
             display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 24px;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 28px;
+            align-items: start;
         }
 
-        /* Stories Row */
-        .stories-bar {
-            background: #FFFFFF;
-            border: 1px solid var(--line);
-            border-radius: var(--radius-lg);
-            padding: 16px 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-subtle);
-        }
-
-        .stories-header {
-            font-size: 11.5px;
-            font-weight: 750;
-            text-transform: uppercase;
-            color: var(--gray);
-            letter-spacing: 0.05em;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .stories-scroll {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-            scrollbar-width: thin;
-        }
-
-        .story-node {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .story-ring {
-            width: 62px;
-            height: 62px;
-            border-radius: 50%;
-            padding: 2.5px;
-            background: linear-gradient(135deg, #0D9488, #0F6E6E, #2563EB);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .story-ring:hover {
-            transform: scale(1.06);
-        }
-
-        .story-avatar {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: var(--ink);
-            color: white;
-            font-size: 14px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid white;
-        }
-
-        .add-story-btn {
-            width: 62px;
-            height: 62px;
-            border-radius: 50%;
-            border: 2px dashed var(--gray);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            color: var(--gray);
-            background: var(--paper);
-            transition: all 0.2s;
-        }
-
-        .add-story-btn:hover {
-            border-color: var(--teal-bright);
-            color: var(--teal-bright);
-            background: var(--teal-dim);
-        }
-
-        .story-label {
-            font-size: 11.5px;
-            font-weight: 600;
-            color: var(--ink);
-            max-width: 68px;
-            text-align: center;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        /* Create Post Card */
-        .create-post-card {
-            background: #FFFFFF;
-            border: 1px solid var(--line);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-subtle);
-        }
-
-        .create-post-header {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-
-        .create-post-input {
-            width: 100%;
-            border: 1.5px solid var(--line);
-            background: var(--paper-2);
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 13.5px;
-            font-family: var(--sans);
-            resize: vertical;
-            min-height: 70px;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .create-post-input:focus {
-            border-color: var(--teal-bright);
-            background: #FFFFFF;
-            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
-        }
-
-        .post-category-selector {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            margin-bottom: 14px;
-            padding-bottom: 4px;
-        }
-
-        .category-pill {
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 600;
-            background: var(--paper-2);
-            border: 1px solid var(--line);
-            color: var(--gray);
-            cursor: pointer;
-            transition: all 0.15s;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .category-pill.selected {
-            background: var(--teal);
-            color: #FFFFFF;
-            border-color: var(--teal);
-        }
-
-        .create-post-actions {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-top: 1px solid var(--line);
-            padding-top: 14px;
-        }
-
-        .post-upload-tools {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-upload-tool {
-            background: var(--paper-2);
-            border: 1px solid var(--line);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--ink);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.15s;
-        }
-
-        .btn-upload-tool:hover {
-            background: #E2E8F0;
-        }
-
-        .media-preview-container {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            margin-top: 12px;
-            padding-bottom: 6px;
-        }
-
-        .media-preview-item {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--line);
-            flex-shrink: 0;
-        }
-
-        .media-preview-item img,
-        .media-preview-item video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .btn-remove-preview {
-            position: absolute;
-            top: 2px;
-            right: 2px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 10px;
-            cursor: pointer;
-        }
-
-        .btn-submit-post {
-            background: var(--coral);
-            color: white;
-            border: none;
-            padding: 9px 22px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-submit-post:hover {
-            background: #E02424;
-            transform: translateY(-1px);
-        }
-
-        /* Feed Stream Filters */
-        .feed-filters-bar {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            overflow-x: auto;
-        }
-
-        .feed-filter-btn {
-            padding: 6px 14px;
-            background: #FFFFFF;
-            border: 1px solid var(--line);
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--gray);
-            cursor: pointer;
-            transition: all 0.15s;
-            white-space: nowrap;
-        }
-
-        .feed-filter-btn.active {
-            background: var(--ink);
-            color: #FFFFFF;
-            border-color: var(--ink);
-        }
-
-        /* Feed Post Card */
-        .post-card {
-            background: #FFFFFF;
-            border: 1px solid var(--line);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-subtle);
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
-        }
-
-        .post-card:hover {
-            box-shadow: var(--shadow-card);
-        }
-
-        .post-author-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .author-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .author-avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: var(--ink);
-            color: white;
-            font-size: 14px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-        }
-
-        .author-name-link {
-            font-weight: 750;
-            font-size: 14.5px;
-            color: var(--ink);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .author-name-link:hover {
-            color: var(--teal);
-        }
-
-        .author-badge {
-            font-size: 10.5px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 100px;
-            text-transform: uppercase;
-        }
-
-        .author-badge.badge-user { background: var(--paper-2); color: var(--gray); }
-        .author-badge.badge-volunteer { background: var(--gold-dim); color: var(--gold); }
-        .author-badge.badge-police { background: var(--police-dim); color: var(--police-blue); }
-        .author-badge.badge-journalist { background: var(--teal-dim); color: var(--teal); }
-        .author-badge.badge-admin { background: var(--purple-dim); color: var(--purple); }
-
-        .post-time {
-            font-size: 11.5px;
-            color: var(--gray);
-        }
-
-        .post-content {
-            font-size: 14px;
-            color: #1F2937;
-            margin-bottom: 14px;
-            line-height: 1.6;
-        }
-
-        .post-media-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 8px;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 14px;
-        }
-
-        .post-media-grid img,
-        .post-media-grid video {
-            width: 100%;
-            height: 240px;
-            object-fit: cover;
-            border-radius: 8px;
-            background: #000;
-        }
-
-        .post-actions-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-top: 1px solid var(--line);
-            padding-top: 12px;
-            color: var(--gray);
-            font-size: 12.5px;
-            font-weight: 600;
-        }
-
-        .post-action-btn {
-            background: none;
-            border: none;
-            color: var(--gray);
-            font-size: 12.5px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 8px;
-            border-radius: 6px;
-            transition: all 0.15s;
-        }
-
-        .post-action-btn:hover {
-            color: var(--ink);
-            background: var(--paper-2);
-        }
-
-        .post-action-btn.liked {
-            color: var(--coral);
-        }
-
-        /* Comment Section */
-        .comments-list {
-            margin-top: 12px;
-            border-top: 1px solid var(--line);
-            padding-top: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .comment-item {
-            display: flex;
-            gap: 8px;
-            font-size: 12.5px;
-        }
-
-        .comment-box {
-            background: var(--paper-2);
-            padding: 8px 12px;
-            border-radius: 12px;
-            width: 100%;
-        }
-
-        .comment-author {
-            font-weight: 700;
-            color: var(--ink);
-            margin-right: 6px;
-        }
-
-        .comment-input-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .comment-input {
-            flex: 1;
-            padding: 6px 12px;
-            background: var(--paper-2);
-            border: 1px solid var(--line);
-            border-radius: 100px;
-            font-size: 12px;
-            outline: none;
-        }
-
-        /* Right Sidebar Widgets */
-        .sidebar-card {
-            background: #FFFFFF;
-            border: 1px solid var(--line);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-subtle);
-        }
-
-        .sidebar-title {
-            font-size: 13.5px;
-            font-weight: 800;
-            color: var(--ink);
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        /* ================== 2. PRESS DESK VIEW ================== */
-        .press-grid {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 24px;
-        }
-
-        .press-stats-bar {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-            margin-bottom: 20px;
-        }
-
-        .press-stat-card {
-            background: #FFFFFF;
-            border: 1px solid var(--line);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            box-shadow: var(--shadow-subtle);
-        }
-
-        .press-stat-label {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--gray);
-            margin-bottom: 6px;
-        }
-
-        .press-stat-value {
-            font-size: 24px;
-            font-weight: 800;
-            font-family: var(--mono);
-            color: var(--ink);
-        }
-
-        .press-form-card {
+        /* Editor & Case Suite Card */
+        .card {
             background: #FFFFFF;
             border: 1px solid var(--line);
             border-radius: var(--radius-lg);
             padding: 24px;
-            box-shadow: var(--shadow-subtle);
+            box-shadow: var(--shadow-card);
             margin-bottom: 24px;
         }
 
-        .press-input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid var(--line);
-            background: var(--paper-2);
-            border-radius: 10px;
-            font-size: 13.5px;
-            font-family: var(--sans);
-            outline: none;
-            margin-bottom: 12px;
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
         }
 
-        .press-input:focus, .press-textarea:focus, .press-select:focus {
-            border-color: var(--teal-bright);
-            background: #FFFFFF;
+        .card-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .press-textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid var(--line);
-            background: var(--paper-2);
-            border-radius: 10px;
-            font-size: 13.5px;
-            font-family: var(--sans);
-            outline: none;
-            resize: vertical;
-            min-height: 100px;
+        .form-row {
             margin-bottom: 14px;
         }
 
-        .press-select {
+        .form-label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--gray);
+            margin-bottom: 6px;
+        }
+
+        .press-input,
+        .press-select,
+        .press-textarea {
             width: 100%;
-            padding: 10px 14px;
             border: 1px solid var(--line);
             background: var(--paper-2);
-            border-radius: 10px;
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
             font-size: 13.5px;
             font-family: var(--sans);
+            color: var(--ink);
             outline: none;
-            margin-bottom: 12px;
+            transition: all 0.15s;
+        }
+
+        .press-input:focus,
+        .press-select:focus,
+        .press-textarea:focus {
+            background: #FFFFFF;
+            border-color: var(--teal-bright);
+            box-shadow: 0 0 0 3px var(--teal-glow);
+        }
+
+        .press-textarea {
+            height: 90px;
+            resize: none;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
         .btn-publish-press {
             width: 100%;
             background: var(--teal);
-            color: white;
+            color: #FFFFFF;
             border: none;
             padding: 12px;
-            border-radius: 10px;
-            font-size: 13.5px;
+            border-radius: 100px;
+            font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 6px 20px var(--teal-glow);
         }
 
         .btn-publish-press:hover {
-            background: var(--teal-bright);
+            background: #0B5757;
             transform: translateY(-1px);
         }
 
+        /* Case Linking Suite */
         .case-card {
-            background: #FFFFFF;
+            background: var(--paper-2);
             border: 1px solid var(--line);
             border-radius: var(--radius-md);
             padding: 16px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
+            border-left: 4px solid var(--teal);
+            transition: all 0.2s;
+        }
+
+        .case-card:hover {
+            background: #FFFFFF;
             box-shadow: var(--shadow-subtle);
         }
 
@@ -918,17 +339,84 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .case-id {
+            font-family: var(--mono);
             font-size: 12px;
             font-weight: 700;
-            font-family: var(--mono);
             color: var(--teal);
         }
 
         .case-status {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 100px;
+            text-transform: uppercase;
+        }
+
+        .case-status.open {
+            background: #FEF3C7;
+            color: #B45309;
+        }
+
+        .case-status.resolved {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .case-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .case-meta {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+
+        .btn-attach-note {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            color: var(--teal);
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-attach-note:hover {
+            background: var(--teal);
+            color: white;
+            border-color: var(--teal);
+        }
+
+        /* Press Feed Items */
+        .press-feed-item {
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 14px;
+            background: #FFFFFF;
+        }
+
+        .press-feed-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .badge-verified {
+            background: var(--teal-dim);
+            color: var(--teal);
             font-size: 10.5px;
             font-weight: 700;
             padding: 2px 8px;
@@ -936,39 +424,43 @@
             text-transform: uppercase;
         }
 
-        .case-status.open { background: #FEF3C7; color: #D97706; }
-        .case-status.resolved { background: #D1FAE5; color: #059669; }
+        .press-feed-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
 
-        .btn-attach-note {
-            background: var(--paper-2);
-            border: 1px solid var(--line);
-            padding: 6px 12px;
-            border-radius: 6px;
+        .press-feed-body {
+            font-size: 13px;
+            color: #334155;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .press-feed-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             font-size: 11.5px;
-            font-weight: 700;
-            color: var(--teal);
-            cursor: pointer;
-            margin-top: 8px;
-            transition: all 0.15s;
+            color: var(--gray);
+            border-top: 1px solid var(--line);
+            padding-top: 8px;
         }
 
-        .btn-attach-note:hover {
-            background: var(--teal);
-            color: white;
-        }
-
+        /* Timeline Container */
         .timeline-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            max-height: 340px;
+            gap: 12px;
+            max-height: 380px;
             overflow-y: auto;
         }
 
         .timeline-item {
             padding: 10px 12px;
             background: var(--paper-2);
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             border-left: 3px solid var(--teal);
             font-size: 12px;
         }
@@ -979,180 +471,6 @@
             font-family: var(--mono);
             color: var(--gray);
             margin-bottom: 2px;
-        }
-
-        /* ================== 3. EXPLORE VIEW ================== */
-        .explore-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-        }
-
-        .search-bar-box {
-            display: flex;
-            gap: 10px;
-            background: #FFFFFF;
-            border: 1px solid var(--line);
-            border-radius: 100px;
-            padding: 8px 16px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-subtle);
-        }
-
-        .search-input-field {
-            border: none;
-            outline: none;
-            width: 100%;
-            font-size: 14px;
-            font-family: var(--sans);
-        }
-
-        /* ================== 4. REELS VIEW ================== */
-        .reels-container {
-            max-width: 540px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .reel-card {
-            background: #000;
-            border-radius: 24px;
-            overflow: hidden;
-            position: relative;
-            height: 680px;
-            box-shadow: var(--shadow-card);
-        }
-
-        .reel-card video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .reel-overlay-bottom {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 70px;
-            padding: 24px;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
-            color: white;
-        }
-
-        .reel-actions-side {
-            position: absolute;
-            bottom: 24px;
-            right: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .reel-btn {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(8px);
-            border: none;
-            color: white;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            cursor: pointer;
-            transition: transform 0.15s;
-        }
-
-        .reel-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* ================== 5. MESSAGES VIEW ================== */
-        .messages-layout {
-            background: #FFFFFF;
-            border: 1px solid var(--line);
-            border-radius: var(--radius-lg);
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            height: 650px;
-            overflow: hidden;
-            box-shadow: var(--shadow-subtle);
-        }
-
-        .convo-list {
-            border-right: 1px solid var(--line);
-            overflow-y: auto;
-        }
-
-        .convo-item {
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--line);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: background 0.15s;
-        }
-
-        .convo-item:hover,
-        .convo-item.active {
-            background: var(--paper-2);
-        }
-
-        .chat-thread-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .chat-thread-header {
-            padding: 14px 20px;
-            border-bottom: 1px solid var(--line);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .chat-messages-area {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .chat-msg-bubble {
-            max-width: 65%;
-            padding: 10px 16px;
-            border-radius: 16px;
-            font-size: 13.5px;
-            line-height: 1.4;
-        }
-
-        .chat-msg-bubble.sent {
-            align-self: flex-end;
-            background: var(--teal);
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .chat-msg-bubble.received {
-            align-self: flex-start;
-            background: var(--paper-2);
-            color: var(--ink);
-            border-bottom-left-radius: 4px;
-        }
-
-        .chat-compose-bar {
-            padding: 14px 20px;
-            border-top: 1px solid var(--line);
-            display: flex;
-            gap: 10px;
         }
 
         /* Toast */
@@ -1183,14 +501,11 @@
         }
 
         @media (max-width: 960px) {
-            .feed-grid,
-            .press-grid,
-            .explore-grid,
-            .messages-layout {
+            .container {
                 grid-template-columns: 1fr;
             }
             .press-stats-bar {
-                grid-template-columns: repeat(2, 1fr);
+                display: none;
             }
         }
     </style>
@@ -1198,546 +513,302 @@
 
 <body>
 
-    <!-- ══ ONE-TIME REGISTRATION: JOURNALIST ══ -->
-    <div id="regOverlay">
-        <div class="reg-box">
-            <div class="reg-logo">📰 PERIMETER PRESS</div>
-            <div class="reg-sub">Journalist Press Desk — One-time Credential Setup</div>
-            <div id="regAlertBox"></div>
-            <div class="reg-title">Register Your Press Profile</div>
-            <div class="reg-desc">Enter your credentials once. You will be recognized automatically every time you open this page.</div>
+<!-- ══ ONE-TIME REGISTRATION: JOURNALIST ══ -->
+<div id="regOverlay">
+    <div class="reg-box">
+        <div class="reg-logo">📰 PERIMETER PRESS</div>
+        <div class="reg-sub">Journalist Press Desk — One-time Credential Setup</div>
+        <div id="regAlertBox"></div>
+        <div class="reg-title">Register Your Press Profile</div>
+        <div class="reg-desc">Enter your credentials once. You'll be recognised automatically every time you open this page.</div>
 
-            <div class="reg-field">
-                <label class="reg-label" for="regName">Full Name</label>
-                <input class="reg-input" type="text" id="regName" placeholder="e.g. Rhea Nair" autocomplete="name">
-            </div>
-            <div class="reg-field">
-                <label class="reg-label" for="regPressId">Press ID / News Outlet</label>
-                <input class="reg-input" type="text" id="regPressId" placeholder="e.g. Deccan Herald · PID-2026-044">
-            </div>
-            <div class="reg-field">
-                <label class="reg-label" for="regPass">Password</label>
-                <input class="reg-input" type="password" id="regPass" placeholder="At least 6 characters">
-            </div>
-            <div class="reg-field">
-                <label class="reg-label" for="regConf">Confirm Password</label>
-                <input class="reg-input" type="password" id="regConf" placeholder="Re-enter password">
-            </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regName">Full Name</label>
+            <input class="reg-input" type="text" id="regName" placeholder="e.g. Rhea Nair" autocomplete="name">
+        </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regPressId">Press ID / News Outlet</label>
+            <input class="reg-input" type="text" id="regPressId" placeholder="e.g. Deccan Herald · PID-2026-044">
+        </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regPass">Password</label>
+            <input class="reg-input" type="password" id="regPass" placeholder="At least 6 characters">
+        </div>
+        <div class="reg-field">
+            <label class="reg-label" for="regConf">Confirm Password</label>
+            <input class="reg-input" type="password" id="regConf" placeholder="Re-enter password">
+        </div>
 
-            <button class="reg-btn" onclick="submitPressReg()">📰 Register & Enter Press Desk</button>
+        <button class="reg-btn" onclick="submitPressReg()">📰 Register & Enter Press Desk</button>
 
-            <div style="text-align:center;font-size:12px;color:#64748B;margin-top:16px;">
-                Need help or switching persona? <a href="register.html" style="color:#0D9488;font-weight:600;text-decoration:none;">Go to Register / Switch Persona</a>
-            </div>
+        <div style="text-align:center;font-size:12px;color:#64748B;margin-top:16px;">
+            Need help or switching persona? <a href="register.html" style="color:#0F6E6E;font-weight:600;text-decoration:none;">Go to Register / Switch Persona</a>
         </div>
     </div>
+</div>
 
-    <!-- Top Role Banner -->
-    <div class="user-topbar">
+
+
+    <!-- Topbar -->
+    <div class="press-topbar">
         <div style="display: flex; align-items: center; gap: 8px;">
             <span>Logged in as</span>
-            <span class="user-badge-pill">📰 <span id="topbarUserName">Rhea Nair (Verified Press)</span></span>
+            <span class="press-badge-pill">📰 <span id="topbarPressName">Rhea Nair (Press Reporter)</span></span>
         </div>
-        <div class="user-topbar-right">
-            <button type="button" onclick="openPressDirectoryModal()" style="background:#0F6E6E; color:#FFF; border:none; padding:3px 12px; border-radius:100px; font-size:11.5px; font-weight:700; cursor:pointer;">👥 Community & Sources Directory</button>
+        <div class="press-topbar-right">
             <span style="color: #5EEAD4; font-family: var(--mono); font-size: 11px;">OUTLET: THE DECCAN HERALD</span>
             <a href="register.html" onclick="logout(); return false;">Switch Persona / Logout →</a>
         </div>
     </div>
 
-    <!-- Main Navigation Header -->
+    <!-- Header -->
     <header>
-        <div class="nav-container">
-            <a class="logo" onclick="switchView('feed')">
-                <div style="width: 28px; height: 28px; background: var(--teal); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;">📰</div>
-                PERIMETER <span>.</span>
-            </a>
+        <nav class="nav">
+            <div class="logo">PERIMETER <span>.</span> <span style="font-size: 13px; color: var(--teal); font-weight: 600; margin-left: 4px;">PRESS DESK</span></div>
 
-            <!-- View Switcher Tabs -->
-            <nav class="nav-tabs">
-                <button class="nav-tab-btn active" id="tabFeed" onclick="switchView('feed')">🏠 Feed</button>
-                <button class="nav-tab-btn" id="tabExplore" onclick="switchView('explore')">🔍 Explore</button>
-                <button class="nav-tab-btn" id="tabReels" onclick="switchView('reels')">🎬 Reels</button>
-                <button class="nav-tab-btn" id="tabMessages" onclick="switchView('messages')">💬 Messages</button>
-                <button class="nav-tab-btn" id="tabChannels" onclick="switchView('channels')">📢 Channels</button>
-                <button class="nav-tab-btn press-tab" id="tabPress" onclick="switchView('press')">📰 Press Desk</button>
-                <button class="nav-tab-btn" id="tabProfile" onclick="switchView('profile')">👤 Profile</button>
-            </nav>
-
-            <!-- Header Actions -->
-            <div class="nav-actions">
-                <button class="btn-sos-header" onclick="triggerSOS()">
-                    <span>🚨</span> LIVE SOS
-                </button>
-                <div class="user-nav-pill" onclick="switchView('profile')" title="View Journalist Profile">
-                    <div class="avatar-circle" id="headerUserAvatar">RN</div>
-                    <span style="font-size: 12.5px; font-weight: 700;" id="headerUserName">Journalist</span>
-                </div>
+            <div class="press-stats-bar">
+                <div class="press-stat">Articles: <b id="statArticles">34</b></div>
+                <div class="press-stat">Fact-Check: <b>99.8%</b></div>
+                <div class="press-stat">Cases Linked: <b>12</b></div>
+                <div class="press-stat">Citations: <b>420</b></div>
             </div>
-        </div>
+
+            <div class="user-nav-profile" onclick="toast('Press Credential #PRESS-IND-4091 (Verified Media)', '📰')">
+                <div class="avatar-sm" id="pressAvatar">RN</div>
+                <span style="font-size: 12.5px; font-weight: 700;" id="navPressName">Rhea N.</span>
+            </div>
+        </nav>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="app-container">
+    <!-- Main Container -->
+    <main class="container">
 
-        <!-- ==================== 1. FEED VIEW ==================== -->
-        <section class="view-panel active" id="panelFeed">
-            <div class="feed-grid">
-                
-                <!-- Left: Feed Flow -->
-                <div>
-                    <!-- 24H Safety Stories & Beacons -->
-                    <div class="stories-bar">
-                        <div class="stories-header">
-                            <span>24H Safety Stories & Press Dispatches</span>
-                            <span style="color: #10B981; font-weight: 700;">● LIVE WIRE</span>
+        <!-- Left Column: Press Report Publishing & Active News Feed -->
+        <section>
+
+            <!-- Verified Article Publishing Suite -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>📰 Publish Verified Safety Bulletin / News</span>
+                    </div>
+                    <span class="badge-verified">Direct Community Dispatch</span>
+                </div>
+
+                <form onsubmit="handlePublishReport(event)">
+                    <div class="form-row">
+                        <label class="form-label">Report Headline</label>
+                        <input type="text" class="press-input" id="reportHeadline" placeholder="e.g. Verified Safe Night Corridor Established along MG Road Metro" required>
+                    </div>
+
+                    <div class="grid-2 form-row">
+                        <div>
+                            <label class="form-label">Target Sector / Location</label>
+                            <input type="text" class="press-input" id="reportLocation" placeholder="e.g. MG Road & Brigade Junction" required>
                         </div>
-                        <div class="stories-scroll" id="storiesScroll">
-                            <div class="story-node" onclick="openStoryUploader()">
-                                <div class="add-story-btn">+</div>
-                                <span class="story-label">Your Story</span>
-                            </div>
+                        <div>
+                            <label class="form-label">Link Directly to Open Case</label>
+                            <select class="press-select" id="reportCaseSelect">
+                                <option value="">-- No Direct Case Link --</option>
+                                <option value="CASE-2026-089">Case #2026-089 (Sector 4 Alley SOS)</option>
+                                <option value="CASE-2026-092">Case #2026-092 (MG Road Corridor Patrol)</option>
+                                <option value="CASE-2026-095">Case #2026-095 (Koramangala 4th Block)</option>
+                            </select>
                         </div>
                     </div>
 
-                    <!-- Post Composer Box -->
-                    <div class="create-post-card">
-                        <div class="create-post-header">
-                            <div class="avatar-circle" id="composerAvatar">RN</div>
-                            <textarea class="create-post-input" id="postContentInput" placeholder="Share a verified press report, hazard update, or investigation finding..."></textarea>
-                        </div>
-
-                        <!-- Category Selector -->
-                        <div class="post-category-selector" id="postCategorySelector">
-                            <div class="category-pill selected" data-cat="COMMUNITY" onclick="selectCategory(this, 'COMMUNITY')">💬 Community</div>
-                            <div class="category-pill" data-cat="SAFE_ROUTE" onclick="selectCategory(this, 'SAFE_ROUTE')">🚶 Safe Route</div>
-                            <div class="category-pill" data-cat="HAZARD_ALERT" onclick="selectCategory(this, 'HAZARD_ALERT')">⚠️ Hazard Alert</div>
-                            <div class="category-pill" data-cat="HELP_REQUEST" onclick="selectCategory(this, 'HELP_REQUEST')">🙋 Help Request</div>
-                            <div class="category-pill" data-cat="POLICE_NOTICE" onclick="selectCategory(this, 'POLICE_NOTICE')">🚔 Police Notice</div>
-                        </div>
-
-                        <!-- Hidden Device File Input for Multi-Upload -->
-                        <input type="file" id="postMediaFileInput" accept="image/*,video/*" multiple style="display: none;" onchange="handleDeviceMediaSelected(event)">
-
-                        <!-- Selected Media Previews -->
-                        <div class="media-preview-container" id="mediaPreviewRow"></div>
-
-                        <div class="create-post-actions">
-                            <div class="post-upload-tools">
-                                <button type="button" class="btn-upload-tool" onclick="document.getElementById('postMediaFileInput').click()">
-                                    📷 Add Photo/Video
-                                </button>
-                                <button type="button" class="btn-upload-tool" onclick="promptMediaUrl()">
-                                    🔗 Image URL
-                                </button>
-                            </div>
-                            <button type="button" class="btn-submit-post" onclick="submitNewPost()">
-                                Post Update →
-                            </button>
-                        </div>
+                    <div class="form-row">
+                        <label class="form-label">Investigation Summary & Safety Notice</label>
+                        <textarea class="press-textarea" id="reportContent" placeholder="Provide verified details, police confirmation, volunteer escorts active, or guidance for citizens..." required></textarea>
                     </div>
 
-                    <!-- Feed Stream Filter Pills -->
-                    <div class="feed-filters-bar">
-                        <button class="feed-filter-btn active" onclick="filterFeed('ALL', this)">All Updates</button>
-                        <button class="feed-filter-btn" onclick="filterFeed('FOLLOWING', this)">Following</button>
-                        <button class="feed-filter-btn" onclick="filterFeed('HAZARD_ALERT', this)">Safety Alerts</button>
-                        <button class="feed-filter-btn" onclick="filterFeed('POLICE_NOTICE', this)">Police Bulletins</button>
-                        <button class="feed-filter-btn" onclick="filterFeed('HELP_REQUEST', this)">Help Requests</button>
-                    </div>
+                    <button type="submit" class="btn-publish-press">
+                        <span>Publish Verified Safety Bulletin to Citizens</span>
+                        <span>→</span>
+                    </button>
+                </form>
+            </div>
 
-                    <!-- Post Feed Items List -->
-                    <div id="postsFeedContainer">
-                        <div style="text-align: center; padding: 40px; color: var(--gray);">
-                            Loading live updates... ⏳
-                        </div>
+            <!-- Published Press Feed -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>🗂️ Live Press Publications & Verified Bulletins</span>
                     </div>
                 </div>
 
-                <!-- Right: Press Quick Sidebar -->
-                <aside>
-                    <div class="sidebar-card">
-                        <div class="sidebar-title">
-                            <span>📰 Press Desk Newsroom</span>
-                            <span style="font-size: 11px; background: var(--teal-dim); color: var(--teal); padding: 2px 8px; border-radius: 100px; font-weight: 800;">VERIFIED</span>
+                <div id="pressFeedList">
+
+                    <div class="press-feed-item">
+                        <div class="press-feed-header">
+                            <span class="badge-verified">Verified Press Bulletin</span>
+                            <span style="font-size: 11.5px; color: var(--gray);">Linked to Case #2026-092 · 12 mins ago</span>
                         </div>
-                        <p style="font-size: 12.5px; color: var(--gray); margin-bottom: 14px;">
-                            Access verified police cases, publish safety bulletins, and log investigation findings.
-                        </p>
-                        <button class="btn-publish-press" onclick="switchView('press')">
-                            Open Press Desk Suite →
-                        </button>
+                        <div class="press-feed-title">Verified Safe Corridor Established near MG Road Metro Station</div>
+                        <div class="press-feed-body">
+                            Following volunteer risk reports, city police and volunteer marshals have set up illuminated night patrol checkpoints active until 2:00 AM.
+                        </div>
+                        <div class="press-feed-footer">
+                            <span>Author: Rhea Nair (Deccan Herald)</span>
+                            <span style="color: var(--teal); font-weight: 600; cursor: pointer;" onclick="toast('Press link copied!', '↗️')">Share Article ↗️</span>
+                        </div>
                     </div>
 
-                    <div class="sidebar-card">
-                        <div class="sidebar-title">
-                            <span>⚡ Live Incident Wire</span>
-                        </div>
-                        <p style="font-size: 11.5px; color: var(--gray); margin-bottom: 12px;">Real-time synchronized log across Citizens, Volunteers, Press, and Police.</p>
-                        <div class="timeline-container" id="sideTimelineContainer">
-                            <div class="timeline-item">
-                                <div class="timeline-time">10:52 AM · JOURNALIST ACTION</div>
-                                <div><b>Press Bulletin Linked:</b> Rhea Nair attached verified coverage to open case.</div>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-
+                </div>
             </div>
+
         </section>
 
-        <!-- ==================== 2. PRESS DESK VIEW ==================== -->
-        <section class="view-panel" id="panelPress">
-            <div class="press-grid">
-                
-                <!-- Left: Verified Article Publishing & News Feed -->
-                <div>
-                    <!-- Stats Bar -->
-                    <div class="press-stats-bar">
-                        <div class="press-stat-card">
-                            <div class="press-stat-label">Articles Published</div>
-                            <div class="press-stat-value" style="color: var(--teal);" id="statArticles">34</div>
-                        </div>
-                        <div class="press-stat-card">
-                            <div class="press-stat-label">Fact-Check Score</div>
-                            <div class="press-stat-value" style="color: #10B981;">99.8%</div>
-                        </div>
-                        <div class="press-stat-card">
-                            <div class="press-stat-label">Cases Linked</div>
-                            <div class="press-stat-value" style="color: var(--police-blue);" id="statCasesLinked">12</div>
-                        </div>
-                        <div class="press-stat-card">
-                            <div class="press-stat-label">Community Citations</div>
-                            <div class="press-stat-value" style="color: var(--gold);">420</div>
-                        </div>
+        <!-- Right Column: Case Linking Suite & Universal Timeline -->
+        <aside>
+
+            <!-- Case Linking Suite -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>🔍 Active Incident Cases (Press Audit)</span>
                     </div>
-
-                    <!-- Verified Bulletin Publishing Suite -->
-                    <div class="press-form-card">
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
-                            <h3 style="font-size: 16px; font-weight: 800;">📰 Publish Verified Safety Bulletin / News</h3>
-                            <span class="author-badge badge-journalist">Direct Dispatch</span>
-                        </div>
-
-                        <form onsubmit="handlePublishReport(event)">
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; margin-bottom: 4px;">Report Headline</label>
-                            <input type="text" class="press-input" id="reportHeadline" placeholder="e.g. Verified Safe Night Corridor Established along MG Road Metro" required>
-
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                                <div>
-                                    <label style="display: block; font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; margin-bottom: 4px;">Target Sector / Location</label>
-                                    <input type="text" class="press-input" id="reportLocation" placeholder="e.g. MG Road & Brigade Junction" required>
-                                </div>
-                                <div>
-                                    <label style="display: block; font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; margin-bottom: 4px;">Link Directly to Open Case</label>
-                                    <select class="press-select" id="reportCaseSelect">
-                                        <option value="">-- No Direct Case Link --</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; margin-bottom: 4px;">Investigation Summary & Safety Notice</label>
-                            <textarea class="press-textarea" id="reportContent" placeholder="Provide verified details, police confirmation, volunteer escorts active, or guidance for citizens..." required></textarea>
-
-                            <button type="submit" class="btn-publish-press">
-                                <span>Publish Verified Safety Bulletin to Citizens</span>
-                                <span>→</span>
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Published Press Feed -->
-                    <div style="margin-top: 24px;">
-                        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 14px;">🗂️ Live Press Publications & Verified Bulletins</h3>
-                        <div id="pressFeedList">
-                            <div style="text-align: center; padding: 30px; color: var(--gray);">Loading published press bulletins... ⏳</div>
-                        </div>
-                    </div>
+                    <span style="font-size: 11.5px; color: var(--gray); font-family: var(--mono);">3 ACTIVE</span>
                 </div>
 
-                <!-- Right: Active Incident Cases (Press Audit) -->
-                <aside>
-                    <div class="sidebar-card">
-                        <div class="sidebar-title">
-                            <span>🔍 Active Incident Cases (Press Audit)</span>
-                            <span style="font-size: 11px; font-family: var(--mono); color: var(--gray);" id="pressCasesCount">3 ACTIVE</span>
-                        </div>
-                        <div id="pressCasesList" style="display: flex; flex-direction: column; gap: 10px;">
-                            <div style="text-align: center; padding: 20px; color: var(--gray);">Loading verified cases... ⏳</div>
-                        </div>
+                <!-- Case 1 -->
+                <div class="case-card">
+                    <div class="case-top">
+                        <span class="case-id">CASE-2026-089</span>
+                        <span class="case-status open">Under Police Investigation</span>
                     </div>
-
-                    <div class="sidebar-card">
-                        <div class="sidebar-title">
-                            <span>⚡ Universal Incident Timeline</span>
-                        </div>
-                        <p style="font-size: 11.5px; color: var(--gray); margin-bottom: 12px;">Real-time synchronized log across Citizens, Volunteers, Press, and Police.</p>
-                        <div class="timeline-container" id="timelineContainer">
-                            <div class="timeline-item">
-                                <div class="timeline-time">10:52 AM · JOURNALIST ACTION</div>
-                                <div><b>Press Bulletin Linked:</b> Rhea Nair attached verified coverage to Case.</div>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-
-            </div>
-        </section>
-
-        <!-- ==================== 3. EXPLORE VIEW ==================== -->
-        <section class="view-panel" id="panelExplore">
-            <div class="search-bar-box">
-                <span style="font-size: 16px;">🔍</span>
-                <input type="text" class="search-input-field" id="exploreSearchInput" placeholder="Search newsrooms, journalists, officers, or hashtags..." oninput="handleExploreSearch(event)">
-            </div>
-            <div class="explore-grid">
-                <div>
-                    <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 14px;">👥 Verified Journalists & Official Sources</h3>
-                    <div id="exploreUsersGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px;"></div>
+                    <div class="case-title">Motion SOS Beacon · Sector 4 Alleyway</div>
+                    <div class="case-meta">Triggered 10:42 AM · Volunteer Priya D. arrived on scene · Police Unit #4 secured.</div>
+                    <button class="btn-attach-note" onclick="attachNoteToCase('CASE-2026-089')">Attach Press Report Note →</button>
                 </div>
-                <div>
-                    <div class="sidebar-card">
-                        <div class="sidebar-title"><span>🔥 Trending Safety Topics</span></div>
-                        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
-                            <div><b>#MGRoadSafeZone</b> <span style="color: var(--gray); font-size: 11.5px;">· 124 updates</span></div>
-                            <div><b>#NightEscortActive</b> <span style="color: var(--gray); font-size: 11.5px;">· 89 dispatches</span></div>
-                            <div><b>#PressInvestigation</b> <span style="color: var(--gray); font-size: 11.5px;">· 56 reports</span></div>
-                        </div>
+
+                <!-- Case 2 -->
+                <div class="case-card">
+                    <div class="case-top">
+                        <span class="case-id">CASE-2026-092</span>
+                        <span class="case-status resolved">Safe Route Deployed</span>
+                    </div>
+                    <div class="case-title">MG Road Night Corridor Establishment</div>
+                    <div class="case-meta">Verified safe passage operational. 2 volunteer checkpoints confirmed.</div>
+                    <button class="btn-attach-note" onclick="attachNoteToCase('CASE-2026-092')">Attach Press Report Note →</button>
+                </div>
+            </div>
+
+            <!-- Universal Case Timeline -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>⚡ Universal Incident Timeline (Live Sync)</span>
+                    </div>
+                </div>
+                <p style="font-size: 11.5px; color: var(--gray); margin-bottom: 12px;">Real-time dispatch log across Citizens, Volunteers, Press, and Police.</p>
+                <div class="timeline-container" id="timelineContainer">
+                    <div class="timeline-item">
+                        <div class="timeline-time">10:52 AM · JOURNALIST ACTION</div>
+                        <div><b>Press Bulletin Linked:</b> Rhea Nair attached verified coverage to Case #2026-089.</div>
+                    </div>
+                    <div class="timeline-item" style="border-left-color: var(--coral);">
+                        <div class="timeline-time">10:45 AM · POLICE COMMAND</div>
+                        <div><b>On Scene:</b> Officer Patil secured Sector 4 distress area.</div>
+                    </div>
+                    <div class="timeline-item" style="border-left-color: var(--gold);">
+                        <div class="timeline-time">10:43 AM · VOLUNTEER ACTION</div>
+                        <div><b>Volunteer Priya D.</b> logged arrival and confirmed user well-being.</div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- ==================== 4. REELS VIEW ==================== -->
-        <section class="view-panel" id="panelReels">
-            <div class="reels-container" id="reelsContainer"></div>
-        </section>
-
-        <!-- ==================== 5. MESSAGES VIEW ==================== -->
-        <section class="view-panel" id="panelMessages">
-            <div class="messages-layout">
-                <div class="convo-list" id="convoListContainer">
-                    <div style="padding: 14px 18px; font-weight: 800; border-bottom: 1px solid var(--line);">Press Desk Inquiries</div>
-                    <div id="convoItemsList"></div>
-                </div>
-                <div class="chat-thread-container">
-                    <div class="chat-thread-header">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div class="avatar-circle" id="activeChatAvatar">U</div>
-                            <div>
-                                <div style="font-weight: 700; font-size: 14px;" id="activeChatName">Select an official contact</div>
-                                <div style="font-size: 11.5px; color: var(--gray);" id="activeChatRole">Verified Contact</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chat-messages-area" id="chatMessagesContainer">
-                        <div style="text-align: center; color: var(--gray); margin-top: 40px;">Select a contact to begin secure communication.</div>
-                    </div>
-                    <div class="chat-compose-bar">
-                        <input type="text" class="comment-input" id="chatMessageInput" placeholder="Type a message or press inquiry..." onkeydown="if(event.key==='Enter') sendChatMessage()">
-                        <button class="btn-submit-post" style="padding: 6px 18px;" onclick="sendChatMessage()">Send</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ==================== 6. CHANNELS VIEW ==================== -->
-        <section class="view-panel" id="panelChannels">
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px;" id="channelsGrid"></div>
-        </section>
-
-        <!-- ==================== 7. PROFILE VIEW ==================== -->
-        <section class="view-panel" id="panelProfile">
-            <div class="sidebar-card" style="max-width: 600px; margin: 0 auto; text-align: center;">
-                <div class="avatar-circle" style="width: 80px; height: 80px; font-size: 28px; margin: 0 auto 14px;" id="profileAvatarBig">RN</div>
-                <h2 style="font-size: 20px; font-weight: 800;" id="profileNameBig">Rhea Nair</h2>
-                <div style="font-size: 13px; color: var(--gray); font-family: var(--mono); margin-bottom: 12px;" id="profileHandleBig">@rhea_nair</div>
-                <span class="user-badge-pill" style="margin-bottom: 20px;">📰 ACCREDITED JOURNALIST</span>
-                
-                <div style="text-align: left; background: var(--paper-2); padding: 16px; border-radius: 12px; margin: 20px 0; font-size: 13px; display: flex; flex-direction: column; gap: 8px;">
-                    <div>📰 <strong>Press Accreditation ID:</strong> <span id="prPressId">PID-2026-044</span></div>
-                    <div>🏢 <strong>Newsroom / Media House:</strong> <span id="prOutlet">The Deccan Herald</span></div>
-                    <div>📱 <strong>Newsroom Direct:</strong> <span id="prPhone">+91 98444 55667</span></div>
-                    <div>✉️ <strong>Press Email:</strong> <span id="prEmail">rhea.nair@press.perimeter.org</span></div>
-                </div>
-
-                <a href="profile.html" class="btn-publish-press" style="display: inline-block; padding: 10px 24px; text-decoration: none;">
-                    View Full Journalist Profile & Articles →
-                </a>
-            </div>
-        </section>
+        </aside>
 
     </main>
 
-    <!-- Sources & Community Directory Modal -->
-    <div id="pressDirectoryModal" style="display:none; position:fixed; inset:0; background:rgba(10,14,30,0.8); z-index:99999; align-items:center; justify-content:center; padding:16px;">
-        <div style="background:#1E293B; color:#F8FAFC; border:1px solid #334155; border-radius:18px; width:100%; max-width:680px; max-height:85vh; display:flex; flex-direction:column; padding:24px; position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.5);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                <h3 style="font-size:18px; font-weight:800;">📰 Official Sources & Community Directory</h3>
-                <button onclick="document.getElementById('pressDirectoryModal').style.display='none'" style="background:#334155; border:none; color:#FFF; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button>
-            </div>
-            <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
-                <button type="button" class="prs-dir-pill active" onclick="loadPressDirectory('all', this)" style="padding:5px 12px; border-radius:100px; background:#0F6E6E; color:#FFF; border:none; font-size:12px; font-weight:700; cursor:pointer;">All Contacts</button>
-                <button type="button" class="prs-dir-pill" onclick="loadPressDirectory('police', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Police Command</button>
-                <button type="button" class="prs-dir-pill" onclick="loadPressDirectory('volunteer', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Verified Responders</button>
-                <button type="button" class="prs-dir-pill" onclick="loadPressDirectory('journalist', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Press Bureau</button>
-                <button type="button" class="prs-dir-pill" onclick="loadPressDirectory('user', this)" style="padding:5px 12px; border-radius:100px; background:#334155; color:#CBD5E1; border:none; font-size:12px; font-weight:700; cursor:pointer;">Citizens</button>
-            </div>
-            <div id="pressDirectoryList" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
-                <div style="text-align:center; padding:30px; color:#94A3B8;">Loading official sources...</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
+    <!-- Toast -->
     <div class="toast" id="toast">
         <span id="toastIcon">✨</span>
         <span id="toastMsg">Notification message</span>
     </div>
 
-    <script src="js/location.js"></script>
     <script src="js/api.js"></script>
     <script>
-        let currentUser = null;
-        let activeTab = 'feed';
-        let selectedCategory = 'COMMUNITY';
-        let pendingMediaFiles = [];
-        let pendingMediaUrls = [];
-        let activeChatUserId = null;
-
-        // One-time Journalist Registration
-        async function submitPressReg() {
-            const name = document.getElementById('regName').value.trim();
-            const pressId = document.getElementById('regPressId').value.trim();
-            const pass = document.getElementById('regPass').value;
-            const conf = document.getElementById('regConf').value;
-            const alertBox = document.getElementById('regAlertBox');
-
-            if (!name || !pressId || !pass) {
-                alertBox.style.display = 'block';
-                alertBox.textContent = 'Please fill in all fields.';
-                return;
-            }
-            if (pass !== conf) {
-                alertBox.style.display = 'block';
-                alertBox.textContent = 'Passwords do not match.';
-                return;
-            }
-            if (pass.length < 6) {
-                alertBox.style.display = 'block';
-                alertBox.textContent = 'Password must be at least 6 characters.';
-                return;
-            }
-
-            try {
-                const res = await apiCall('/auth/register', 'POST', {
-                    name: name,
-                    email: `press_${Date.now()}@press.perimeter.org`,
-                    password: pass,
-                    role: 'journalist',
-                    phone: '+91 98444 55667',
-                    dynamic_field_1: pressId,
-                    dynamic_field_2: 'The Deccan Herald'
-                });
-
-                if (res && res.token) {
-                    localStorage.setItem('perimeter_token', res.token);
-                    localStorage.setItem('perimeter_user', JSON.stringify(res.user));
-                    document.getElementById('regOverlay').classList.remove('show');
-                    initJournalistDashboard();
-                }
-            } catch (err) {
-                alertBox.style.display = 'block';
-                alertBox.textContent = err.message || 'Registration failed.';
-            }
-        }
+        let currentPressUser = null;
+        let pressName = 'Journalist';
+        let pressAvatar = 'RN';
 
         async function initJournalistDashboard() {
-            currentUser = await guardProtectedPage(['journalist']);
-            if (!currentUser) return;
+            currentPressUser = await guardProtectedPage(['journalist']);
+            if (!currentPressUser) return;
 
-            const name = currentUser.name || 'Journalist';
-            const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'J';
+            pressName = currentPressUser.name || 'Journalist';
+            pressAvatar = pressName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'J';
 
-            document.getElementById('topbarUserName').textContent = `${name} (Verified Press)`;
-            document.getElementById('headerUserName').textContent = name.split(' ')[0];
-            document.getElementById('headerUserAvatar').textContent = initials;
-            document.getElementById('composerAvatar').textContent = initials;
-            document.getElementById('profileAvatarBig').textContent = initials;
-            document.getElementById('profileNameBig').textContent = name;
-            document.getElementById('profileHandleBig').textContent = currentUser.username || `@${name.toLowerCase().replace(' ', '_')}`;
-            document.getElementById('prPressId').textContent = currentUser.dynamic_field_1 || 'PID-2026-044';
-            document.getElementById('prOutlet').textContent = currentUser.dynamic_field_2 || 'The Deccan Herald';
-            document.getElementById('prPhone').textContent = currentUser.phone || '+91 98444 55667';
-            document.getElementById('prEmail').textContent = currentUser.email || 'rhea.nair@press.perimeter.org';
+            const topNameEl = document.getElementById('topbarPressName');
+            if (topNameEl) topNameEl.textContent = `${pressName} (Verified Journalist)`;
+            const navNameEl = document.getElementById('navPressName');
+            if (navNameEl) navNameEl.textContent = `${pressName.split(' ')[0]} (Press)`;
+            const avEl = document.getElementById('pressAvatar');
+            if (avEl) avEl.textContent = pressAvatar;
 
-            // Load Social and Press Data
-            loadStories();
-            loadFeedPosts('ALL');
-            loadPressCases();
+            await loadPressCases();
         }
 
-        function switchView(viewName) {
-            activeTab = viewName;
-            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
-
-            const panel = document.getElementById(`panel${viewName.charAt(0).toUpperCase() + viewName.slice(1)}`);
-            const tab = document.getElementById(`tab${viewName.charAt(0).toUpperCase() + viewName.slice(1)}`);
-
-            if (panel) panel.classList.add('active');
-            if (tab) tab.classList.add('active');
-
-            if (viewName === 'press') {
-                loadPressCases();
-            } else if (viewName === 'explore') {
-                loadExploreData();
-            } else if (viewName === 'reels') {
-                loadReels();
-            } else if (viewName === 'messages') {
-                loadConversations();
-            } else if (viewName === 'channels') {
-                loadChannels();
-            }
-        }
-
-        // ================= PRESS DESK OPERATIONS =================
         async function loadPressCases() {
             try {
                 const cases = await apiCall('/case/');
-                const allCases = Array.isArray(cases) ? cases : [];
                 const caseSelect = document.getElementById('reportCaseSelect');
-                const caseList = document.getElementById('pressCasesList');
-                const countEl = document.getElementById('pressCasesCount');
+                const caseList = document.querySelector('.case-list');
 
-                if (caseSelect && allCases.length > 0) {
-                    caseSelect.innerHTML = '<option value="">-- No Direct Case Link --</option>' + allCases.map(c => `
-                        <option value="${c.case_id}">${c.case_id} — ${c.title} (${c.status})</option>
-                    `).join('');
+                if (caseSelect && cases && cases.length > 0) {
+                    caseSelect.innerHTML = '<option value="">-- Optional: Link Directly to Active Case ID --</option>';
+                    cases.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.case_id;
+                        opt.textContent = `${c.case_id} — ${c.title} (${c.status})`;
+                        caseSelect.appendChild(opt);
+                    });
                 }
 
-                if (countEl) countEl.textContent = `${allCases.length} CASES`;
-
-                if (caseList) {
-                    if (allCases.length === 0) {
-                        caseList.innerHTML = '<div style="color:var(--gray); font-size:12px;">No active cases.</div>';
-                    } else {
-                        caseList.innerHTML = allCases.map(c => `
-                            <div class="case-card">
-                                <div class="case-top">
-                                    <span class="case-id">${c.case_id}</span>
-                                    <span class="case-status ${c.status === 'RESOLVED' ? 'resolved' : 'open'}">${c.status || 'ACTIVE'}</span>
+                if (caseList && cases && cases.length > 0) {
+                    caseList.innerHTML = '';
+                    cases.forEach(c => {
+                        const card = document.createElement('div');
+                        card.className = 'case-card';
+                        card.id = `press_case_${c.case_id}`;
+                        const timeStr = new Date(c.opened_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        card.innerHTML = `
+                            <div class="case-header">
+                                <div>
+                                    <div class="case-id">${c.case_id} · ${c.victim_identifier}</div>
+                                    <div class="case-title">${c.title}</div>
+                                    <div class="case-meta">📍 ${c.location} · Opened: ${timeStr}</div>
                                 </div>
-                                <div style="font-weight:700; font-size:13px; color:var(--ink);">${c.title || 'Incident Case'}</div>
-                                <div style="font-size:11.5px; color:var(--gray); margin-top:2px;">📍 ${c.location || 'Metro Area'}</div>
-                                <button class="btn-attach-note" onclick="attachNoteToCase('${c.case_id}')">Attach Press Report Note →</button>
+                                <span class="case-badge ${c.status === 'RESOLVED' ? 'resolved' : 'active'}">${c.status.replace('_', ' ')}</span>
                             </div>
-                        `).join('');
-                    }
+                            <div style="margin-top: 10px; display: flex; gap: 8px;">
+                                <button class="btn-police-act resolve" style="padding: 6px 12px; font-size: 12px;" onclick="attachNoteToCase('${c.case_id}')">
+                                    📰 Attach Press Note
+                                </button>
+                            </div>
+                        `;
+                        caseList.appendChild(card);
+                    });
                 }
             } catch (err) {
                 console.warn('Could not load press cases:', err.message);
             }
+        }
+
+        function addTimelineEntry(title, desc) {
+            const container = document.getElementById('timelineContainer');
+            if (!container) return;
+            const item = document.createElement('div');
+            item.className = 'timeline-item';
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            item.innerHTML = `
+                <div class="timeline-time">${timeStr} · JOURNALIST REPORT</div>
+                <div><b>${title}:</b> ${desc}</div>
+            `;
+            container.insertBefore(item, container.firstChild);
         }
 
         async function handlePublishReport(event) {
@@ -1748,14 +819,14 @@
             const content = document.getElementById('reportContent').value.trim();
 
             if (!headline || !content) {
-                showToast('Please provide a headline and summary.', '⚠️');
+                toast('Please provide a headline and article summary.', '⚠️');
                 return;
             }
 
             try {
-                showToast('Publishing verified bulletin... ⏳', '📰');
+                // 1. Save press post to feed
                 await apiCall('/feed/', 'POST', {
-                    author_name: currentUser?.name || 'Journalist',
+                    author_name: pressName,
                     author_role: 'journalist',
                     title: headline,
                     content: content,
@@ -1763,544 +834,77 @@
                     location_name: location || 'Press Desk Citywide'
                 });
 
+                // 2. If attached to a case, link press report in DB
                 if (caseId) {
                     await apiCall(`/case/${caseId}/link-press`, 'POST', {
                         article_id: 'art_' + Date.now(),
                         title: headline,
-                        outlet: currentUser?.dynamic_field_2 || 'The Deccan Herald',
-                        journalist_name: currentUser?.name || 'Journalist',
+                        outlet: currentPressUser?.dynamic_field_2 || 'The Deccan Herald',
+                        journalist_name: pressName,
                         url: '#' + caseId,
                         published_at: new Date().toISOString()
                     });
                 }
 
-                addTimelineEntry('Verified Bulletin Published', `${headline} (${location})${caseId ? ' attached to ' + caseId : ''}`);
-                
+                const feed = document.getElementById('pressFeedList');
+                if (feed) {
+                    const item = document.createElement('div');
+                    item.className = 'press-feed-item';
+                    item.innerHTML = `
+                        <div class="press-feed-header">
+                            <span class="badge-verified">Verified Press Bulletin</span>
+                            <span style="font-size: 11.5px; color: var(--gray);">${caseId ? 'Linked to ' + caseId + ' · ' : ''}Just now · ${location}</span>
+                        </div>
+                        <div class="press-feed-title">${headline}</div>
+                        <div class="press-feed-body">${content}</div>
+                        <div class="press-feed-footer">
+                            <span>Author: ${pressName} (${currentPressUser?.dynamic_field_2 || 'Press Outlet'})</span>
+                            <span style="color: var(--teal); font-weight: 600; cursor: pointer;" onclick="toast('Press link copied!', '↗️')">Share Article ↗️</span>
+                        </div>
+                    `;
+                    feed.prepend(item);
+                }
+
+                addTimelineEntry('Press Report Published in Database', `${headline} (${location})${caseId ? ' attached to ' + caseId : ''}.`);
+
                 let countEl = document.getElementById('statArticles');
-                if (countEl) countEl.textContent = String(parseInt(countEl.textContent || '34') + 1);
+                if (countEl) {
+                    let count = parseInt(countEl.textContent) + 1;
+                    countEl.textContent = count;
+                }
 
                 document.getElementById('reportHeadline').value = '';
                 document.getElementById('reportLocation').value = '';
                 document.getElementById('reportContent').value = '';
                 document.getElementById('reportCaseSelect').value = '';
 
-                showToast('📰 Verified Safety Bulletin published and synced to feeds!', '🚀');
-                loadFeedPosts('ALL');
+                toast('📰 Verified Safety Bulletin saved to database and broadcasted!', '🚀');
             } catch (err) {
-                showToast(err.message || 'Could not publish report.', '❌');
+                toast(err.message || 'Could not publish press report.', '❌');
             }
         }
 
         async function attachNoteToCase(caseId) {
-            const note = prompt(`Enter press update or investigation note for ${caseId}:`, 'Press bureau verified on-site responder checkpoints active.');
+            const note = prompt(`Enter press update or investigation note for ${caseId}:`, 'Press team verified local patrol response on site.');
             if (note) {
                 try {
                     await apiCall(`/case/${caseId}/timeline`, 'POST', {
                         timestamp: new Date().toISOString(),
                         title: 'Press Field Note Attached',
-                        description: `${currentUser?.name || 'Journalist'}: ${note}`,
+                        description: `${pressName}: ${note}`,
                         actor_role: 'journalist',
-                        actor_name: currentUser?.name || 'Journalist'
+                        actor_name: pressName
                     });
-                    addTimelineEntry(`Attached to ${caseId}`, `${currentUser?.name || 'Journalist'}: ${note}`);
-                    showToast(`Note attached to case ${caseId}!`, '📰');
+                    addTimelineEntry(`Attached to ${caseId}`, `${pressName}: ${note}`);
+                    toast(`Note attached to case ${caseId}!`, '📰');
                 } catch (err) {
-                    showToast(err.message || 'Could not attach note.', '⚠️');
+                    toast(err.message || 'Could not attach note.', '⚠️');
                 }
             }
         }
 
-        function addTimelineEntry(title, desc) {
-            const containers = [document.getElementById('timelineContainer'), document.getElementById('sideTimelineContainer')];
-            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            containers.forEach(c => {
-                if (!c) return;
-                const item = document.createElement('div');
-                item.className = 'timeline-item';
-                item.innerHTML = `<div class="timeline-time">${timeStr} · PRESS ACTION</div><div><b>${title}:</b> ${desc}</div>`;
-                c.insertBefore(item, c.firstChild);
-            });
-        }
-
-        // ================= STORIES & FEED LOGIC =================
-        async function loadStories() {
-            const scroll = document.getElementById('storiesScroll');
-            try {
-                const stories = await SocialAPI.getStories();
-                const list = Array.isArray(stories) ? stories : [];
-                scroll.innerHTML = `
-                    <div class="story-node" onclick="openStoryUploader()">
-                        <div class="add-story-btn">+</div>
-                        <span class="story-label">Your Story</span>
-                    </div>
-                ` + list.map(s => `
-                    <div class="story-node" onclick="viewStory('${s.id}')">
-                        <div class="story-ring">
-                            <div class="story-avatar">${s.author_avatar || s.author_name.slice(0,2).toUpperCase()}</div>
-                        </div>
-                        <span class="story-label">${s.author_name.split(' ')[0]}</span>
-                    </div>
-                `).join('');
-            } catch (err) {
-                console.warn('Stories load error:', err.message);
-            }
-        }
-
-        async function openStoryUploader() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*,video/*';
-            input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                try {
-                    showToast('Uploading story... ⏳', '📷');
-                    const res = await MediaAPI.uploadFile(file);
-                    await SocialAPI.createStory({
-                        author_name: currentUser?.name || 'Journalist',
-                        author_role: 'journalist',
-                        media_url: res.url,
-                        caption: 'Live safety dispatch'
-                    });
-                    showToast('Story published successfully!', '✨');
-                    loadStories();
-                } catch (err) {
-                    showToast(`Story upload failed: ${err.message}`, '❌');
-                }
-            };
-            input.click();
-        }
-
-        function selectCategory(el, cat) {
-            selectedCategory = cat;
-            document.querySelectorAll('#postCategorySelector .category-pill').forEach(p => p.classList.remove('selected'));
-            el.classList.add('selected');
-        }
-
-        function handleDeviceMediaSelected(event) {
-            const files = Array.from(event.target.files);
-            pendingMediaFiles.push(...files);
-            renderMediaPreviews();
-        }
-
-        function promptMediaUrl() {
-            const url = prompt('Enter public Image/Video URL:');
-            if (url && url.startsWith('http')) {
-                pendingMediaUrls.push(url);
-                renderMediaPreviews();
-            }
-        }
-
-        function renderMediaPreviews() {
-            const container = document.getElementById('mediaPreviewRow');
-            container.innerHTML = '';
-            pendingMediaFiles.forEach((f, idx) => {
-                const item = document.createElement('div');
-                item.className = 'media-preview-item';
-                const url = URL.createObjectURL(f);
-                if (f.type.startsWith('video/')) {
-                    item.innerHTML = `<video src="${url}" muted></video><button class="btn-remove-preview" onclick="removePendingFile(${idx})">✕</button>`;
-                } else {
-                    item.innerHTML = `<img src="${url}"><button class="btn-remove-preview" onclick="removePendingFile(${idx})">✕</button>`;
-                }
-                container.appendChild(item);
-            });
-            pendingMediaUrls.forEach((u, idx) => {
-                const item = document.createElement('div');
-                item.className = 'media-preview-item';
-                item.innerHTML = `<img src="${u}"><button class="btn-remove-preview" onclick="removePendingUrl(${idx})">✕</button>`;
-                container.appendChild(item);
-            });
-        }
-
-        function removePendingFile(idx) {
-            pendingMediaFiles.splice(idx, 1);
-            renderMediaPreviews();
-        }
-
-        function removePendingUrl(idx) {
-            pendingMediaUrls.splice(idx, 1);
-            renderMediaPreviews();
-        }
-
-        async function submitNewPost() {
-            const input = document.getElementById('postContentInput');
-            const content = input.value.trim();
-            if (!content && pendingMediaFiles.length === 0 && pendingMediaUrls.length === 0) {
-                showToast('Please enter text or attach media.', '⚠️');
-                return;
-            }
-
-            try {
-                showToast('Publishing post... ⏳', '🚀');
-                let uploadedUrls = [...pendingMediaUrls];
-                if (pendingMediaFiles.length > 0) {
-                    const res = await MediaAPI.uploadMultiple(pendingMediaFiles);
-                    if (res && res.urls) uploadedUrls.push(...res.urls);
-                }
-
-                await SocialAPI.createPost({
-                    author_name: currentUser?.name || 'Journalist',
-                    author_role: 'journalist',
-                    content: content,
-                    category: selectedCategory,
-                    tag: selectedCategory,
-                    location_name: 'Press Bureau Metro Area',
-                    media_urls: uploadedUrls
-                });
-
-                input.value = '';
-                pendingMediaFiles = [];
-                pendingMediaUrls = [];
-                renderMediaPreviews();
-                showToast('Post published to community feed!', '✨');
-                loadFeedPosts('ALL');
-            } catch (err) {
-                showToast(`Post failed: ${err.message}`, '❌');
-            }
-        }
-
-        async function loadFeedPosts(filter = 'ALL') {
-            const container = document.getElementById('postsFeedContainer');
-            try {
-                const posts = await SocialAPI.getFeed(filter);
-                const list = Array.isArray(posts) ? posts : [];
-                if (list.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--gray);">No posts in this category yet.</div>';
-                    return;
-                }
-
-                container.innerHTML = list.map(p => {
-                    const authorInitials = p.author_name ? p.author_name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() : 'U';
-                    const badgeClass = `badge-${p.author_role || 'user'}`;
-                    const timeStr = p.created_at ? new Date(p.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent';
-
-                    let mediaHtml = '';
-                    if (p.media_urls && p.media_urls.length > 0) {
-                        mediaHtml = `
-                            <div class="post-media-grid">
-                                ${p.media_urls.map(u => u.endsWith('.mp4') || u.endsWith('.webm') ? `<video src="${u}" controls></video>` : `<img src="${u}" loading="lazy">`).join('')}
-                            </div>
-                        `;
-                    }
-
-                    return `
-                        <div class="post-card" id="post_${p.id}">
-                            <div class="post-author-row">
-                                <div class="author-info">
-                                    <a href="profile.html?id=${p.author_id || ''}" class="author-avatar">${authorInitials}</a>
-                                    <div>
-                                        <div style="display: flex; align-items: center; gap: 6px;">
-                                            <a href="profile.html?id=${p.author_id || ''}" class="author-name-link">${p.author_name}</a>
-                                            <span class="author-badge ${badgeClass}">${p.author_role || 'Citizen'}</span>
-                                        </div>
-                                        <div class="post-time">${timeStr} · 📍 ${p.location_name || 'Nearby Area'}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="post-content">${p.content}</div>
-                            ${mediaHtml}
-                            <div class="post-actions-bar">
-                                <button class="post-action-btn ${p.is_liked ? 'liked' : ''}" onclick="toggleLikePost('${p.id}', this)">
-                                    <span>❤️</span> <span class="like-cnt">${p.likes_count || 0}</span>
-                                </button>
-                                <button class="post-action-btn" onclick="toggleComments('${p.id}')">
-                                    <span>💬</span> <span>${p.comments ? p.comments.length : 0} Comments</span>
-                                </button>
-                                <button class="post-action-btn" onclick="sharePost('${p.id}')">
-                                    <span>↗️</span> Share
-                                </button>
-                            </div>
-                            <div class="comments-list" id="comments_${p.id}" style="display: none;">
-                                <div id="comments_container_${p.id}">
-                                    ${p.comments ? p.comments.map(c => `
-                                        <div class="comment-item">
-                                            <div class="comment-box">
-                                                <span class="comment-author">${c.author_name}:</span>
-                                                <span>${c.text}</span>
-                                            </div>
-                                        </div>
-                                    `).join('') : ''}
-                                </div>
-                                <div class="comment-input-row">
-                                    <input type="text" class="comment-input" id="input_comment_${p.id}" placeholder="Write a response..." onkeydown="if(event.key==='Enter') submitComment('${p.id}')">
-                                    <button class="btn-submit-post" style="padding: 4px 12px; font-size: 11px;" onclick="submitComment('${p.id}')">Reply</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            } catch (err) {
-                container.innerHTML = `<div style="color: var(--coral); padding: 20px; text-align: center;">Error loading feed: ${err.message}</div>`;
-            }
-        }
-
-        function filterFeed(cat, btn) {
-            document.querySelectorAll('.feed-filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            loadFeedPosts(cat);
-        }
-
-        async function toggleLikePost(postId, btn) {
-            try {
-                const res = await SocialAPI.likePost(postId);
-                btn.classList.toggle('liked');
-                const cnt = btn.querySelector('.like-cnt');
-                if (cnt && res.likes_count !== undefined) cnt.textContent = res.likes_count;
-            } catch (err) {
-                showToast(`Like failed: ${err.message}`, '⚠️');
-            }
-        }
-
-        function toggleComments(postId) {
-            const list = document.getElementById(`comments_${postId}`);
-            if (list) list.style.display = list.style.display === 'none' ? 'flex' : 'none';
-        }
-
-        async function submitComment(postId) {
-            const input = document.getElementById(`input_comment_${postId}`);
-            const text = input.value.trim();
-            if (!text) return;
-            try {
-                await SocialAPI.addComment(postId, {
-                    author_name: currentUser?.name || 'Journalist',
-                    author_role: 'journalist',
-                    text: text
-                });
-                input.value = '';
-                const container = document.getElementById(`comments_container_${postId}`);
-                if (container) {
-                    const item = document.createElement('div');
-                    item.className = 'comment-item';
-                    item.innerHTML = `<div class="comment-box"><span class="comment-author">${currentUser?.name || 'Journalist'}:</span> <span>${text}</span></div>`;
-                    container.appendChild(item);
-                }
-                showToast('Comment posted', '💬');
-            } catch (err) {
-                showToast(`Comment failed: ${err.message}`, '❌');
-            }
-        }
-
-        function sharePost(postId) {
-            navigator.clipboard.writeText(window.location.origin + window.location.pathname + '#post_' + postId);
-            showToast('Post link copied to clipboard!', '🔗');
-        }
-
-        // ================= EXPLORE & DIRECTORY =================
-        async function loadExploreData() {
-            try {
-                const users = await SocialAPI.searchUsers('');
-                const grid = document.getElementById('exploreUsersGrid');
-                if (!grid) return;
-                grid.innerHTML = (users || []).map(u => `
-                    <div style="background: white; border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: flex; align-items: center; gap: 12px;">
-                        <div class="avatar-circle">${u.avatar || u.name.slice(0,2).toUpperCase()}</div>
-                        <div style="flex: 1;">
-                            <div style="font-weight: 700; font-size: 13.5px;">${u.name}</div>
-                            <div style="font-size: 11.5px; color: var(--gray);">${u.badge_title || u.role}</div>
-                        </div>
-                        <a href="profile.html?id=${u.id}" class="btn-upload-tool" style="font-size: 11px;">Profile</a>
-                    </div>
-                `).join('');
-            } catch (err) {
-                console.warn('Explore load error:', err.message);
-            }
-        }
-
-        function handleExploreSearch(e) {
-            const q = e.target.value.toLowerCase().trim();
-            document.querySelectorAll('#exploreUsersGrid > div').forEach(card => {
-                card.style.display = card.textContent.toLowerCase().includes(q) ? 'flex' : 'none';
-            });
-        }
-
-        async function openPressDirectoryModal() {
-            document.getElementById('pressDirectoryModal').style.display = 'flex';
-            await loadPressDirectory('all');
-        }
-
-        async function loadPressDirectory(role = 'all', btn = null) {
-            if (btn) {
-                document.querySelectorAll('.prs-dir-pill').forEach(b => {
-                    b.style.background = '#334155';
-                    b.style.color = '#CBD5E1';
-                });
-                btn.style.background = '#0F6E6E';
-                btn.style.color = '#FFF';
-            }
-
-            const list = document.getElementById('pressDirectoryList');
-            list.innerHTML = '<div style="text-align:center; padding:30px; color:#94A3B8;">Fetching sources & contacts... ⏳</div>';
-
-            try {
-                const users = await SocialAPI.searchUsers('', role);
-                if (!users || users.length === 0) {
-                    list.innerHTML = '<div style="text-align:center; padding:30px; color:#94A3B8;">No contacts found.</div>';
-                    return;
-                }
-
-                list.innerHTML = users.map(u => `
-                    <div style="background:#0F172A; border:1px solid #334155; border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <div style="width:42px; height:42px; border-radius:50%; background:#134E4A; color:#FFF; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px;">${u.avatar || 'U'}</div>
-                            <div>
-                                <div style="font-weight:700; font-size:14px; color:#FFF;">${u.name} <span style="font-size:11px; padding:2px 8px; border-radius:100px; background:#334155; color:#99F6E4; margin-left:6px;">${u.badge_title}</span></div>
-                                <div style="font-size:12px; color:#94A3B8;">${u.dynamic_field_1 ? u.dynamic_field_1 + ' · ' : ''}${u.location || 'Metro Area'}</div>
-                            </div>
-                        </div>
-                        <a href="profile.html?id=${u.id}" style="padding:6px 12px; border-radius:100px; background:#0F6E6E; color:#FFF; text-decoration:none; font-size:11px; font-weight:700;">View Profile</a>
-                    </div>
-                `).join('');
-            } catch (err) {
-                list.innerHTML = `<div style="color:#EF4444; padding:20px; text-align:center;">Error: ${err.message}</div>`;
-            }
-        }
-
-        // ================= REELS =================
-        async function loadReels() {
-            const container = document.getElementById('reelsContainer');
-            try {
-                const reels = await SocialAPI.getReels();
-                const list = Array.isArray(reels) ? reels : [];
-                if (!list.length) {
-                    container.innerHTML = '<div style="text-align: center; color: var(--gray); padding: 40px;">No safety video stories published yet.</div>';
-                    return;
-                }
-                container.innerHTML = list.map(r => `
-                    <div class="reel-card">
-                        <video src="${r.video_url}" loop controls></video>
-                        <div class="reel-overlay-bottom">
-                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                                <div class="avatar-circle" style="width: 24px; height: 24px; font-size: 10px;">${r.author_name.slice(0,2).toUpperCase()}</div>
-                                <span style="font-weight: 700; font-size: 13px;">${r.author_name}</span>
-                            </div>
-                            <div style="font-size: 13.5px;">${r.caption || 'Verified investigative report & safety bulletin'}</div>
-                        </div>
-                        <div class="reel-actions-side">
-                            <button class="reel-btn">❤️</button>
-                            <button class="reel-btn">💬</button>
-                            <button class="reel-btn">↗️</button>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (err) {
-                console.warn('Reels load error:', err.message);
-            }
-        }
-
-        // ================= MESSAGING =================
-        async function loadConversations() {
-            const list = document.getElementById('convoItemsList');
-            try {
-                const convos = await SocialAPI.getConversations();
-                const arr = Array.isArray(convos) ? convos : [];
-                list.innerHTML = arr.map(c => `
-                    <div class="convo-item ${activeChatUserId === c.user_id ? 'active' : ''}" onclick="selectConversation('${c.user_id}', '${c.name}', '${c.role}')">
-                        <div class="avatar-circle">${c.name.slice(0,2).toUpperCase()}</div>
-                        <div style="flex: 1; overflow: hidden;">
-                            <div style="font-weight: 700; font-size: 13px;">${c.name}</div>
-                            <div style="font-size: 11.5px; color: var(--gray); white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">${c.last_message || 'Verified contact'}</div>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (err) {
-                console.warn('Convos load error:', err.message);
-            }
-        }
-
-        async function selectConversation(userId, name, role) {
-            activeChatUserId = userId;
-            document.getElementById('activeChatName').textContent = name;
-            document.getElementById('activeChatRole').textContent = role || 'Contact';
-            document.getElementById('activeChatAvatar').textContent = name.slice(0,2).toUpperCase();
-            loadChatMessages(userId);
-        }
-
-        async function loadChatMessages(userId) {
-            const area = document.getElementById('chatMessagesContainer');
-            try {
-                const msgs = await SocialAPI.getMessages(userId);
-                const arr = Array.isArray(msgs) ? msgs : [];
-                area.innerHTML = arr.map(m => `
-                    <div class="chat-msg-bubble ${m.sender_id === currentUser?.id ? 'sent' : 'received'}">
-                        ${m.text}
-                        <div style="font-size: 9.5px; opacity: 0.7; text-align: right; margin-top: 2px;">
-                            ${new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </div>
-                    </div>
-                `).join('');
-                area.scrollTop = area.scrollHeight;
-            } catch (err) {
-                console.warn('Messages load error:', err.message);
-            }
-        }
-
-        async function sendChatMessage() {
-            if (!activeChatUserId) {
-                showToast('Please select a conversation first.', '⚠️');
-                return;
-            }
-            const input = document.getElementById('chatMessageInput');
-            const text = input.value.trim();
-            if (!text) return;
-
-            try {
-                await SocialAPI.sendMessage(activeChatUserId, text);
-                input.value = '';
-                loadChatMessages(activeChatUserId);
-            } catch (err) {
-                showToast(`Send failed: ${err.message}`, '❌');
-            }
-        }
-
-        // ================= CHANNELS =================
-        async function loadChannels() {
-            const grid = document.getElementById('channelsGrid');
-            try {
-                const channels = await SocialAPI.getChannels();
-                const arr = Array.isArray(channels) ? channels : [];
-                grid.innerHTML = arr.map(ch => `
-                    <div class="sidebar-card">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                            <div class="avatar-circle" style="background: var(--teal);">${ch.name.slice(0,2).toUpperCase()}</div>
-                            <div>
-                                <div style="font-weight: 700; font-size: 14px;">${ch.name}</div>
-                                <div style="font-size: 11.5px; color: var(--gray);">${ch.members_count || 128} Subscribers</div>
-                            </div>
-                        </div>
-                        <p style="font-size: 12.5px; color: var(--gray); margin-bottom: 14px;">${ch.description || 'Official newsroom & verified emergency broadcast channel.'}</p>
-                        <button class="btn-publish-press" style="width: 100%; padding: 8px; font-size: 12px;" onclick="showToast('Subscribed to ${ch.name}', '📢')">Subscribe to Wire</button>
-                    </div>
-                `).join('');
-            } catch (err) {
-                console.warn('Channels load error:', err.message);
-            }
-        }
-
-        // ================= SOS TRIGGER =================
-        async function triggerSOS() {
-            if (!confirm('TRIGGER EMERGENCY DISTRESS BEACON?')) return;
-            try {
-                const pos = await LocationTracker.getAccuratePosition();
-                await SOSAPI.triggerSOS({
-                    user_name: currentUser?.name || 'Journalist',
-                    trigger_type: 'PRESS_FIELD_EMERGENCY',
-                    severity: 'HIGH',
-                    latitude: pos.latitude,
-                    longitude: pos.longitude
-                });
-                showToast('🚨 EMERGENCY DISTRESS SIGNAL BROADCASTED!', '🚨');
-            } catch (err) {
-                showToast(`SOS Trigger error: ${err.message}`, '❌');
-            }
-        }
-
-        function showToast(msg, icon = '✨', duration = 3500) {
-            const t = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            document.getElementById('toastIcon').textContent = icon;
-            t.classList.add('show');
-            setTimeout(() => { t.classList.remove('show'); }, duration);
+        function toast(msg, icon = '✨') {
+            showToast(msg, icon);
         }
 
         window.addEventListener('DOMContentLoaded', () => {

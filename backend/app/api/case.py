@@ -66,6 +66,30 @@ def get_case_by_id(case_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Case ID not found.")
     return serialize_case(c)
 
+
+@router.post("/{case_id}/resolve")
+def resolve_case(case_id: str, notes: str = "Case resolved and citizen verified safe.", resolved_by: str = "City Police Command", db: Session = Depends(get_db)):
+    """Resolve a case and its linked SOS incident together."""
+    c = db.query(IncidentCase).filter(IncidentCase.case_id == case_id).first()
+    if not c:
+        raise HTTPException(status_code=404, detail="Case ID not found.")
+
+    c.status = "RESOLVED"
+    db.add(TimelineEvent(
+        case_id=case_id,
+        title="Incident Resolved & Case Closed",
+        description=f"Resolution logged by {resolved_by}. Findings: {notes}",
+        actor_role="police",
+        actor_name=resolved_by
+    ))
+
+    sos = db.query(SOSIncident).filter(SOSIncident.case_id == case_id).first()
+    if sos:
+        sos.status = "RESOLVED"
+
+    db.commit()
+    return {"status": "success", "message": f"Case {case_id} resolved successfully.", "case_id": case_id}
+
 @router.post("/{case_id}/timeline")
 def add_timeline_event(case_id: str, entry: TimelineEntry, db: Session = Depends(get_db)):
     """
@@ -83,28 +107,9 @@ def add_timeline_event(case_id: str, entry: TimelineEntry, db: Session = Depends
         actor_name=entry.actor_name,
         timestamp=entry.timestamp
     )
-
     db.add(event)
-
-        # Mark the case resolved when the police records the closure event.
-    if entry.title == "Incident Resolved & Closed":
-        c.status = "RESOLVED"
-
-        # Also resolve the SOS incident linked to this case.
-        sos = db.query(SOSIncident).filter(
-            SOSIncident.case_id == case_id
-        ).first()
-
-        if sos:
-            sos.status = "RESOLVED"
-
     db.commit()
-
-    return {
-        "status": "success",
-        "message": f"Timeline event added to {case_id}.",
-        "case_status": c.status
-    }
+    return {"status": "success", "message": f"Timeline event added to {case_id}."}
 
 @router.post("/{case_id}/link-press")
 def link_press_article(case_id: str, article: PressArticleLink, db: Session = Depends(get_db)):

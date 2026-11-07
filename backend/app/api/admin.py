@@ -1,380 +1,236 @@
 """
-PERIMETER Admin Management & System Governance API
-Comprehensive data visibility, user administration, incident auditing, and real database analytics.
+PERIMETER Admin Management API
 """
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from sqlalchemy import func
-from typing import List, Dict, Optional
+from sqlalchemy import func, or_
 from datetime import datetime, timedelta
+from app.models.admin_tracking import LoginHistory, UserPresence, AdminAuditLog
+from typing import List, Dict
 
 from app.db.session import get_db
 from app.models.user import User
-from app.models.sos import SOSIncident, Responder
+from app.models.sos import SOSIncident
 from app.models.feed import FeedPost
 from app.models.case import IncidentCase
-from app.models.location import UserLocation
-from app.models.crime import AreaSafetyScore, CrimeStatistic
-from app.models.notification import Notification
-from app.core.security import require_role
+from app.schemas.admin import AdminStatsResponse, SystemStatusResponse
+from app.schemas.auth import UserProfileResponse
+from app.core.security import get_current_user
+from app.models.case import TimelineEvent
 
-router = APIRouter(prefix="/admin", tags=["Admin Management & Database Visibility"])
+router = APIRouter(prefix="/admin", tags=["Admin Management & System Control"])
 
-def get_user_activity_status(last_active_at: Optional[datetime], is_active: bool) -> str:
-    """Computes dynamic activity status from last_active_at timestamp."""
-    if not is_active:
-        return "inactive"
-    if not last_active_at:
-        return "active"
-    delta = (datetime.utcnow() - last_active_at).total_seconds()
-    if delta < 900:  # Within 15 minutes
-        return "online"
-    elif delta < 86400:  # Within 24 hours
-        return "recently_active"
-    return "active"
+def require_admin(user: User):
+    if user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required.")
 
 @router.get("/users")
-def get_admin_users(
-    role: Optional[str] = None,
-    current_user: User = Depends(require_role(["admin"])),
-    db: Session = Depends(get_db)
-):
-    """
-    Admin-only user governance directory:
-    Displays all registered personas with live activity status based on last_active_at.
-    Strict Security: Never exposes password or password hashes.
-    """
+def admin_users(q: str = "", role: str = "", limit: int = 100, offset: int = 0,
+               db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    require_admin(current_user)
     query = db.query(User)
-    if role and role.strip() and role.strip().lower() != "all":
-        query = query.filter(User.role == role.strip().lower())
-    
-    users = query.order_by(User.created_at.desc()).all()
-    results = []
-    for u in users:
-        status_label = get_user_activity_status(u.last_active_at, u.is_active if hasattr(u, "is_active") else True)
-        results.append({
-            "id": u.id,
-            "name": u.name,
-            "username": u.username,
-            "email": u.email,
-            "phone": u.phone,
-            "role": u.role,
-            "badge_title": u.badge_title,
-            "status": status_label,
-            "is_active": getattr(u, "is_active", True),
-            "last_active_at": getattr(u, "last_active_at", None),
-            "created_at": u.created_at,
-            "dynamic_field_1": u.dynamic_field_1,
-            "dynamic_field_2": u.dynamic_field_2,
-            "followers_count": u.followers_count or 0,
-            "following_count": u.following_count or 0
-        })
-    return results
-
-@router.get("/statistics")
-@router.get("/overview")
-def get_detailed_admin_statistics(
-    current_user: User = Depends(require_role(["admin"])),
-    db: Session = Depends(get_db)
-):
-    """
-    Aggregates comprehensive relational database statistics across all modules.
-    """
+    if role:
+        query = query.filter(User.role == role)
+    if q.strip():
+        term = f"%{q.strip()}%"
+        query = query.filter(or_(User.name.ilike(term), User.email.ilike(term), User.phone.ilike(term), User.id.ilike(term), User.dynamic_field_1.ilike(term)))
+    total = query.count()
+    users = query.order_by(User.created_at.desc()).offset(max(0, offset)).limit(max(1, min(limit, 200))).all()
     now = datetime.utcnow()
-    one_day_ago = now - timedelta(days=1)
-    fifteen_mins_ago = now - timedelta(minutes=15)
+    return {"total": total, "users": [{"id":u.id,"name":u.name,"username":u.username,"email":u.email,"phone":u.phone,"role":u.role,"badge_title":u.badge_title,"location":u.location,"verified_details":u.dynamic_field_1,"organization_or_area":u.dynamic_field_2,"created_at":u.created_at,"last_seen":(p.last_seen if (p:=db.query(UserPresence).filter(UserPresence.user_id==u.id).first()) else None),"online":bool(p and p.last_seen >= now-timedelta(seconds=90))} for u in users]}
 
-    # USERS Metrics
+@router.get("/online-users")
+def online_users(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    require_admin(current_user)
+    cutoff=datetime.utcnow()-timedelta(seconds=90)
+    rows=db.query(UserPresence).filter(UserPresence.last_seen>=cutoff).order_by(UserPresence.last_seen.desc()).all()
+    return [{"user_id":p.user_id,"name":(db.query(User.name).filter(User.id==p.user_id).scalar() or "Unknown"),"role":(db.query(User.role).filter(User.id==p.user_id).scalar() or "unknown"),"last_seen":p.last_seen} for p in rows]
+
+@router.get("/login-history")
+def login_history(limit:int=100, db:Session=Depends(get_db), current_user:User=Depends(get_current_user)):
+    require_admin(current_user)
+    rows=db.query(LoginHistory).order_by(LoginHistory.occurred_at.desc()).limit(max(1,min(limit,500))).all()
+    return [{"id":r.id,"user_id":r.user_id,"identity":r.identity,"success":r.success,"occurred_at":r.occurred_at} for r in rows]
+
+@router.post("/heartbeat")
+def heartbeat(db:Session=Depends(get_db), current_user:User=Depends(get_current_user)):
+    p=db.query(UserPresence).filter(UserPresence.user_id==current_user.id).first()
+    if p is None: p=UserPresence(user_id=current_user.id); db.add(p)
+    p.last_seen=datetime.utcnow(); db.commit()
+    return {"ok":True,"last_seen":p.last_seen}
+
+@router.get("/storage")
+def storage(db:Session=Depends(get_db), current_user:User=Depends(get_current_user)):
+    require_admin(current_user)
+    from app.db.session import engine
+    from sqlalchemy import text
+    size=None
+    if engine.url.database and engine.url.database != ":memory:":
+        import os
+        try: size=os.path.getsize(engine.url.database)
+        except OSError: pass
+    return {"database_dialect":engine.dialect.name,"database_size_bytes":size,"note":"Media storage measurement depends on configured upload directory or object storage."}
+
+
+@router.get("/stats", response_model=AdminStatsResponse)
+def get_admin_stats(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Retrieve real-time platform metrics for administrative dashboard.
+    """
+    require_admin(current_user)
     total_users = db.query(User).count()
-    online_users = db.query(User).filter(User.last_active_at >= fifteen_mins_ago).count()
-    new_users_24h = db.query(User).filter(User.created_at >= one_day_ago).count()
     
+    # Group users by role
     role_counts = db.query(User.role, func.count(User.id)).group_by(User.role).all()
     users_by_role = {role: count for role, count in role_counts}
     for r in ["user", "volunteer", "police", "journalist", "admin"]:
         if r not in users_by_role:
             users_by_role[r] = 0
 
-    # SOS & INCIDENTS Metrics
-    total_sos = db.query(SOSIncident).count()
-    active_sos = db.query(SOSIncident).filter(SOSIncident.status.in_(["ACTIVE_DISPATCH", "ACKNOWLEDGED"])).count()
-    resolved_sos = db.query(SOSIncident).filter(SOSIncident.status == "RESOLVED").count()
-    
-    total_cases = db.query(IncidentCase).count()
-    active_cases = db.query(IncidentCase).filter(IncidentCase.status != "RESOLVED").count()
-    resolved_cases = db.query(IncidentCase).filter(IncidentCase.status == "RESOLVED").count()
-
-    # Incidents by severity
-    sev_counts = db.query(SOSIncident.severity, func.count(SOSIncident.incident_id)).group_by(SOSIncident.severity).all()
-    incidents_by_severity = {sev: count for sev, count in sev_counts}
-
-    # RESPONDERS & LOCATIONS
-    total_responders = db.query(Responder).count()
-    active_locations = db.query(UserLocation).filter(UserLocation.is_current == True).count()
-    police_count = users_by_role.get("police", 0)
-    volunteer_count = users_by_role.get("volunteer", 0)
-
-    # SAFETY & CRIME
-    total_crime_stats = db.query(CrimeStatistic).count()
-    area_scores = db.query(AreaSafetyScore).all()
-    high_risk_areas = [a.area_name for a in area_scores if a.risk_score >= 65.0]
-    moderate_risk_areas = [a.area_name for a in area_scores if 40.0 <= a.risk_score < 65.0]
-    lower_risk_areas = [a.area_name for a in area_scores if a.risk_score < 40.0]
-
-    return {
-        "status": "OPERATIONAL",
-        "timestamp": now.isoformat(),
-        "users": {
-            "total": total_users,
-            "online_recently": online_users,
-            "new_24h": new_users_24h,
-            "by_role": users_by_role
-        },
-        "incidents": {
-            "total_cases": total_cases,
-            "active_cases": active_cases,
-            "resolved_cases": resolved_cases,
-            "total_sos": total_sos,
-            "active_sos": active_sos,
-            "resolved_sos": resolved_sos,
-            "by_severity": incidents_by_severity,
-            "avg_dispatch_time_mins": 3.2
-        },
-        "responders": {
-            "police_units": police_count,
-            "verified_volunteers": volunteer_count,
-            "total_dispatches": total_responders,
-            "active_tracked_locations": active_locations
-        },
-        "safety_zones": {
-            "high_risk_count": len(high_risk_areas),
-            "high_risk_areas": high_risk_areas,
-            "moderate_risk_count": len(moderate_risk_areas),
-            "moderate_risk_areas": moderate_risk_areas,
-            "lower_risk_count": len(lower_risk_areas),
-            "lower_risk_areas": lower_risk_areas,
-            "ncrb_records_loaded": total_crime_stats
-        }
-    }
-
-@router.get("/incidents")
-def get_admin_incidents(
-    status_filter: Optional[str] = None,
-    current_user: User = Depends(require_role(["admin"])),
-    db: Session = Depends(get_db)
-):
-    """Admin-only audit list of all incidents with full details."""
-    query = db.query(SOSIncident)
-    if status_filter and status_filter.strip().upper() != "ALL":
-        query = query.filter(SOSIncident.status == status_filter.strip().upper())
-    
-    incidents = query.order_by(SOSIncident.created_at.desc()).all()
-    results = []
-    for inc in incidents:
-        results.append({
-            "incident_id": inc.incident_id,
-            "user_id": inc.user_id,
-            "user_name": inc.user_name,
-            "phone": inc.phone,
-            "trigger_type": inc.trigger_type,
-            "severity": inc.severity,
-            "notes": inc.notes,
-            "status": inc.status,
-            "latitude": inc.latitude,
-            "longitude": inc.longitude,
-            "address": inc.address,
-            "case_id": inc.case_id,
-            "created_at": inc.created_at,
-            "resolved_at": inc.resolved_at,
-            "resolved_by": inc.resolved_by,
-            "responders_count": len(inc.responders)
-        })
-    return results
-
-@router.get("/sos")
-def get_admin_sos_events(
-    current_user: User = Depends(require_role(["admin"])),
-    db: Session = Depends(get_db)
-):
-    """Admin-only list of all SOS emergency dispatch events."""
-    sos_events = db.query(SOSIncident).order_by(SOSIncident.created_at.desc()).all()
-    return [
-        {
-            "incident_id": s.incident_id,
-            "user_name": s.user_name,
-            "status": s.status,
-            "severity": s.severity,
-            "trigger_type": s.trigger_type,
-            "latitude": s.latitude,
-            "longitude": s.longitude,
-            "address": s.address,
-            "created_at": s.created_at,
-            "case_id": s.case_id
-        }
-        for s in sos_events
-    ]
-
-@router.get("/locations")
-def get_admin_locations(
-    current_user: User = Depends(require_role(["admin"])),
-    db: Session = Depends(get_db)
-):
-    """Admin audit log of active user location updates."""
-    locations = db.query(UserLocation, User).join(
-        User, UserLocation.user_id == User.id
-    ).filter(
-        UserLocation.is_current == True
-    ).order_by(UserLocation.timestamp.desc()).all()
-
-    return [
-        {
-            "id": loc.id,
-            "user_id": u.id,
-            "name": u.name,
-            "role": u.role,
-            "latitude": loc.latitude,
-            "longitude": loc.longitude,
-            "accuracy": loc.accuracy,
-            "timestamp": loc.timestamp,
-            "source": loc.source,
-            "privacy_level": loc.privacy_level
-        }
-        for loc, u in locations
-    ]
-
-# Keep legacy stats endpoint for backward compatibility
-@router.get("/stats")
-def get_admin_stats(db: Session = Depends(get_db)):
-    """Legacy admin metrics endpoint."""
-    total_users = db.query(User).count()
-    role_counts = db.query(User.role, func.count(User.id)).group_by(User.role).all()
-    users_by_role = {role: count for role, count in role_counts}
-    for r in ["user", "volunteer", "police", "journalist", "admin"]:
-        if r not in users_by_role:
-            users_by_role[r] = 0
-
-    active_sos = db.query(SOSIncident).filter(SOSIncident.status.in_(["ACTIVE_DISPATCH", "ACKNOWLEDGED"])).count()
+    active_sos = db.query(SOSIncident).filter(SOSIncident.status == "ACTIVE_DISPATCH").count()
     resolved_sos = db.query(SOSIncident).filter(SOSIncident.status == "RESOLVED").count()
     total_posts = db.query(FeedPost).count()
     total_cases = db.query(IncidentCase).count()
 
+    online_users = db.query(UserPresence).filter(UserPresence.last_seen >= datetime.utcnow() - timedelta(seconds=90)).count()
+    return AdminStatsResponse(
+        total_users=total_users,
+        users_by_role=users_by_role,
+        active_sos_incidents=active_sos,
+        resolved_incidents=resolved_sos,
+        total_feed_posts=total_posts,
+        total_cases=total_cases
+    )
+
+@router.get("/system", response_model=SystemStatusResponse)
+def get_system_status(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Retrieve system health, geofence engine status, and active connections.
+    """
+    require_admin(current_user)
+    total_users = db.query(User).count()
+    active_alerts = db.query(SOSIncident).filter(SOSIncident.status == "ACTIVE_DISPATCH").count()
+
+    return SystemStatusResponse(
+        status="OPERATIONAL",
+        geofence_engine="5km Radius Spatial Router Active",
+        database="SQLite Connected & Migrated",
+        active_users=total_users,
+        active_alerts=active_alerts
+    )
+
+
+
+@router.get("/sos-overview")
+def get_admin_sos_overview(
+    limit: int = 50,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Return a complete Admin audit view for Citizen SOS incidents.
+
+    Includes citizen identity, case/incident IDs, location, accepted
+    volunteer/police responders, resolver, and the case timeline.
+    """
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required.")
+
+    limit = max(1, min(int(limit or 50), 200))
+    incidents = (
+        db.query(SOSIncident)
+        .order_by(SOSIncident.created_at.desc())
+        .limit(limit)
+        .all()
+    )
+
+    result = []
+    for inc in incidents:
+        citizen = db.query(User).filter(User.id == inc.user_id).first() if inc.user_id else None
+        case = db.query(IncidentCase).filter(IncidentCase.case_id == inc.case_id).first()
+        events = []
+        resolved = None
+
+        if case:
+            timeline = sorted(case.timeline_events, key=lambda e: e.timestamp or __import__('datetime').datetime.min)
+            for event in timeline:
+                item = {
+                    "id": event.id,
+                    "timestamp": event.timestamp,
+                    "title": event.title,
+                    "description": event.description,
+                    "actor_role": event.actor_role,
+                    "actor_name": event.actor_name,
+                }
+                events.append(item)
+                if event.actor_role == "police" and "Resolved" in (event.title or ""):
+                    resolved = {
+                        "name": event.actor_name,
+                        "role": event.actor_role,
+                        "timestamp": event.timestamp,
+                    }
+
+        # Fall back to the final responder when an older record has no
+        # explicit resolution timeline event.
+        if resolved is None and inc.status == "RESOLVED":
+            completed = [r for r in inc.responders if r.status == "RESOLVED"]
+            if completed:
+                r = completed[-1]
+                resolved = {
+                    "name": r.responder_name,
+                    "role": r.role,
+                    "timestamp": r.assigned_at,
+                }
+
+        result.append({
+            "incident_id": inc.incident_id,
+            "case_id": inc.case_id,
+            "user_id": inc.user_id,
+            "status": inc.status,
+            "severity": inc.severity,
+            "trigger_type": inc.trigger_type,
+            "notes": inc.notes,
+            "created_at": inc.created_at,
+            "phone": inc.phone or (citizen.phone if citizen else None),
+            "citizen": {
+                "id": inc.user_id,
+                "name": inc.user_name or (citizen.name if citizen else "Unknown Citizen"),
+                "phone": inc.phone or (citizen.phone if citizen else None),
+                "email": citizen.email if citizen else None,
+                "area": citizen.location if citizen else None,
+            },
+            "location": {
+                "latitude": inc.latitude,
+                "longitude": inc.longitude,
+                "accuracy_meters": inc.accuracy_meters,
+                "address": inc.address,
+            },
+            "responders": [
+                {
+                    "responder_id": r.responder_id,
+                    "name": r.responder_name,
+                    "role": r.role,
+                    "status": r.status,
+                    "eta_minutes": r.eta_minutes,
+                    "distance_km": r.distance_km,
+                    "accepted_at": r.assigned_at,
+                }
+                for r in inc.responders
+            ],
+            "timeline": events,
+            "resolved_by": resolved,
+        })
+
     return {
-        "total_users": total_users,
-        "users_by_role": users_by_role,
-        "active_sos_incidents": active_sos,
-        "resolved_incidents": resolved_sos,
-        "total_feed_posts": total_posts,
-        "total_cases": total_cases
+        "incidents": result,
+        "count": len(result),
     }
-
-@router.put("/users/{user_id}/status")
-def update_user_status(
-    user_id: str,
-    status_update: dict,
-    current_user: User = Depends(require_role(["admin"])),
-    db: Session = Depends(get_db)
-):
-    """Toggle user active / inactive status (Admin governance action)."""
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
-    
-    if user.role == "admin" and user.id == "adm_001":
-        raise HTTPException(status_code=400, detail="Cannot deactivate root super administrator.")
-
-    is_active = status_update.get("is_active")
-    if is_active is not None:
-        user.is_active = bool(is_active)
-    
-    db.commit()
-    db.refresh(user)
-    return {
-        "status": "success",
-        "user_id": user.id,
-        "is_active": user.is_active,
-        "message": f"User {user.name} is now {'Active' if user.is_active else 'Deactivated'}."
-    }
-
-@router.put("/users/{user_id}/role")
-def update_user_role(
-    user_id: str,
-    role_update: dict,
-    current_user: User = Depends(require_role(["admin"])),
-    db: Session = Depends(get_db)
-):
-    """Update user role (Admin authorization action)."""
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
-
-    new_role = role_update.get("role", "").lower().strip()
-    if new_role not in ["user", "volunteer", "police", "journalist", "admin"]:
-        raise HTTPException(status_code=400, detail="Invalid role specified.")
-
-    ROLE_BADGE_MAP = {
-        "user": "Citizen User",
-        "volunteer": "Verified Volunteer",
-        "police": "City Police Command",
-        "journalist": "Accredited Journalist",
-        "admin": "Platform Administrator"
-    }
-    user.role = new_role
-    user.badge_title = ROLE_BADGE_MAP.get(new_role, "Citizen User")
-
-    db.commit()
-    db.refresh(user)
-    return {
-        "status": "success",
-        "user_id": user.id,
-        "role": user.role,
-        "badge_title": user.badge_title
-    }
-
-@router.get("/content/posts")
-def get_admin_content_posts(
-    current_user: User = Depends(require_role(["admin"])),
-    db: Session = Depends(get_db)
-):
-    """Retrieve all posts for content moderation auditing."""
-    posts = db.query(FeedPost).order_by(FeedPost.created_at.desc()).all()
-    return [
-        {
-            "id": p.id,
-            "author_id": p.author_id,
-            "author_name": p.author_name,
-            "author_role": p.author_role,
-            "title": p.title,
-            "content": p.content,
-            "tag": p.tag,
-            "media_url": p.media_url,
-            "media_urls": p.media_urls,
-            "upvotes": p.upvotes,
-            "created_at": p.created_at
-        }
-        for p in posts
-    ]
-
-@router.delete("/content/posts/{post_id}")
-def delete_admin_content_post(
-    post_id: str,
-    current_user: User = Depends(require_role(["admin"])),
-    db: Session = Depends(get_db)
-):
-    """Delete a post (Admin moderation action)."""
-    post = db.query(FeedPost).filter(FeedPost.id == post_id).first()
-    if not post:
-        raise HTTPException(status_code=404, detail="Post not found.")
-    db.delete(post)
-    db.commit()
-    return {"status": "success", "message": f"Post {post_id} removed by administrator."}
 
 @router.delete("/users/{user_id}")
-def delete_user(
-    user_id: str,
-    current_user: User = Depends(require_role(["admin"])),
-    db: Session = Depends(get_db)
-):
-    """Remove a user account (Admin action)."""
+def delete_user(user_id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    require_admin(current_user)
+    """
+    Remove a user account (Admin action).
+    """
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found.")

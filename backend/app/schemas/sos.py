@@ -12,11 +12,22 @@ class SOSTriggerRequest(BaseModel):
     user_name: str
     user_id: Optional[str] = None
     phone: Optional[str] = None
-    trigger_type: str = "MANUAL_HOLD"  # SHAKE_MOTION, MANUAL_HOLD, AUTO_FALL, VEHICLE_CRASH, ACCIDENT_REPORT
-    severity: Optional[str] = "HIGH"
+    trigger_type: str = "MANUAL_HOLD"
+    # Severity controls responder priority; all SOS events are visible to police and volunteers.
+    severity: Optional[str] = "MEDIUM"
     location: LocationCoords
     battery_percentage: Optional[int] = 85
     notes: Optional[str] = None
+    category: Optional[str] = "public"
+    audio_proof_url: Optional[str] = None
+    video_proof_url: Optional[str] = None
+    share_location: bool = True
+    record_audio: bool = False
+    silent_mode: bool = False
+
+class SOSRoutingInfo(BaseModel):
+    dispatch_role: str
+    routing_reason: str
 
 class ResponderInfo(BaseModel):
     responder_id: str
@@ -37,13 +48,10 @@ class SOSIncidentResponse(BaseModel):
     created_at: datetime
     location: LocationCoords
     geofence_radius_km: float = 5.0
-    distance_km: Optional[float] = None
     active_responders: List[ResponderInfo] = []
     case_id: str
-
-class SOSLocationUpdate(BaseModel):
-    latitude: float
-    longitude: float
-    accuracy_meters: Optional[float] = 10.0
-    address: Optional[str] = None
-
+    dispatch_role: str = "volunteer"
+    routing_reason: str = "SOS shared with Police Command and verified volunteers."
+    category: Optional[str] = "public"
+    audio_proof_url: Optional[str] = None
+    video_proof_url: Optional[str] = None

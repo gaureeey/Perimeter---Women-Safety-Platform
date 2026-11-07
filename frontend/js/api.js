@@ -3,9 +3,16 @@
  * Full Social Community & Women Safety Emergency Dispatch Support
  */
 
-const API_BASE = 'http://127.0.0.1:8000/api/v1';
+const API_HOST = window.location.hostname || '127.0.0.1';
+const API_BASE = `${window.location.protocol === 'https:' ? 'https' : 'http'}://${API_HOST}:8000/api/v1`;
+const WS_BASE = `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${API_HOST}:8000`;
 const SESSION_KEY = 'perimeter_session';
 const TOKEN_KEY = 'perimeter_jwt_token';
+
+// Auth is intentionally tab-scoped. Citizen, Police and Admin can be opened
+// in separate tabs/windows of the same browser without overwriting each
+// other's JWT. This is essential for local multi-persona testing.
+const AUTH_STORE = window.sessionStorage;
 
 const ROLE_DASHBOARDS = {
     'user': 'user.html',
@@ -27,7 +34,7 @@ const ROLE_BADGE_TITLES = {
  * Retrieve saved JWT token
  */
 function getAuthToken() {
-    return localStorage.getItem(TOKEN_KEY);
+    return AUTH_STORE.getItem(TOKEN_KEY);
 }
 
 /**
@@ -35,7 +42,7 @@ function getAuthToken() {
  */
 function getCurrentUser() {
     try {
-        const raw = localStorage.getItem(SESSION_KEY);
+        const raw = AUTH_STORE.getItem(SESSION_KEY);
         return raw ? JSON.parse(raw) : null;
     } catch (e) {
         console.error('Error parsing session data', e);
@@ -47,9 +54,9 @@ function getCurrentUser() {
  * Save persistent user session
  */
 function saveSession(token, user) {
-    if (token) localStorage.setItem(TOKEN_KEY, token);
+    if (token) AUTH_STORE.setItem(TOKEN_KEY, token);
     if (user) {
-        localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+        AUTH_STORE.setItem(SESSION_KEY, JSON.stringify(user));
         // Keep legacy keys synced for seamless interoperability
         if (user.role === 'user') {
             localStorage.setItem('perimeter_user_profile', JSON.stringify({
@@ -83,14 +90,14 @@ function saveSession(token, user) {
             }));
         }
     }
-}window.saveSession = saveSession;
+}
 
 /**
  * Clear session and logout
  */
 function logout() {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(SESSION_KEY);
+    AUTH_STORE.removeItem(TOKEN_KEY);
+    AUTH_STORE.removeItem(SESSION_KEY);
     localStorage.removeItem('perimeter_user_profile');
     localStorage.removeItem('perimeter_vol_profile');
     localStorage.removeItem('perimeter_police_profile');
@@ -102,68 +109,53 @@ function logout() {
  * Generic API Fetch helper
  */
 async function apiCall(endpoint, method = 'GET', body = null) {
-    const headers = {};
-
+    const headers = {
+        'Accept': 'application/json'
+    };
+    
     if (body && !(body instanceof FormData)) {
         headers['Content-Type'] = 'application/json';
     }
 
     const token = getAuthToken();
-
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
     const options = {
-        method,
+        method: method,
         headers: headers
     };
 
     if (body) {
-        options.body = body instanceof FormData
-            ? body
-            : JSON.stringify(body);
+        options.body = (body instanceof FormData) ? body : JSON.stringify(body);
     }
 
-    const url = endpoint.startsWith('http')
-        ? endpoint
-        : `${API_BASE}${endpoint}`;
+    const url = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
 
     try {
         const response = await fetch(url, options);
         const data = await response.json().catch(() => null);
 
-        if (response.status === 401) {
-            console.warn('PERIMETER API authentication failed.');
-
-            const errorMsg =
-                data?.detail ||
-                'Your session is no longer valid. Please log in again.';
-
-            throw new Error(errorMsg);
-        }
-
         if (!response.ok) {
-            const errorMsg =
-                data?.detail ||
-                `API request failed with status ${response.status}`;
-
+            if (response.status === 401) {
+                console.warn('[PERIMETER] Session expired or invalid token. Redirecting to registration...');
+                AUTH_STORE.removeItem(TOKEN_KEY);
+                AUTH_STORE.removeItem(SESSION_KEY);
+                if (!window.location.pathname.endsWith('register.html')) {
+                    window.location.href = 'register.html';
+                }
+            }
+            const errorMsg = data?.detail || `API request failed with status ${response.status}`;
             throw new Error(errorMsg);
         }
-
         return data;
-
     } catch (err) {
-        if (err.name === 'TypeError' && err.message.includes('fetch')) {
-            console.error(`[PERIMETER Server Connection Error] Could not connect to API server at ${API_BASE}. Make sure the FastAPI backend is running on port 8000.`);
-            showToast('⚠️ Backend server (port 8000) not reachable. Please run: npm run backend', '🔌', 5000);
-            throw new Error(`Cannot connect to PERIMETER backend at ${API_BASE}. Please ensure port 8000 server is active.`);
-        }
         console.warn(`[PERIMETER API Error] ${method} ${endpoint}:`, err.message);
         throw err;
     }
 }
-    window.apiCall = apiCall;
+
 /**
  * Page Auth Guard for Public Pages (register.html):
  * If user is already authenticated, automatically forwards to their role dashboard.
@@ -171,6 +163,17 @@ async function apiCall(endpoint, method = 'GET', body = null) {
 function guardPublicPage() {
     const user = getCurrentUser();
     const token = getAuthToken();
+    const params = new URLSearchParams(window.location.search);
+    const requestedRole = params.get('role');
+
+    // A role query explicitly means "create/switch to a new persona".
+    // Do not redirect the existing session back to its old dashboard.
+    if (requestedRole && ROLE_DASHBOARDS[requestedRole]) {
+        AUTH_STORE.removeItem(TOKEN_KEY);
+        AUTH_STORE.removeItem(SESSION_KEY);
+        return false;
+    }
+
     if (user && token && user.role && ROLE_DASHBOARDS[user.role]) {
         console.log(`[Auth Guard] Active session detected for ${user.name} (${user.role}). Auto-routing to dashboard...`);
         window.location.replace(ROLE_DASHBOARDS[user.role]);
@@ -212,10 +215,8 @@ async function guardProtectedPage(allowedRoles = []) {
 }
 
 /**
-/*Unified Toast Notification*/
-
-let toastTimer = null;
-
+ * Unified Toast Notification
+ */
 function showToast(msg, icon = '✨', duration = 3200) {
     let el = document.getElementById('toast');
     if (!el) {
@@ -247,8 +248,7 @@ function showToast(msg, icon = '✨', duration = 3200) {
     }, duration);
 }
 
-/*Global alias for compatibility*/
-window.showToast = showToast;
+// Global alias for compatibility
 const toast = showToast;
 
 /* -------------------------------------------------------------
@@ -266,16 +266,8 @@ const SocialAPI = {
     async getUserProfile(userId) {
         return await apiCall(`/social/users/${userId}/profile`);
     },
-    async searchUsers(query = '', role = '') {
-        const params = [];
-        if (query && query.trim()) params.push(`q=${encodeURIComponent(query.trim())}`);
-        if (role && role.trim() && role.trim().toLowerCase() !== 'all') params.push(`role=${encodeURIComponent(role.trim().toLowerCase())}`);
-        const qs = params.length > 0 ? `?${params.join('&')}` : '';
-        return await apiCall(`/social/users/search${qs}`);
-    },
-    async getAllUsers(role = '') {
-        const qs = role && role.trim() && role.trim().toLowerCase() !== 'all' ? `?role=${encodeURIComponent(role.trim().toLowerCase())}` : '';
-        return await apiCall(`/auth/users${qs}`);
+    async searchUsers(query) {
+        return await apiCall(`/social/users/search?q=${encodeURIComponent(query)}`);
     },
 
     // Follows
@@ -304,6 +296,11 @@ const SocialAPI = {
     },
     async createPost(postData) {
         return await apiCall('/feed/', 'POST', postData);
+    },
+    async uploadMedia(file, kind = 'post') {
+        const form = new FormData();
+        form.append('file', file);
+        return await apiCall(`/media/upload?kind=${encodeURIComponent(kind)}`, 'POST', form);
     },
     async toggleLike(postId) {
         return await apiCall(`/social/posts/${postId}/like`, 'POST');
@@ -391,221 +388,27 @@ const SocialAPI = {
         return await apiCall('/social/profile/my-cases');
     },
 
-        // SOS Emergency Dispatch
-        async triggerSOS(sosData) {
-            return await apiCall('/sos/trigger', 'POST', sosData);
-        },
-    
-        async getActiveSOS() {
-            return await apiCall('/sos/active');
-        },
-
-        async getSOS(incidentId) {
-            return await apiCall(`/sos/${encodeURIComponent(incidentId)}`);
-        },
-
-        async acknowledgeSOS(incidentId) {
-            return await apiCall(`/sos/${encodeURIComponent(incidentId)}/acknowledge`, 'POST');
-        },
-
-        async dispatchSOS(incidentId, responderId, responderName, role = 'police') {
-            const params = new URLSearchParams({
-                responder_id: responderId,
-                responder_name: responderName,
-                role: role
-            });
-            return await apiCall(`/sos/${encodeURIComponent(incidentId)}/dispatch?${params.toString()}`, 'POST');
-        },
-    
-        async respondToSOS(incidentId, responderId, responderName, role) {
-            const params = new URLSearchParams({
-                responder_id: responderId,
-                responder_name: responderName,
-                role: role
-            });
-    
-            return await apiCall(
-                `/sos/${encodeURIComponent(incidentId)}/respond?${params.toString()}`,
-                'POST'
-            );
-        },
-    
-        async resolveSOS(incidentId, resolvedBy, notes = null) {
-            const params = new URLSearchParams({
-                resolved_by: resolvedBy
-            });
-    
-            if (notes) {
-                params.append('notes', notes);
-            }
-    
-            return await apiCall(
-                `/sos/${encodeURIComponent(incidentId)}/resolve?${params.toString()}`,
-                'POST'
-            );
-        },
-
-        async updateSOSLocation(incidentId, locationData) {
-            return await apiCall(
-                `/sos/${encodeURIComponent(incidentId)}/location`,
-                'POST',
-                locationData
-            );
-        }
-    };
-    window.SocialAPI = SocialAPI;
-    window.SOSAPI = SocialAPI; // Alias
-
-/* -------------------------------------------------------------
-   LOCATION & GEOFENCE API
-------------------------------------------------------------- */
-const LocationAPI = {
-    async updateLocation(data) {
-        return await apiCall('/location/update', 'POST', data);
+    // SOS Emergency Dispatch
+    async triggerSOS(sosData) {
+        return await apiCall('/sos/trigger', 'POST', sosData);
     },
-    async getMyLocation() {
-        return await apiCall('/location/me');
+    async getActiveSOS() {
+        return await apiCall('/sos/active');
     },
-    async getResponders() {
-        return await apiCall('/location/responders');
+    async getSOSIncident(incidentId) {
+        return await apiCall(`/sos/${encodeURIComponent(incidentId)}`);
     },
-    async getNearbyVolunteers(lat, lng, radiusKm = 5.0) {
-        return await apiCall(`/location/nearby-volunteers?lat=${lat}&lng=${lng}&radius_km=${radiusKm}`);
-    }
-};
-window.LocationAPI = LocationAPI;
-
-/* -------------------------------------------------------------
-   HEATMAP & SAFE ROUTING API
-------------------------------------------------------------- */
-const SafetyMapAPI = {
-    async getHeatmap(city = 'Mumbai') {
-        return await apiCall(`/heatmap?city=${encodeURIComponent(city)}`);
-    },
-    async getSafetyScore(lat, lng) {
-        return await apiCall(`/safety-score?lat=${lat}&lng=${lng}`);
-    },
-    async getSafeRoutes(fromLat, fromLng, toLat, toLng) {
-        return await apiCall(`/safe-routes/?from_lat=${fromLat}&from_lng=${fromLng}&to_lat=${toLat}&to_lng=${toLng}`);
-    }
-};
-window.SafetyMapAPI = SafetyMapAPI;
-
-/* -------------------------------------------------------------
-   NOTIFICATIONS API & REAL-TIME WEBSOCKET
-------------------------------------------------------------- */
-const NotificationAPI = {
-    async getNotifications(limit = 20) {
-        return await apiCall(`/notifications/?limit=${limit}`);
-    },
-    async markRead(notificationId) {
-        return await apiCall(`/notifications/${notificationId}/read`, 'POST');
-    },
-    connectWebSocket(role, onMessageCallback) {
-        try {
-            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const host = '127.0.0.1:8000';
-            const ws = new WebSocket(`${protocol}//${host}/api/v1/notifications/ws/${role}`);
-            ws.onmessage = (event) => {
-                try {
-                    const data = JSON.parse(event.data);
-                    if (onMessageCallback) onMessageCallback(data);
-                } catch(e) {}
-            };
-            ws.onerror = (e) => {
-                console.warn('[WS Alert Error] Fallback polling active.', e);
-            };
-            return ws;
-        } catch (e) {
-            console.warn('[WS Alert Exception]', e);
-            return null;
-        }
-    }
-};
-window.NotificationAPI = NotificationAPI;
-
-/* -------------------------------------------------------------
-   ADMIN GOVERNANCE & DATABASE AUDIT API
-------------------------------------------------------------- */
-const AdminAPI = {
-    async getUsers(role = '') {
-        const qs = role && role !== 'all' ? `?role=${encodeURIComponent(role)}` : '';
-        return await apiCall(`/admin/users${qs}`);
-    },
-    async getDetailedStats() {
-        return await apiCall('/admin/statistics');
-    },
-    async getIncidents(status = '') {
-        const qs = status && status !== 'all' ? `?status_filter=${encodeURIComponent(status)}` : '';
-        return await apiCall(`/admin/incidents${qs}`);
-    },
-    async getSOSEvents() {
-        return await apiCall('/admin/sos');
-    },
-    async getLocations() {
-        return await apiCall('/admin/locations');
-    },
-    async deleteUser(userId) {
-        return await apiCall(`/admin/users/${userId}`, 'DELETE');
-    },
-    async toggleUserStatus(userId, isActive) {
-        return await apiCall(`/admin/users/${userId}/status`, 'PUT', { is_active: isActive });
-    },
-    async updateUserRole(userId, role) {
-        return await apiCall(`/admin/users/${userId}/role`, 'PUT', { role });
-    },
-    async getContentPosts() {
-        return await apiCall('/admin/content/posts');
-    },
-    async deleteContentPost(postId) {
-        return await apiCall(`/admin/content/posts/${postId}`, 'DELETE');
-    }
-};
-window.AdminAPI = AdminAPI;
-
-/* -------------------------------------------------------------
-   DEVICE MEDIA UPLOAD API (Camera / Gallery / File Picker)
-------------------------------------------------------------- */
-const MediaAPI = {
-    async uploadSingle(file) {
-        const formData = new FormData();
-        formData.append('file', file);
-        const token = getAuthToken();
-        const headers = {};
-        if (token) headers['Authorization'] = `Bearer ${token}`;
-
-        const res = await fetch(`${API_BASE_URL}/media/upload`, {
-            method: 'POST',
-            headers: headers,
-            body: formData
+    async respondToSOS(incidentId, responderId, responderName, role) {
+        const params = new URLSearchParams({
+            responder_id: String(responderId),
+            responder_name: String(responderName),
+            role: String(role)
         });
-        if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            throw new Error(err.detail || 'Failed to upload media file.');
-        }
-        return await res.json();
+        return await apiCall(`/sos/${encodeURIComponent(incidentId)}/respond?${params.toString()}`, 'POST');
     },
-
-    async uploadMultiple(files) {
-        const formData = new FormData();
-        for (let i = 0; i < files.length; i++) {
-            formData.append('files', files[i]);
-        }
-        const token = getAuthToken();
-        const headers = {};
-        if (token) headers['Authorization'] = `Bearer ${token}`;
-
-        const res = await fetch(`${API_BASE_URL}/media/upload-multiple`, {
-            method: 'POST',
-            headers: headers,
-            body: formData
-        });
-        if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            throw new Error(err.detail || 'Failed to upload media files.');
-        }
-        return await res.json();
+    async resolveSOS(incidentId, resolvedBy, notes = null) {
+        const params = new URLSearchParams({ resolved_by: String(resolvedBy) });
+        if (notes) params.append('notes', String(notes));
+        return await apiCall(`/sos/${encodeURIComponent(incidentId)}/resolve?${params.toString()}`, 'POST');
     }
 };
-window.MediaAPI = MediaAPI;
-

@@ -1,14 +1,13 @@
-version: '3.8'
 
 services:
   postgres:
     image: postgis/postgis:16-3.4
     container_name: perimeter-postgis
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: perimeter
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your .env file}
     ports:
       - "5432:5432"
     volumes:
