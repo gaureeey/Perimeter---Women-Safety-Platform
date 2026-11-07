@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sign In — PERIMETER Women Safety Platform</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --ink: #111528;
+            --ink-secondary: #2A304E;
+            --paper: #F8FAFC;
+            --coral: #FF5A5F;
+            --coral-glow: rgba(255, 90, 95, 0.25);
+            --teal: #0F6E6E;
+            --purple: #8B5CF6;
+            --gray: #64748B;
+            --line: #E2E8F0;
+
+            --radius-lg: 24px;
+            --radius-md: 14px;
+
+            --shadow-elevation:
+                0 25px 60px -15px rgba(17, 21, 40, 0.16);
+
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: #0B0E1B;
+            color: #F1F5F9;
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 24px;
+            position: relative;
+            overflow-x: hidden;
+
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* =========================
+           BACKGROUND
+        ========================== */
+
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .glow-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.35;
+        }
+
+        .glow-1 {
+            width: 500px;
+            height: 500px;
+            background: #FF5A5F;
+            top: -120px;
+            left: -100px;
+        }
+
+        .glow-2 {
+            width: 600px;
+            height: 600px;
+            background: #0F6E6E;
+            bottom: -150px;
+            right: -150px;
+        }
+
+        .glow-3 {
+            width: 350px;
+            height: 350px;
+            background: #8B5CF6;
+            top: 30%;
+            left: 50%;
+            opacity: 0.2;
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+
+            background-image:
+                linear-gradient(
+                    to right,
+                    rgba(255, 255, 255, 0.03) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    to bottom,
+                    rgba(255, 255, 255, 0.03) 1px,
+                    transparent 1px
+                );
+
+            background-size: 48px 48px;
+
+            mask-image:
+                radial-gradient(
+                    circle at center,
+                    black 40%,
+                    transparent 85%
+                );
+
+            -webkit-mask-image:
+                radial-gradient(
+                    circle at center,
+                    black 40%,
+                    transparent 85%
+                );
+        }
+
+        /* =========================
+           MAIN CONTAINER
+        ========================== */
+
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+
+            width: 100%;
+            max-width: 1080px;
+
+            display: grid;
+            grid-template-columns: 1.1fr 1.3fr;
+
+            background: rgba(17, 21, 40, 0.85);
+
+            border: 1px solid rgba(255, 255, 255, 0.12);
+
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+
+            border-radius: var(--radius-lg);
+
+            overflow: hidden;
+
+            box-shadow: var(--shadow-elevation);
+        }
+
+        /* =========================
+           LEFT BRAND PANEL
+        ========================== */
+
+        .brand-panel {
+            padding: 44px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.04) 0%,
+                    rgba(255, 255, 255, 0.01) 100%
+                );
+
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+            position: relative;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo-icon {
+            width: 44px;
+            height: 44px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #FF5A5F,
+                    #E02424
+                );
+
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+
+            box-shadow:
+                0 8px 20px var(--coral-glow);
+        }
+
+        .brand-title {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #FFFFFF;
+        }
+
+        .brand-title span {
+            color: var(--coral);
+        }
+
+        /* =========================
+           RADAR
+        ========================== */
+
+        .logo-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            margin: 20px 0 18px;
+        }
+
+        .radar-shield {
+            width: 200px;
+            height: 200px;
+            position: relative;
+        }
+
+        .radar-shield svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .sweep-group {
+            transform-origin: 100px 104px;
+            animation: sweepSpin 3.6s linear infinite;
+        }
+
+        @keyframes sweepSpin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .ping-ring {
+            transform-origin: 100px 104px;
+            animation: pingOut 3s ease-out infinite;
+            opacity: 0;
+        }
+
+        .ping-ring.r2 {
+            animation-delay: 1s;
+        }
+
+        .ping-ring.r3 {
+            animation-delay: 2s;
+        }
+
+        @keyframes pingOut {
+            0% {
+                transform: scale(0.35);
+                opacity: 0;
+            }
+
+            15% {
+                opacity: 0.75;
+            }
+
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .shield-outline {
+            stroke-dasharray: 520;
+            stroke-dashoffset: 520;
+
+            animation:
+                drawShield 1.6s
+                cubic-bezier(0.65, 0, 0.35, 1)
+                forwards;
+        }
+
+        @keyframes drawShield {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .shield-core {
+            transform-origin: 100px 104px;
+            animation: coreBreathe 3.2s ease-in-out infinite;
+        }
+
+        @keyframes coreBreathe {
+
+            0%,
+            100% {
+                opacity: 0.85;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.06);
+            }
+        }
+
+        .blip {
+            animation: blipFade 3.6s linear infinite;
+            opacity: 0;
+        }
+
+        .blip.b1 {
+            animation-delay: 0.5s;
+        }
+
+        .blip.b2 {
+            animation-delay: 1.7s;
+        }
+
+        .blip.b3 {
+            animation-delay: 2.8s;
+        }
+
+        @keyframes blipFade {
+            0% {
+                opacity: 0;
+                r: 2;
+            }
+
+            6% {
+                opacity: 1;
+                r: 4.5;
+            }
+
+            45% {
+                opacity: 0.25;
+                r: 3;
+            }
+
+            100% {
+                opacity: 0;
+                r: 2;
+            }
+        }
+
+        .logo-caption {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+
+            color: #5EEAD4;
+
+            margin-top: 6px;
+
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+
+            background: #2DD4BF;
+
+            border-radius: 50%;
+
+            box-shadow: 0 0 8px #2DD4BF;
+
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: scale(0.85);
+            }
+        }
+
+        /* =========================
+           LEFT TEXT
+        ========================== */
+
+        .brand-hero h1 {
+            font-size: 26px;
+            line-height: 1.25;
+            font-weight: 800;
+
+            color: #FFFFFF;
+
+            margin-bottom: 10px;
+
+            text-align: center;
+        }
+
+        .brand-hero p {
+            color: #94A3B8;
+
+            font-size: 13.5px;
+            line-height: 1.6;
+
+            text-align: center;
+        }
+
+        /* =========================
+           QUICK PERSONAS
+        ========================== */
+
+        .persona-quick-panel {
+            margin-top: 24px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+        }
+
+        .persona-quick-title {
+            font-size: 11.5px;
+            font-weight: 700;
+
+            color: #94A3B8;
+
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+
+            margin-bottom: 10px;
+        }
+
+        .persona-pills-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .persona-btn {
+            background:
+                rgba(255, 255, 255, 0.06);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.12);
+
+            color: #F1F5F9;
+
+            padding: 6px 10px;
+
+            border-radius: 8px;
+
+            font-size: 11.5px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: all 0.15s ease;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .persona-btn:hover {
+            background:
+                rgba(255, 255, 255, 0.15);
+
+            border-color: #5EEAD4;
+
+            color: #5EEAD4;
+
+            transform: translateY(-1px);
+        }
+
+        /* =========================
+           RIGHT LOGIN PANEL
+        ========================== */
+
+        .form-panel {
+            padding: 44px;
+
+            background: #FFFFFF;
+
+            color: var(--ink);
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+        }
+
+        .mobile-logo {
+            display: none;
+
+            align-items: center;
+            gap: 10px;
+
+            margin-bottom: 18px;
+        }
+
+        .mobile-logo .brand-title {
+            color: var(--ink);
+            font-size: 20px;
+        }
+
+        .form-header {
+            margin-bottom: 20px;
+        }
+
+        .form-header h2 {
+            font-size: 26px;
+            font-weight: 800;
+
+            letter-spacing: -0.02em;
+
+            color: var(--ink);
+
+            margin-bottom: 4px;
+        }
+
+        .form-header p {
+            color: var(--gray);
+            font-size: 13px;
+        }
+
+        /* =========================
+           INFO BANNER
+        ========================== */
+
+        .role-info-banner {
+            background: #F8FAFC;
+
+            border: 1px solid var(--line);
+
+            border-left:
+                4px solid
+                var(--coral);
+
+            border-radius: 8px;
+
+            padding: 10px 14px;
+
+            font-size: 12px;
+
+            color: #475569;
+
+            margin-bottom: 18px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        /* =========================
+           FORM
+        ========================== */
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+
+            font-size: 11px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+
+            color: #475569;
+
+            margin-bottom: 4px;
+        }
+
+        .input-wrapper {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+
+            left: 12px;
+
+            color: #94A3B8;
+
+            font-size: 14px;
+
+            pointer-events: none;
+        }
+
+        .form-input {
+            width: 100%;
+
+            padding:
+                11px
+                44px
+                11px
+                38px;
+
+            background: #F8FAFC;
+
+            border:
+                1.5px solid
+                var(--line);
+
+            border-radius: 14px;
+
+            font-size: 13px;
+
+            font-family: var(--sans);
+
+            color: var(--ink);
+
+            outline: none;
+
+            transition: all 0.15s ease;
+        }
+
+        .form-input:focus {
+            background: #FFFFFF;
+
+            border-color: var(--coral);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(255, 90, 95, 0.12);
+        }
+
+        .toggle-pw {
+            position: absolute;
+
+            right: 10px;
+
+            background: none;
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            color: #94A3B8;
+
+            padding: 4px;
+        }
+
+        /* =========================
+           META
+        ========================== */
+
+        .form-meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin: 4px 0 16px;
+
+            font-size: 12px;
+        }
+
+        .remember-box {
+            display: flex;
+            align-items: center;
+
+            gap: 6px;
+
+            color: #475569;
+
+            cursor: pointer;
+
+            user-select: none;
+        }
+
+        .remember-box input {
+            accent-color: var(--coral);
+
+            width: 14px;
+            height: 14px;
+
+            cursor: pointer;
+        }
+
+        .link-quiet {
+            color: var(--teal);
+
+            text-decoration: none;
+
+            font-weight: 600;
+        }
+
+        .link-quiet:hover {
+            text-decoration: underline;
+        }
+
+        /* =========================
+           LOGIN BUTTON
+        ========================== */
+
+        .btn-login {
+            width: 100%;
+
+            padding: 13px;
+
+            background: var(--ink);
+
+            color: #FFFFFF;
+
+            border: none;
+
+            border-radius: 100px;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            font-family: var(--sans);
+
+            cursor: pointer;
+
+            transition: all 0.2s ease;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            box-shadow:
+                0 8px 20px
+                rgba(17, 21, 40, 0.2);
+        }
+
+        .btn-login:hover:not(:disabled) {
+            background: #252C50;
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 12px 24px
+                rgba(17, 21, 40, 0.25);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.75;
+            cursor: wait;
+        }
+
+        /* =========================
+           SIGNUP
+        ========================== */
+
+        .divider-row {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            margin: 18px 0 14px;
+
+            color: #94A3B8;
+
+            font-size: 11px;
+
+            font-weight: 600;
+        }
+
+        .divider-row::before,
+        .divider-row::after {
+            content: '';
+
+            flex: 1;
+
+            height: 1px;
+
+            background: var(--line);
+        }
+
+        .signup-cta {
+            text-align: center;
+
+            font-size: 13px;
+
+            color: var(--gray);
+        }
+
+        .signup-cta a {
+            color: var(--coral);
+
+            font-weight: 700;
+
+            text-decoration: none;
+        }
+
+        .signup-cta a:hover {
+            text-decoration: underline;
+        }
+
+        /* =========================
+           MOBILE
+        ========================== */
+
+        .mobile-personas {
+            display: none;
+        }
+
+        @media (max-width: 960px) {
+
+            .login-wrapper {
+                grid-template-columns: 1fr;
+
+                max-width: 500px;
+            }
+
+            .brand-panel {
+                display: none;
+            }
+
+            .form-panel {
+                padding: 32px 24px;
+
+                max-height: none;
+            }
+
+            .mobile-logo {
+                display: flex;
+            }
+
+            .mobile-personas {
+                display: block;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .sweep-group,
+            .ping-ring,
+            .shield-core,
+            .blip,
+            .pulse-dot,
+            .shield-outline {
+                animation: none !important;
+            }
+
+            .shield-outline {
+                stroke-dashoffset: 0;
+            }
+
+            .ping-ring {
+                opacity: 0.25;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background -->
+    <div class="ambient-bg">
+        <div class="glow-sphere glow-1"></div>
+        <div class="glow-sphere glow-2"></div>
+        <div class="glow-sphere glow-3"></div>
+        <div class="bg-grid"></div>
+    </div>
+
+    <!-- Main Login Card -->
+    <main class="login-wrapper">
+
+        <!-- =====================================
+             LEFT: BRAND / RADAR
+        ====================================== -->
+
+        <section class="brand-panel">
+
+            <div>
+
+                <header class="brand-header">
+                    <div class="brand-logo-icon">🛡️</div>
+
+                    <div class="brand-title">
+                        PERIMETER <span>.</span>
+                    </div>
+                </header>
+
+                <!-- Radar -->
+                <div class="logo-stage">
+
+                    <div class="radar-shield">
+
+                        <svg
+                            viewBox="0 0 200 200"
+                            xmlns="http://www.w3.org/2000/svg"
+                            role="img"
+                            aria-label="PERIMETER safety radar">
+
+                            <defs>
+
+                                <linearGradient
+                                    id="shieldFill"
+                                    x1="0"
+                                    y1="0"
+                                    x2="1"
+                                    y2="1">
+
+                                    <stop
+                                        offset="0%"
+                                        stop-color="#FF5A5F"
+                                        stop-opacity="0.22" />
+
+                                    <stop
+                                        offset="100%"
+                                        stop-color="#0F6E6E"
+                                        stop-opacity="0.18" />
+
+                                </linearGradient>
+
+                                <linearGradient
+                                    id="shieldStroke"
+                                    x1="0"
+                                    y1="0"
+                                    x2="1"
+                                    y2="1">
+
+                                    <stop
+                                        offset="0%"
+                                        stop-color="#FF5A5F" />
+
+                                    <stop
+                                        offset="100%"
+                                        stop-color="#2DD4BF" />
+
+                                </linearGradient>
+
+                                <linearGradient
+                                    id="sweepFade"
+                                    x1="0"
+                                    y1="0"
+                                    x2="1"
+                                    y2="0">
+
+                                    <stop
+                                        offset="0%"
+                                        stop-color="#2DD4BF"
+                                        stop-opacity="0.55" />
+
+                                    <stop
+                                        offset="100%"
+                                        stop-color="#2DD4BF"
+                                        stop-opacity="0" />
+
+                                </linearGradient>
+
+                                <clipPath id="shieldClip">
+                                    <path
+                                        d="M100 26 L162 52 V104 C162 142 133 166 100 178
+                                           C67 166 38 142 38 104 V52 Z" />
+                                </clipPath>
+
+                                <filter
+                                    id="softGlow"
+                                    x="-50%"
+                                    y="-50%"
+                                    width="200%"
+                                    height="200%">
+
+                                    <feGaussianBlur
+                                        stdDeviation="3"
+                                        result="b" />
+
+                                    <feMerge>
+                                        <feMergeNode in="b" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+
+                                </filter>
+
+                            </defs>
+
+                            <!-- Shield -->
+                            <path
+                                d="M100 26 L162 52 V104 C162 142 133 166 100 178
+                                   C67 166 38 142 38 104 V52 Z"
+                                fill="url(#shieldFill)" />
+
+                            <g clip-path="url(#shieldClip)">
+
+                                <!-- Range rings -->
+                                <circle
+                                    cx="100"
+                                    cy="104"
+                                    r="22"
+                                    fill="none"
+                                    stroke="rgba(94,234,212,0.25)"
+                                    stroke-width="1" />
+
+                                <circle
+                                    cx="100"
+                                    cy="104"
+                                    r="42"
+                                    fill="none"
+                                    stroke="rgba(94,234,212,0.18)"
+                                    stroke-width="1" />
+
+                                <circle
+                                    cx="100"
+                                    cy="104"
+                                    r="62"
+                                    fill="none"
+                                    stroke="rgba(94,234,212,0.12)"
+                                    stroke-width="1" />
+
+                                <!-- Crosshair -->
+                                <line
+                                    x1="100"
+                                    y1="30"
+                                    x2="100"
+                                    y2="178"
+                                    stroke="rgba(255,255,255,0.07)"
+                                    stroke-width="1" />
+
+                                <line
+                                    x1="34"
+                                    y1="104"
+                                    x2="166"
+                                    y2="104"
+                                    stroke="rgba(255,255,255,0.07)"
+                                    stroke-width="1" />
+
+                                <!-- Radar sweep -->
+                                <g class="sweep-group">
+
+                                    <path
+                                        d="M100 104 L100 32 A72 72 0 0 1 165 78 Z"
+                                        fill="url(#sweepFade)" />
+
+                                    <line
+                                        x1="100"
+                                        y1="104"
+                                        x2="100"
+                                        y2="32"
+                                        stroke="#5EEAD4"
+                                        stroke-width="1.5"
+                                        opacity="0.9" />
+
+                                </g>
+
+                                <!-- Radar blips -->
+                                <circle
+                                    class="blip b1"
+                                    cx="128"
+                                    cy="78"
+                                    r="3"
+                                    fill="#FF5A5F"
+                                    filter="url(#softGlow)" />
+
+                                <circle
+                                    class="blip b2"
+                                    cx="72"
+                                    cy="132"
+                                    r="3"
+                                    fill="#FFD166"
+                                    filter="url(#softGlow)" />
+
+                                <circle
+                                    class="blip b3"
+                                    cx="136"
+                                    cy="130"
+                                    r="3"
+                                    fill="#5EEAD4"
+                                    filter="url(#softGlow)" />
+
+                                <!-- Ping rings -->
+                                <circle
+                                    class="ping-ring r1"
+                                    cx="100"
+                                    cy="104"
+                                    r="34"
+                                    fill="none"
+                                    stroke="#FF5A5F"
+                                    stroke-width="1.5" />
+
+                                <circle
+                                    class="ping-ring r2"
+                                    cx="100"
+                                    cy="104"
+                                    r="34"
+                                    fill="none"
+                                    stroke="#2DD4BF"
+                                    stroke-width="1.5" />
+
+                                <circle
+                                    class="ping-ring r3"
+                                    cx="100"
+                                    cy="104"
+                                    r="34"
+                                    fill="none"
+                                    stroke="#8B5CF6"
+                                    stroke-width="1.5" />
+
+                            </g>
+
+                            <!-- Core -->
+                            <g class="shield-core">
+
+                                <circle
+                                    cx="100"
+                                    cy="104"
+                                    r="8"
+                                    fill="#FF5A5F"
+                                    filter="url(#softGlow)" />
+
+                                <circle
+                                    cx="100"
+                                    cy="104"
+                                    r="14"
+                                    fill="none"
+                                    stroke="rgba(255,90,95,0.45)"
+                                    stroke-width="1.5" />
+
+                            </g>
+
+                            <!-- Shield outline -->
+                            <path
+                                class="shield-outline"
+                                d="M100 26 L162 52 V104 C162 142 133 166 100 178
+                                   C67 166 38 142 38 104 V52 Z"
+                                fill="none"
+                                stroke="url(#shieldStroke)"
+                                stroke-width="2.5"
+                                stroke-linejoin="round" />
+
+                        </svg>
+
+                    </div>
+
+                    <div class="logo-caption">
+                        <span class="pulse-dot"></span>
+                        Radar live · 5 km
+                    </div>
+
+                </div>
+
+                <div class="brand-hero">
+
+                    <h1>
+                        Welcome back to your safety network
+                    </h1>
+
+                    <p>
+                        Sign in to reconnect your emergency radar,
+                        community feed, and verified responder channel.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- Quick Login Personas -->
+            <div class="persona-quick-panel">
+
+                <div class="persona-quick-title">
+                    Quick Test Personas (1-Click Login):
+                </div>
+
+                <div class="persona-pills-row">
+
+                    <button
+                        type="button"
+                        class="persona-btn"
+                        onclick="quickLoginPersona('aarohi.sharma@perimeter.org')">
+                        👩 Aarohi
+                    </button>
+
+                    <button
+                        type="button"
+                        class="persona-btn"
+                        onclick="quickLoginPersona('priya.deshmukh@volunteers.perimeter.org')">
+                        🙋 Priya
+                    </button>
+
+                    <button
+                        type="button"
+                        class="persona-btn"
+                        onclick="quickLoginPersona('patil.k@police.gov.in')">
+                        🚔 Patil
+                    </button>
+
+                    <button
+                        type="button"
+                        class="persona-btn"
+                        onclick="quickLoginPersona('rhea.nair@press.perimeter.org')">
+                        📰 Rhea
+                    </button>
+
+                    <button
+                        type="button"
+                        class="persona-btn"
+                        onclick="quickLoginPersona('admin.root@perimeter.org')">
+                        👑 Admin
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             RIGHT: LOGIN FORM
+        ====================================== -->
+
+        <section class="form-panel">
+
+            <!-- Mobile Logo -->
+            <div class="mobile-logo">
+
+                <div class="brand-logo-icon">
+                    🛡️
+                </div>
+
+                <div class="brand-title">
+                    PERIMETER <span>.</span>
+                </div>
+
+            </div>
+
+
+            <div class="form-header">
+
+                <h2>
+                    Sign in
+                </h2>
+
+                <p>
+                    Your role and dashboard are restored automatically
+                    from your account.
+                </p>
+
+            </div>
+
+
+            <!-- Information Banner -->
+            <div class="role-info-banner">
+
+                <span style="font-size:18px;">
+                    🔐
+                </span>
+
+                <span>
+                    Citizens, volunteers, press, police and admins
+                    all sign in here — PERIMETER routes you to the
+                    correct console.
+                </span>
+
+            </div>
+
+
+            <!-- LOGIN FORM -->
+            <form
+                id="loginForm"
+                onsubmit="return handleLogin(event)">
+
+                <!-- Identity -->
+                <div class="form-group">
+
+                    <label
+                        class="form-label"
+                        for="loginIdentity">
+
+                        Email or Badge ID
+
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            ✉️
+                        </span>
+
+                        <input
+                            type="text"
+                            id="loginIdentity"
+                            class="form-input"
+                            placeholder="you@domain.com or Badge ID"
+                            required
+                            autocomplete="username"
+                            autofocus>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Password -->
+                <div class="form-group">
+
+                    <label
+                        class="form-label"
+                        for="loginPassword">
+
+                        Password
+
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            class="form-input"
+                            placeholder="Enter your password"
+                            required
+                            minlength="6"
+                            autocomplete="current-password">
+
+                        <button
+                            type="button"
+                            class="toggle-pw"
+                            onclick="togglePassword()"
+                            id="pwToggleBtn"
+                            aria-label="Show password">
+
+                            👁️
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Remember + Forgot -->
+                <div class="form-meta-row">
+
+                    <label class="remember-box">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe"
+                            checked>
+
+                        Keep me signed in
+
+                    </label>
+
+                    <a
+                        href="#"
+                        class="link-quiet"
+                        onclick="handleForgot(event)">
+
+                        Forgot password?
+
+                    </a>
+
+                </div>
+
+
+                <!-- Login Button -->
+                <button
+                    type="submit"
+                    class="btn-login"
+                    id="submitLoginBtn">
+
+                    <span id="btnLoginText">
+                        Sign in to PERIMETER
+                    </span>
+
+                    <span>
+                        →
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <!-- Registration -->
+            <div class="divider-row">
+                New here
+            </div>
+
+            <div class="signup-cta">
+
+                No account yet?
+
+                <a href="register.html">
+                    Create one in under a minute
+                </a>
+
+            </div>
+
+
+            <!-- Mobile Personas -->
+            <div class="mobile-personas">
+
+                <div class="divider-row">
+                    Quick test personas
+                </div>
+
+                <div
+                    class="persona-pills-row"
+                    style="justify-content:center;">
+
+                    <button
+                        type="button"
+                        class="persona-btn"
+                        style="background:#F1F5F9;color:#334155;border-color:var(--line)"
+                        onclick="quickLoginPersona('aarohi.sharma@perimeter.org')">
+
+                        👩 Aarohi
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="persona-btn"
+                        style="background:#F1F5F9;color:#334155;border-color:var(--line)"
+                        onclick="quickLoginPersona('priya.deshmukh@volunteers.perimeter.org')">
+
+                        🙋 Priya
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="persona-btn"
+                        style="background:#F1F5F9;color:#334155;border-color:var(--line)"
+                        onclick="quickLoginPersona('patil.k@police.gov.in')">
+
+                        🚔 Patil
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="persona-btn"
+                        style="background:#F1F5F9;color:#334155;border-color:var(--line)"
+                        onclick="quickLoginPersona('rhea.nair@press.perimeter.org')">
+
+                        📰 Rhea
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="persona-btn"
+                        style="background:#F1F5F9;color:#334155;border-color:var(--line)"
+                        onclick="quickLoginPersona('admin.root@perimeter.org')">
+
+                        👑 Admin
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================
+         PERIMETER API
+    ====================================== -->
+
+    <script src="js/api.js"></script>
+
+
+    <script>
+
+        /* =====================================
+           PASSWORD VISIBILITY
+        ====================================== */
+
+        function togglePassword() {
+
+            const input =
+                document.getElementById('loginPassword');
+
+            const btn =
+                document.getElementById('pwToggleBtn');
+
+            const hidden =
+                input.type === 'password';
+
+            input.type =
+                hidden ? 'text' : 'password';
+
+            btn.textContent =
+                hidden ? '🙈' : '👁️';
+
+            btn.setAttribute(
+                'aria-label',
+                hidden
+                    ? 'Hide password'
+                    : 'Show password'
+            );
+        }
+
+
+        /* =====================================
+           FORGOT PASSWORD
+        ====================================== */
+
+        function handleForgot(event) {
+
+            event.preventDefault();
+
+            showToast(
+                'Password reset is not connected yet. Please contact the administrator.',
+                '📩'
+            );
+        }
+
+
+        /* =====================================
+           RESET LOGIN BUTTON
+        ====================================== */
+
+        function resetLoginButton() {
+
+            const btn =
+                document.getElementById('submitLoginBtn');
+
+            btn.disabled = false;
+
+            btn.innerHTML = `
+                <span id="btnLoginText">
+                    Sign in to PERIMETER
+                </span>
+                <span>→</span>
+            `;
+        }
+
+
+        /* =====================================
+           REAL PERIMETER LOGIN
+        ====================================== */
+
+        async function handleLogin(event) {
+
+            event.preventDefault();
+
+            const identity =
+                document
+                    .getElementById('loginIdentity')
+                    .value
+                    .trim();
+
+            const password =
+                document
+                    .getElementById('loginPassword')
+                    .value;
+
+            const rememberMe =
+                document
+                    .getElementById('rememberMe')
+                    .checked;
+
+
+            /* Basic validation */
+
+            if (!identity) {
+
+                showToast(
+                    'Please enter your email or badge ID.',
+                    '⚠️'
+                );
+
+                return false;
+            }
+
+            if (password.length < 6) {
+
+                showToast(
+                    'Password must be at least 6 characters long.',
+                    '⚠️'
+                );
+
+                return false;
+            }
+
+
+            /* Login button */
+
+            const btn =
+                document.getElementById('submitLoginBtn');
+
+            btn.disabled = true;
+
+            btn.innerHTML = `
+                <span>
+                    Verifying credentials...
+                </span>
+                <span>⏳</span>
+            `;
+
+
+            try {
+
+                /*
+                 * IMPORTANT:
+                 *
+                 * Your FastAPI backend expects:
+                 *
+                 * {
+                 *     identity: "...",
+                 *     password: "..."
+                 * }
+                 */
+
+                const res =
+                    await apiCall(
+                        '/auth/login',
+                        'POST',
+                        {
+                            identity: identity,
+                            password: password
+                        }
+                    );
+
+
+                /* Validate backend response */
+
+                if (
+                    !res ||
+                    !res.access_token ||
+                    !res.user
+                ) {
+
+                    throw new Error(
+                        'Invalid response received from the Perimeter server.'
+                    );
+                }
+
+
+                /* Save JWT + user profile */
+
+                saveSession(
+                    res.access_token,
+                    res.user
+                );
+
+
+                /*
+                 * Optional remembered identity.
+                 * Password is NEVER stored.
+                 */
+
+                if (rememberMe) {
+
+                    localStorage.setItem(
+                        'perimeter_remembered_identity',
+                        identity
+                    );
+
+                } else {
+
+                    localStorage.removeItem(
+                        'perimeter_remembered_identity'
+                    );
+                }
+
+
+                /* Successful login */
+
+                showToast(
+                    `Signed in as ${res.user.name} (${res.user.badge_title})`,
+                    '✅'
+                );
+
+
+                /*
+                 * Redirect according to backend role.
+                 *
+                 * user       → user.html
+                 * volunteer  → volunteer.html
+                 * police     → police.html
+                 * journalist → journalist.html
+                 * admin      → admin.html
+                 */
+
+                const target =
+                    ROLE_DASHBOARDS[res.user.role]
+                    || 'user.html';
+
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        target;
+
+                }, 600);
+
+            }
+
+
+            catch (err) {
+
+                console.error(
+                    'PERIMETER LOGIN ERROR:',
+                    err
+                );
+
+                resetLoginButton();
+
+                showToast(
+                    err.message ||
+                    'Sign in failed. Check your email/badge ID and password.',
+                    '❌'
+                );
+            }
+
+            return false;
+        }
+
+
+        /* =====================================
+           QUICK LOGIN PERSONA
+        ====================================== */
+
+        async function quickLoginPersona(identity) {
+
+            showToast(
+                `Signing in as ${identity.split('@')[0]}...`,
+                '⚡'
+            );
+
+
+            try {
+
+                const res =
+                    await apiCall(
+                        '/auth/login',
+                        'POST',
+                        {
+                            identity: identity,
+                            password: 'password123'
+                        }
+                    );
+
+
+                if (
+                    !res ||
+                    !res.access_token ||
+                    !res.user
+                ) {
+
+                    throw new Error(
+                        'Invalid response from backend.'
+                    );
+                }
+
+
+                saveSession(
+                    res.access_token,
+                    res.user
+                );
+
+
+                showToast(
+                    `Signed in as ${res.user.name} (${res.user.badge_title})`,
+                    '✅'
+                );
+
+
+                const target =
+                    ROLE_DASHBOARDS[res.user.role]
+                    || 'user.html';
+
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        target;
+
+                }, 500);
+
+            }
+
+
+            catch (err) {
+
+                console.error(
+                    'QUICK LOGIN ERROR:',
+                    err
+                );
+
+                showToast(
+                    err.message ||
+                    'Quick login failed.',
+                    '❌'
+                );
+            }
+        }
+
+
+        /* =====================================
+           PAGE LOAD
+        ====================================== */
+
+        window.addEventListener(
+            'DOMContentLoaded',
+            () => {
+
+                /*
+                 * If already logged in,
+                 * send user directly to dashboard.
+                 */
+
+                if (guardPublicPage()) {
+                    return;
+                }
+
+
+                /*
+                 * Restore remembered identity.
+                 * Only the email/badge ID is stored.
+                 * Password is never stored.
+                 */
+
+                const remembered =
+                    localStorage.getItem(
+                        'perimeter_remembered_identity'
+                    );
+
+                if (remembered) {
+
+                    document.getElementById(
+                        'loginIdentity'
+                    ).value = remembered;
+
+                    document.getElementById(
+                        'rememberMe'
+                    ).checked = true;
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

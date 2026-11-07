@@ -1,1 +1,61 @@
+# Python virtual environment
+.venv/
+venv/
+env/
 
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Node dependencies
+node_modules/
+
+# IDE settings
+.vscode/
+
+# Python test cache
+.pytest_cache/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+*.db
+*.sqlite
+*.sqlite3
+# Backend environment
+backend/.venv/
+backend/uploads/
+backend/perimeter.db
+backend/26.3
+backend/4.6.0
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+# Local database
+*.db
+*.sqlite
+*.sqlite3
+
+# Python environments
+.venv/
+backend/.venv/
+
+# Uploaded media
+backend/uploads/
+
+# Unnecessary files
+backend/26.3
+backend/4.6.0
+mobile/appbackend/.env
+*.db

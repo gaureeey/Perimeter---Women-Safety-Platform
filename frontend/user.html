@@ -10,8 +10,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         :root {
             --ink: #111528;
@@ -546,8 +544,6 @@
         .badge-role.verified { background: var(--teal-dim); color: var(--teal); }
         .badge-role.volunteer { background: var(--gold-dim); color: #B45309; }
         .badge-role.police { background: var(--police-dim); color: var(--police-blue); }
-        .badge-role.journalist { background: #E0F2FE; color: #0369A1; }
-        .badge-role.admin { background: #EDE9FE; color: #7C3AED; }
         .badge-role.user { background: #F1F5F9; color: var(--gray); }
 
         .post-meta-sub {
@@ -830,77 +826,6 @@
             background: #F1F5F9;
             color: var(--ink);
             border: 1px solid var(--line);
-        }
-
-        .role-filter-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-
-        .role-filter-pill {
-            padding: 6px 14px;
-            border-radius: 100px;
-            border: 1px solid var(--line);
-            background: #FFFFFF;
-            color: var(--ink);
-            font-size: 12.5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .role-filter-pill:hover {
-            border-color: var(--coral);
-            background: #FFF5F5;
-        }
-
-        .role-filter-pill.active {
-            background: var(--coral);
-            color: #FFFFFF;
-            border-color: var(--coral);
-            box-shadow: 0 4px 12px var(--coral-glow);
-        }
-
-        .user-card-credential {
-            font-size: 11.5px;
-            color: #475569;
-            background: #F8FAFC;
-            border: 1px dashed var(--line);
-            border-radius: 8px;
-            padding: 6px 8px;
-            margin: 8px 0;
-            text-align: left;
-            word-break: break-word;
-        }
-
-        .user-card-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .btn-card-view {
-            padding: 7px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 700;
-            border: 1px solid var(--line);
-            background: #F8FAFC;
-            color: var(--ink);
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .btn-card-view:hover {
-            background: #F1F5F9;
-            border-color: var(--coral);
-            color: var(--coral);
         }
 
         /* ================== REELS VIEW ================== */
@@ -1227,6 +1152,143 @@
             overflow-y: auto;
         }
 
+
+        /* ================== SMART SOS RADAR UPGRADE ================== */
+        .sos-upgrade-card {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            max-width: 760px;
+            margin: 0 auto;
+            box-shadow: var(--shadow-card);
+        }
+        .sos-status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+        .sos-location-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 11px;
+            border-radius: 100px;
+            background: var(--teal-dim);
+            color: var(--teal);
+            font-family: var(--mono);
+            font-size: 10.5px;
+            font-weight: 600;
+        }
+        .sos-location-chip.searching { background: var(--gold-dim); color: var(--gold); }
+        .sos-location-chip.denied { background: var(--coral-dim); color: var(--coral); }
+        .sos-category-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0 24px;
+        }
+        .sos-category-btn {
+            border: 1.5px solid var(--line);
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: left;
+            cursor: pointer;
+            transition: .18s ease;
+        }
+        .sos-category-btn:hover { transform: translateY(-1px); border-color: var(--coral); }
+        .sos-category-btn.active { border-color: var(--coral); background: var(--coral-dim); box-shadow: 0 0 0 3px var(--coral-glow); }
+        .sos-category-icon { font-size: 25px; margin-bottom: 7px; }
+        .sos-category-title { font-size: 14px; font-weight: 800; }
+        .sos-category-desc { font-size: 11.5px; color: var(--gray); margin-top: 3px; }
+        .sos-stage {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 220px;
+            margin: 6px 0 8px;
+        }
+        .sos-ring-field {
+            width: 210px;
+            height: 210px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sos-ring-field svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .sos-geofence-dash { fill: none; stroke: var(--coral); stroke-width: 1.5; stroke-dasharray: 5 8; opacity: .35; animation: sosRotate 40s linear infinite; transform-origin: center; }
+        @keyframes sosRotate { to { transform: rotate(360deg); } }
+        .sos-pulse-ring { position: absolute; border-radius: 50%; border: 2px solid var(--coral); opacity: 0; pointer-events: none; }
+        .sos-pulse-ring.animate { animation: sosPulse 1.8s ease-out infinite; }
+        @keyframes sosPulse { 0% { width: 120px; height: 120px; opacity: .55; } 100% { width: 270px; height: 270px; opacity: 0; } }
+        .sos-hold-progress {
+            position: absolute; width: 158px; height: 158px; border-radius: 50%;
+            background: conic-gradient(var(--ink) calc(var(--p,0) * 1%), transparent 0);
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 6px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 6px));
+            opacity: 0; transition: opacity .15s ease; z-index: 1;
+        }
+        .sos-hold-progress.visible { opacity: 1; }
+        .sos-main-btn {
+            width: 150px; height: 150px; border-radius: 50%; border: none; cursor: pointer;
+            background: radial-gradient(circle at 35% 30%, #FF7377, var(--coral) 70%);
+            color: white; font-weight: 800; font-size: 15px; letter-spacing: .02em;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+            box-shadow: 0 12px 30px rgba(255,90,95,.4); position: relative; z-index: 2;
+            user-select: none; touch-action: none; transition: transform .12s ease, box-shadow .12s ease;
+        }
+        .sos-main-btn:disabled { opacity: .55; cursor: not-allowed; }
+        .sos-main-btn:active:not(:disabled), .sos-main-btn.holding { transform: scale(.97); box-shadow: 0 12px 40px rgba(255,90,95,.65); }
+        .sos-center-dot { width: 8px; height: 8px; border-radius: 50%; background: white; animation: sosDotPulse 1.4s ease-in-out infinite; }
+        @keyframes sosDotPulse { 0%,100% { transform: scale(1); opacity:1; } 50% { transform:scale(1.5); opacity:.6; } }
+        .sos-hint { font-size: 12px; color: var(--gray); text-align: center; margin-top: 10px; }
+        .sos-active-panel {
+            display: none; margin-top: 22px; padding: 18px; border-radius: 16px;
+            background: #111528; color: white; text-align: left;
+        }
+        .sos-active-panel.show { display: block; }
+        .sos-active-head { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px; }
+        .sos-active-title { font-size: 14px; font-weight: 800; display:flex; align-items:center; gap:8px; }
+        .sos-active-title .dot { width:8px; height:8px; border-radius:50%; background:#FF5A5F; box-shadow:0 0 0 5px rgba(255,90,95,.15); animation:blink 1.4s infinite; }
+        .sos-timer { font-family:var(--mono); font-size:16px; font-weight:700; }
+        .sos-responder-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-top:1px solid rgba(255,255,255,.1); }
+        .sos-responder-avatar { width:34px; height:34px; border-radius:50%; background:#2A304E; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; }
+        .sos-responder-info { flex:1; }
+        .sos-responder-name { font-size:12px; font-weight:700; }
+        .sos-responder-meta { font-size:10.5px; color:#94A3B8; }
+        .sos-empty { font-size:12px; color:#CBD5E1; padding:10px 0; }
+        .sos-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px; }
+        .sos-detail { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:9px 10px; }
+        .sos-detail-label { font-size:9.5px; color:#94A3B8; text-transform:uppercase; letter-spacing:.04em; }
+        .sos-detail-value { font-size:11px; font-weight:700; margin-top:2px; word-break:break-word; }
+        .sos-action-row { display:flex; gap:8px; margin-top:14px; }
+        .sos-call-btn, .sos-stand-btn { flex:1; padding:10px; border-radius:100px; font-weight:800; cursor:pointer; border:1px solid rgba(255,255,255,.15); }
+        .sos-call-btn { background:#FFFFFF; color:#111528; }
+        .sos-stand-btn { background:#FF5A5F; color:#FFFFFF; }
+        .sos-preferences { margin-top:22px; border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+        .sos-pref-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 15px; border-bottom:1px solid var(--line); }
+        .sos-pref-row:last-child { border-bottom:none; }
+        .sos-pref-title { font-size:12px; font-weight:700; }
+        .sos-pref-desc { font-size:10.5px; color:var(--gray); margin-top:2px; }
+        .sos-switch { width:42px; height:24px; border:0; border-radius:100px; background:#CBD5E1; position:relative; cursor:pointer; flex-shrink:0; }
+        .sos-switch::after { content:''; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:white; transition:.18s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+        .sos-switch.on { background:var(--teal); }
+        .sos-switch.on::after { left:21px; }
+        .sos-quick-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
+        .sos-secondary-btn { padding:11px; border-radius:100px; border:1px solid var(--line); background:#F8FAFC; font-weight:700; color:#475569; cursor:pointer; }
+        .sos-secondary-btn:hover { border-color:var(--coral); color:var(--ink); }
+        .sos-footnote { margin-top:14px; font-size:10.5px; line-height:1.5; color:var(--gray); text-align:center; }
+        @media (max-width: 600px) {
+            .sos-category-grid, .sos-detail-grid, .sos-quick-actions { grid-template-columns:1fr; }
+            .sos-upgrade-card { padding:20px 14px; }
+        }
+
         /* Responsive */
         @media (max-width: 880px) {
             .feed-grid { grid-template-columns: 1fr; }
@@ -1320,25 +1382,16 @@
                             <button type="button" class="tag-pill" data-cat="HELP_REQUEST" onclick="selectPostCategory(this, 'HELP_REQUEST')">🙋 Help Request</button>
                             <button type="button" class="tag-pill" data-cat="POLICE_NOTICE" onclick="selectPostCategory(this, 'POLICE_NOTICE')">🚔 Police Notice</button>
                         </div>
-                        <!-- Device Media Preview Carousel Container -->
-                        <div id="postMediaPreviewContainer" style="display: none; margin: 12px 0; padding: 12px; background: #0B0E1B; border-radius: 14px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <span style="font-size: 11.5px; font-weight: 800; color: #94A3B8; text-transform: uppercase;">Device Media (<span id="previewCountText">0</span>/10 items)</span>
-                                <button type="button" onclick="clearSelectedMedia()" style="background: none; border: none; color: #FF5A5F; font-size: 11.5px; font-weight: 700; cursor: pointer;">Remove All</button>
-                            </div>
-                            <div id="postMediaPreviewGrid" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px;"></div>
-                        </div>
-
                         <div class="create-post-footer">
-                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                                <input type="file" id="postDeviceFileInput" accept="image/*,video/*" multiple style="display: none;" onchange="handlePostDeviceFiles(event)">
-                                <button type="button" onclick="document.getElementById('postDeviceFileInput').click()" style="background: var(--paper-2); border: 1px solid var(--line); border-radius: 100px; padding: 6px 14px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--ink);">
-                                    <span>📷 Add Photo/Video</span>
-                                </button>
-                                <span style="cursor: pointer; font-size: 11.5px; color: var(--gray);" onclick="promptMediaUrl()">🔗 Image URL</span>
-                                <span id="attachedMediaIndicator" style="display: none; color: var(--teal); font-weight: 700; font-size: 12px;">✓ <span id="attachedCount">0</span> Attached</span>
+                            <div style="display: flex; gap: 10px; font-size: 12px; color: var(--gray);">
+                                <label style="cursor:pointer;">
+        📷 Add Photo
+        <input id="postPhotoInput" type="file" accept="image/*" style="display:none" onchange="handlePostPhotoSelected(this)">
+    </label>
+    <span style="cursor:pointer;color:#64748B;" onclick="promptMediaUrl()">Use Photo URL</span>
+                                <span id="attachedMediaIndicator" style="display: none; color: var(--teal); font-weight: 700;">✓ Photo Attached</span>
                             </div>
-                            <button class="btn-publish-post" id="btnPublishPost" onclick="publishPost()">Post Update →</button>
+                            <button class="btn-publish-post" onclick="publishPost()">Post Update →</button>
                         </div>
                     </div>
 
@@ -1392,17 +1445,9 @@
             <div class="explore-header">
                 <div style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Explore Safety Community</div>
                 <div style="font-size: 13px; color: var(--gray); margin-bottom: 14px;">Find neighbors, verified emergency volunteers, police command precincts, and journalists.</div>
-                <div style="position: relative; margin-bottom: 12px;">
+                <div style="position: relative;">
                     <span style="position: absolute; left: 16px; top: 13px; font-size: 15px;">🔍</span>
                     <input type="text" class="search-input-big" id="exploreSearchInput" placeholder="Search by name, @username, role (volunteer/police), or location..." oninput="handleExploreSearch(this.value)">
-                </div>
-
-                <div class="role-filter-row">
-                    <button type="button" class="role-filter-pill active" data-role="all" onclick="filterExploreRole(this, 'all')">🌐 All Members</button>
-                    <button type="button" class="role-filter-pill" data-role="user" onclick="filterExploreRole(this, 'user')">👩 Citizens</button>
-                    <button type="button" class="role-filter-pill" data-role="volunteer" onclick="filterExploreRole(this, 'volunteer')">🙋 Verified Volunteers</button>
-                    <button type="button" class="role-filter-pill" data-role="police" onclick="filterExploreRole(this, 'police')">🚔 Police Command</button>
-                    <button type="button" class="role-filter-pill" data-role="journalist" onclick="filterExploreRole(this, 'journalist')">📰 Press Reporters</button>
                 </div>
             </div>
 
@@ -1474,25 +1519,117 @@
             </div>
         </section>
 
-        <!-- ==================== 6. SOS RADAR & EMERGENCY VIEW ==================== -->
+        <!-- ==================== 6. SMART SOS RADAR & EMERGENCY VIEW ==================== -->
         <section class="view-panel" id="view-sos">
-            <div style="background: #FFFFFF; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 32px; text-align: center; max-width: 650px; margin: 0 auto; box-shadow: var(--shadow-card);">
-                <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--coral-dim); color: var(--coral); font-size: 38px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
-                    🚨
+            <div class="sos-upgrade-card">
+                <div class="sos-status-row">
+                    <div>
+                        <div style="font-size:11px; font-weight:800; color:var(--coral); text-transform:uppercase; letter-spacing:.08em;">SMART SOS</div>
+                        <h1 style="font-size:25px; font-weight:800; margin-top:3px;">Send your location. Get real help.</h1>
+                        <p style="font-size:13px; color:var(--gray); margin-top:4px;">Choose what is happening, then hold the button for 2 seconds to alert your network.</p>
+                    </div>
+                    <div class="sos-location-chip searching" id="sosLocationStatus"><span>●</span><span id="sosLocationText">Getting GPS location…</span></div>
                 </div>
-                <h1 style="font-size: 26px; font-weight: 800; margin-bottom: 6px;">Instant Emergency SOS Dispatch</h1>
-                <p style="font-size: 13.5px; color: var(--gray); margin-bottom: 24px;">
-                    Triggering sends your real-time GPS coordinates to all nearby police patrol units and verified volunteers within a 5 km spatial radius.
-                </p>
 
-                <div style="display: flex; flex-direction: column; gap: 14px;">
-                    <button class="btn-sos-header" style="padding: 16px; font-size: 16px; justify-content: center;" onclick="triggerSOSInstant()">
-                        ⚡ HOLD OR TAP: TRIGGER 5KM GEOFENCE SOS
+                <div class="sos-category-grid">
+                    <button type="button" class="sos-category-btn active" data-sos-cat="public" onclick="selectSOSCategory('public')">
+                        <div class="sos-category-icon">🚨</div>
+                        <div class="sos-category-title">Public Safety</div>
+                        <div class="sos-category-desc">Police + nearby verified volunteers</div>
                     </button>
-                    <button style="padding: 12px; border-radius: 100px; border: 1px solid var(--line); background: #F8FAFC; font-weight: 700; color: #475569; cursor: pointer;" onclick="openAccidentModal()">
-                        🚗 Report Accident / Collision Dispatch
+                    <button type="button" class="sos-category-btn" data-sos-cat="medical" onclick="selectSOSCategory('medical')">
+                        <div class="sos-category-icon">🏥</div>
+                        <div class="sos-category-title">Personal / Medical</div>
+                        <div class="sos-category-desc">Emergency contacts + medical response</div>
                     </button>
                 </div>
+
+                <div class="sos-severity-panel" style="margin: 14px 0 6px; padding: 14px 16px; border: 1px solid #E2E8F0; border-radius: 16px; background: #F8FAFC;">
+                    <div style="font-size: 12px; font-weight: 800; color: #334155; margin-bottom: 9px;">How serious is the situation?</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button type="button" id="sosSeverityMedium" onclick="selectSOSSeverity('MEDIUM')"
+                                style="border: 2px solid #CBD5E1; border-radius: 12px; padding: 10px; background: white; cursor: pointer; font-weight: 700;">
+                            🟢 Need Assistance<br><small style="font-weight:500;color:#64748B;">Verified volunteer</small>
+                        </button>
+                        <button type="button" id="sosSeverityHigh" onclick="selectSOSSeverity('HIGH')"
+                                style="border: 2px solid #CBD5E1; border-radius: 12px; padding: 10px; background: white; cursor: pointer; font-weight: 700;">
+                            🔴 Immediate Danger<br><small style="font-weight:500;color:#64748B;">Police Command</small>
+                        </button>
+                    </div>
+                    <div id="sosRoutingHint" style="font-size: 11px; color: #64748B; margin-top: 8px;">Need assistance → verified volunteer dispatch.</div>
+                </div>
+
+                <div class="sos-stage">
+                    <div class="sos-ring-field">
+                        <svg viewBox="0 0 280 280" aria-hidden="true"><circle class="sos-geofence-dash" cx="140" cy="140" r="135" /></svg>
+                        <div class="sos-pulse-ring" id="sosPulse1"></div>
+                        <div class="sos-pulse-ring" id="sosPulse2"></div>
+                        <div class="sos-hold-progress" id="sosHoldProgress"></div>
+                        <button class="sos-main-btn" id="sosMainBtn" aria-describedby="sosHint" type="button">
+                            <div class="sos-center-dot"></div>
+                            <span id="sosMainBtnLabel">HOLD FOR<br>SOS</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="sos-hint" id="sosHint">Press and hold — release to cancel before <b>2s</b></div>
+
+                <div class="sos-active-panel" id="sosActivePanel">
+                    <div class="sos-active-head">
+                        <div class="sos-active-title"><span class="dot"></span> SOS ACTIVE</div>
+                        <div class="sos-timer" id="sosTimerText">00:00</div>
+                    </div>
+                    <div id="sosResponderSlot"><div class="sos-empty">Dispatching to responders in your 5 km radius…</div></div>
+                    <div class="sos-detail-grid">
+                        <div class="sos-detail"><div class="sos-detail-label">Case ID</div><div class="sos-detail-value" id="sosCaseIdText">—</div></div>
+                        <div class="sos-detail"><div class="sos-detail-label">GPS</div><div class="sos-detail-value" id="sosCoordText">—</div></div>
+                        <div class="sos-detail"><div class="sos-detail-label">Shared With</div><div class="sos-detail-value" id="sosSharedText">—</div></div>
+                        <div class="sos-detail"><div class="sos-detail-label">Audio</div><div class="sos-detail-value" id="sosAudioText">Off</div></div>
+                    </div>
+                    <div class="sos-action-row">
+                        <button class="sos-call-btn" id="sosCallBtn" onclick="callSOSControlRoom()">📞 Call 112</button>
+                        <button class="sos-stand-btn" id="sosStandBtn" onclick="standDownSOS()">Stand Down</button>
+                    </div>
+                </div>
+
+                <div style="margin:16px 0;padding:14px;border:1px solid #E2E8F0;border-radius:14px;background:#F8FAFC;">
+                    <div style="font-weight:800;font-size:13px;margin-bottom:4px;">🎥 Optional SOS Proof</div>
+                    <div style="font-size:11px;color:#64748B;margin-bottom:10px;">
+                        Audio or video evidence is optional. SOS can be triggered without any proof.
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <label class="sos-secondary-btn" style="cursor:pointer;">
+                            🎙️ Add Audio
+                            <input id="sosAudioProof" type="file" accept="audio/*" style="display:none">
+                        </label>
+                        <label class="sos-secondary-btn" style="cursor:pointer;">
+                            🎥 Add Video
+                            <input id="sosVideoProof" type="file" accept="video/*" style="display:none">
+                        </label>
+                    </div>
+                    <div id="sosProofStatus" style="font-size:11px;color:#64748B;margin-top:8px;">No proof attached.</div>
+                </div>
+
+                <div class="sos-quick-actions">
+                    <button class="sos-secondary-btn" onclick="openAccidentModal()">🚗 Report Accident / Collision</button>
+                    <button class="sos-secondary-btn" onclick="refreshSOSLocation()">📍 Refresh GPS Location</button>
+                </div>
+
+                <div class="sos-preferences">
+                    <div class="sos-pref-row">
+                        <div><div class="sos-pref-title">Share live location</div><div class="sos-pref-desc">Updates while the SOS is active.</div></div>
+                        <button type="button" class="sos-switch on" id="sosTglLocation" aria-checked="true" onclick="toggleSOSPreference(this,'share_location')"></button>
+                    </div>
+                    <div class="sos-pref-row">
+                        <div><div class="sos-pref-title">Record ambient audio</div><div class="sos-pref-desc">Send the recording preference with the case.</div></div>
+                        <button type="button" class="sos-switch on" id="sosTglAudio" aria-checked="true" onclick="toggleSOSPreference(this,'record_audio')"></button>
+                    </div>
+                    <div class="sos-pref-row">
+                        <div><div class="sos-pref-title">Silent mode</div><div class="sos-pref-desc">No vibration from this page when enabled.</div></div>
+                        <button type="button" class="sos-switch" id="sosTglSilent" aria-checked="false" onclick="toggleSOSPreference(this,'silent_mode')"></button>
+                    </div>
+                </div>
+
+                <p class="sos-footnote">SOS uses your browser's location permission. Location is sent only when you trigger an emergency request. Verify your emergency contacts and permissions before relying on the prototype.</p>
             </div>
         </section>
 
@@ -1534,131 +1671,6 @@
             <!-- Activity Container -->
             <div id="profileActivityContent">
                 <!-- Rendered dynamically -->
-            </div>
-        </section>
-
-        <!-- ==================== 7. SOS & SAFETY MAP VIEW ==================== -->
-        <section class="view-panel" id="view-sos">
-            <div style="background: white; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-card); margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 18px;">
-                    <div>
-                        <h2 style="font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px;">
-                            <span>🚨 Live Safety Map & Geofence Radar</span>
-                            <span style="font-size: 11px; background: #DC2626; color: white; padding: 2px 8px; border-radius: 100px; text-transform: uppercase;">Active 5 km</span>
-                        </h2>
-                        <p style="font-size: 13px; color: var(--gray); margin-top: 4px;">
-                            Real-time GPS geofence connected to City Police Command, verified volunteers, and NCRB crime statistics.
-                        </p>
-                    </div>
-
-                    <!-- Top Action Controls -->
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <button class="nav-tab-btn" style="background: #F1F5F9; border: 1px solid var(--line);" onclick="locateUserOnMap()">
-                            📍 Use My Location
-                        </button>
-                        <button class="nav-tab-btn" style="background: #F1F5F9; border: 1px solid var(--line);" onclick="toggleHeatmapLayer()">
-                            🗺️ Safety Heatmap
-                        </button>
-                        <button class="nav-tab-btn" style="background: #F1F5F9; border: 1px solid var(--line);" onclick="openModal('accidentModal')">
-                            🚗 Report Incident
-                        </button>
-                        <button class="btn-sos-header" onclick="triggerSOSInstant()">
-                            ⚡ TRIGGER SOS
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Emergency State Banner (active during distress) -->
-                <div id="activeEmergencyBanner" style="display: none; background: linear-gradient(135deg, #DC2626, #991B1B); color: white; padding: 14px 20px; border-radius: var(--radius-md); margin-bottom: 18px; align-items: center; justify-content: space-between; animation: pulse-sos 2s infinite;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <span style="font-size: 24px;">🚨</span>
-                        <div>
-                            <div style="font-weight: 800; font-size: 15px;">EMERGENCY BROADCAST ACTIVE</div>
-                            <div style="font-size: 12.5px; opacity: 0.95;">Your real-time GPS coordinates are being transmitted to authorized emergency responders (Police & 5km Volunteers).</div>
-                        </div>
-                    </div>
-                    <button onclick="cancelActiveEmergency()" style="background: white; color: #DC2626; border: none; padding: 6px 14px; border-radius: 100px; font-weight: 700; cursor: pointer; font-size: 12px;">Resolve Distress</button>
-                </div>
-
-                <!-- User Location Consent Banner -->
-                <div id="locationConsentBanner" style="display: none; background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 12px; padding: 12px 18px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 20px;">📍</span>
-                        <div>
-                            <strong style="color: #92400E; font-size: 13px;">Location Permission</strong>
-                            <div style="font-size: 12px; color: #78350F;">Perimeter wants to access your location to provide live safety and route recommendations.</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <button onclick="requestUserLocationConsent(true)" style="background: #D97706; color: white; border: none; padding: 6px 14px; border-radius: 100px; font-weight: 700; font-size: 12px; cursor: pointer;">Allow Location</button>
-                        <button onclick="requestUserLocationConsent(false)" style="background: transparent; color: #78350F; border: 1px solid #D97706; padding: 6px 12px; border-radius: 100px; font-weight: 600; font-size: 12px; cursor: pointer;">Not Now</button>
-                    </div>
-                </div>
-
-                <!-- Live GPS Status Readout -->
-                <div id="liveGpsStatusRow" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #F8FAFC; border: 1px solid var(--line); border-radius: 10px; margin-bottom: 12px; font-size: 12px; flex-wrap: wrap; gap: 8px;">
-                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <span style="color: var(--teal); font-weight: 800;">📍 Your Current Location:</span>
-                        <span id="liveGpsCoordsText" style="font-family: var(--mono); color: var(--ink); font-weight: 600;">Detecting GPS...</span>
-                        <span id="liveGpsAccuracyBadge" style="background: #E2E8F0; color: #334155; padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 700;">± -- m</span>
-                    </div>
-                    <div id="liveGpsUpdatedText" style="color: var(--gray); font-size: 11.5px;">Updated: just now</div>
-                </div>
-
-                <!-- Interactive Leaflet Map Container -->
-                <div id="userSafetyMap" style="height: 480px; width: 100%; border-radius: 14px; border: 1px solid var(--line); z-index: 10;"></div>
-
-                <!-- Map Legend & Data Attribution -->
-                <div style="margin-top: 14px; padding: 12px 16px; background: #F8FAFC; border: 1px solid var(--line); border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 12px;">
-                    <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-weight: 600;">
-                        <span><b style="color: #10B981;">●</b> Lower reported risk (0–40)</span>
-                        <span><b style="color: #F59E0B;">●</b> Moderate reported risk (41–65)</span>
-                        <span><b style="color: #EF4444;">●</b> Higher reported risk (66–100)</span>
-                        <span>🚨 Active SOS</span>
-                        <span>🚔 Police Command</span>
-                        <span>🙋 Volunteer Unit</span>
-                    </div>
-                    <div style="color: var(--gray); font-size: 11.5px; font-style: italic;">
-                        Risk estimation uses Perimeter incident reports and publicly available NCRB crime statistics.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Safe Route Analysis Card -->
-            <div style="background: white; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-card);">
-                <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
-                    <span>🚶 Find Safer Route (AI Corridor Risk Analysis)</span>
-                </h3>
-                <p style="font-size: 13px; color: var(--gray); margin-bottom: 16px;">
-                    Compare the fastest route with patrolled, lower reported risk alternatives.
-                </p>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; margin-bottom: 16px;">
-                    <div>
-                        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--gray);">Origin</label>
-                        <input type="text" id="routeOriginInput" class="search-input-big" value="My Current GPS Location" style="border-radius: 8px; padding-left: 12px;" readonly>
-                    </div>
-                    <div>
-                        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--gray);">Destination (Safe Transit Corridor)</label>
-                        <select id="routeDestSelect" class="search-input-big" style="border-radius: 8px; padding-left: 12px;">
-                            <option value="19.1136,72.8697">Andheri East Metro Interchange (19.1136, 72.8697)</option>
-                            <option value="19.0657,72.8687">Bandra Kurla Complex (BKC) (19.0657, 72.8687)</option>
-                            <option value="19.0178,72.8478">Dadar Central Station Hub (19.0178, 72.8478)</option>
-                            <option value="18.9067,72.8147">Colaba Gateway Terminal (18.9067, 72.8147)</option>
-                            <option value="19.1257,72.9090">Powai Lake Safe Corridor (19.1257, 72.9090)</option>
-                        </select>
-                    </div>
-                    <div style="display: flex; align-items: flex-end;">
-                        <button class="btn-publish-post" style="height: 44px; padding: 0 20px;" onclick="calculateSafeRoutes()">
-                            Analyze Routes →
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Evaluated Route Cards Container -->
-                <div id="routeResultsContainer" style="display: none; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px;">
-                    <!-- Rendered dynamically -->
-                </div>
             </div>
         </section>
 
@@ -1764,117 +1776,52 @@
     <!-- Accident Report Modal -->
     <div class="modal-overlay" id="accidentModal">
         <div class="modal-card">
-            <h3 style="font-size: 18px; font-weight: 800; color: #DC2626; margin-bottom: 14px;">🚗 Report Accident / Collision</h3>
-            <div style="margin-bottom: 12px;">
-                <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Incident Severity</label>
-                <select id="accidentSeverity" class="search-input-big" style="border-radius: 8px; padding-left: 12px;">
-                    <option value="CRITICAL">CRITICAL (Ambulance & PCR required)</option>
-                    <option value="HIGH">HIGH (Major Vehicle Collision)</option>
-                    <option value="MEDIUM">MEDIUM (Minor Fender / Road Obstruction)</option>
+            <h3 style="font-size:18px; font-weight:800; color:#DC2626; margin-bottom:8px;">🚗 Report Accident / Collision</h3>
+            <p style="font-size:12px; color:var(--gray); margin-bottom:14px;">Your current browser GPS will be used when available.</p>
+            <div style="margin-bottom:12px;">
+                <label style="font-size:11px; font-weight:700; text-transform:uppercase;">Incident Severity</label>
+                <select id="accidentSeverity" class="search-input-big" style="border-radius:8px; padding-left:12px;">
+                    <option value="CRITICAL">CRITICAL — Ambulance / emergency units</option>
+                    <option value="HIGH">HIGH — Major vehicle collision</option>
+                    <option value="MEDIUM">MEDIUM — Minor collision / road obstruction</option>
                 </select>
             </div>
-            <div style="margin-bottom: 12px;">
-                <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Vehicle / Landmark Details</label>
-                <textarea id="accidentNotes" class="create-post-input" placeholder="e.g. Two-wheeler collision near Metro Pillar #42. Two riders injured."></textarea>
+            <div style="margin-bottom:12px;">
+                <label style="font-size:11px; font-weight:700; text-transform:uppercase;">Vehicle / Landmark Details</label>
+                <textarea id="accidentNotes" class="create-post-input" placeholder="e.g. Two-wheeler collision near a junction. Two people appear injured."></textarea>
             </div>
-            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
-                <button style="padding: 8px 16px; border-radius: 100px; border: 1px solid var(--line); background: #F1F5F9; font-weight: 600; cursor: pointer;" onclick="closeModal('accidentModal')">Cancel</button>
-                <button class="btn-sos-header" style="background: #DC2626;" onclick="submitAccidentReport()">Dispatch Emergency Units →</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- User Profile Viewer Modal -->
-    <div class="modal-overlay" id="userProfileModal">
-        <div class="modal-card" style="max-width: 520px; position: relative;">
-            <button onclick="closeModal('userProfileModal')" style="position: absolute; right: 20px; top: 20px; border: none; background: #F1F5F9; border-radius: 50%; width: 32px; height: 32px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;">✕</button>
-            
-            <div style="text-align: center; margin-top: 10px;">
-                <div id="modalProfileAvatar" style="width: 80px; height: 80px; border-radius: 50%; background: var(--coral); color: white; font-size: 28px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; box-shadow: 0 8px 24px var(--coral-glow);">AS</div>
-                <h3 id="modalProfileName" style="font-size: 20px; font-weight: 800; margin-bottom: 2px;">User Name</h3>
-                <div id="modalProfileUsername" style="font-size: 13px; color: var(--gray); font-family: var(--mono); margin-bottom: 8px;">@handle</div>
-                <span id="modalProfileBadge" class="badge-role user" style="display: inline-block; padding: 4px 12px; font-size: 11.5px;">Citizen User</span>
-            </div>
-
-            <!-- Credentials Callout -->
-            <div id="modalProfileCredentials" style="margin: 16px 0; padding: 12px; background: #F8FAFC; border: 1px solid var(--line); border-radius: 10px; font-size: 12.5px; color: #334155;">
-                <!-- Filled dynamically -->
-            </div>
-
-            <p id="modalProfileBio" style="font-size: 13px; color: #475569; line-height: 1.5; margin-bottom: 16px; text-align: center;">Bio description...</p>
-
-            <div style="display: flex; justify-content: center; gap: 24px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 16px;">
-                <div style="text-align: center;">
-                    <div id="modalStatPosts" style="font-size: 16px; font-weight: 800; color: var(--ink);">0</div>
-                    <div style="font-size: 11px; color: var(--gray);">Posts</div>
-                </div>
-                <div style="text-align: center;">
-                    <div id="modalStatFollowers" style="font-size: 16px; font-weight: 800; color: var(--ink);">0</div>
-                    <div style="font-size: 11px; color: var(--gray);">Followers</div>
-                </div>
-                <div style="text-align: center;">
-                    <div id="modalStatFollowing" style="font-size: 16px; font-weight: 800; color: var(--ink);">0</div>
-                    <div style="font-size: 11px; color: var(--gray);">Following</div>
-                </div>
-            </div>
-
-            <div id="modalProfileMeta" style="font-size: 12px; color: var(--gray); margin-bottom: 20px; display: flex; flex-direction: column; gap: 6px;">
-                <div id="modalProfileLocation">📍 Location: Mumbai</div>
-                <div id="modalProfileEmail">✉️ Email: user@perimeter.org</div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button id="modalFollowBtn" class="btn-follow" style="margin-top: 0;" onclick="toggleModalFollow()">+ Follow</button>
-                <button id="modalMessageBtn" class="btn-publish-post" style="background: var(--ink); justify-content: center;" onclick="openModalChat()">💬 Message</button>
+            <div id="accidentGpsStatus" style="font-size:11px; color:var(--gray); margin-bottom:12px;">📍 GPS will be acquired before dispatch.</div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+                <button style="padding:8px 16px; border-radius:100px; border:1px solid var(--line); background:#F1F5F9; font-weight:600; cursor:pointer;" onclick="closeModal('accidentModal')">Cancel</button>
+                <button class="btn-sos-header" id="accidentDispatchBtn" style="background:#DC2626;" onclick="submitAccidentReport()">Dispatch Emergency Units →</button>
             </div>
         </div>
     </div>
 
     <script src="js/api.js"></script>
-    <script src="js/location.js"></script>
     <script>
         let currentUser = null;
         let selectedCategory = 'COMMUNITY_UPDATE';
         let attachedMediaUrl = null;
-        let selectedDeviceFiles = [];
         let activeStoryId = null;
         let activeConvId = null;
-        let userSafetyMap = null;
-        let userMarker = null;
-        let heatLayerGroup = null;
-        let routeLayerGroup = null;
-        let activeEmergencyIncidentId = null;
 
         window.addEventListener('DOMContentLoaded', async () => {
-            currentUser = await guardProtectedPage();
+            connectCitizenSOSChannel();
+            currentUser = await guardProtectedPage(['user', 'admin']);
             if (!currentUser) return;
 
             // Render user badge & header info
             document.getElementById('navUserName').textContent = currentUser.name.split(' ')[0];
             document.getElementById('navUserAvatar').textContent = currentUser.avatar || 'AS';
             document.getElementById('createPostAvatar').textContent = currentUser.avatar || 'AS';
-            
-            const roleBadgeMap = {
-                'user': '🛡️ Citizen Member',
-                'volunteer': '🙋 Verified Volunteer Responder',
-                'police': '🚔 City Police Command',
-                'journalist': '📰 Accredited Press Reporter',
-                'admin': '⚙️ Super Administrator'
-            };
-            document.getElementById('userBadgeTop').textContent = roleBadgeMap[currentUser.role] || `🛡️ ${currentUser.badge_title || 'Citizen Member'}`;
+            document.getElementById('userBadgeTop').textContent = `🛡️ ${currentUser.badge_title || 'Citizen Member'}`;
 
             // Load initial data
             loadFeed('ALL');
             loadStories();
             loadSidebarChannels();
             loadProfileData();
-
-            // Connect real-time alert websocket
-            NotificationAPI.connectWebSocket(currentUser.role || 'user', (alert) => {
-                if (alert.type === 'NEW_SOS_INCIDENT') {
-                    showToast(`🚨 Active Emergency Alert in your area: ${alert.incident_id}`, '🚨', 6000);
-                }
-            });
         });
 
         /* View Navigation Switcher */
@@ -1892,10 +1839,9 @@
             else if (viewName === 'messages') loadConversations();
             else if (viewName === 'channels') loadChannelsView();
             else if (viewName === 'profile') loadProfileData();
-            else if (viewName === 'sos') initUserSafetyMap();
         }
 
-        /* ------------------ FEED & DEVICE MEDIA UPLOAD ------------------ */
+        /* ------------------ FEED & STORIES ------------------ */
 
         function selectPostCategory(el, cat) {
             document.querySelectorAll('.category-select-row .tag-pill').forEach(p => p.classList.remove('active'));
@@ -1903,158 +1849,79 @@
             selectedCategory = cat;
         }
 
-        function handlePostDeviceFiles(event) {
-            const files = Array.from(event.target.files || []);
-            if (!files.length) return;
-
-            const allowedTotal = 10;
-            if (selectedDeviceFiles.length + files.length > allowedTotal) {
-                showToast(`Maximum ${allowedTotal} media items allowed per post.`, '⚠️');
-            }
-
-            const availableSlots = allowedTotal - selectedDeviceFiles.length;
-            const toAdd = files.slice(0, availableSlots);
-
-            for (const f of toAdd) {
-                const isImage = f.type.startsWith('image/');
-                const isVideo = f.type.startsWith('video/');
-                if (!isImage && !isVideo) {
-                    showToast(`File ${f.name} is not an image or video. Skipped.`, '⚠️');
-                    continue;
-                }
-                if (isImage && f.size > 10 * 1024 * 1024) {
-                    showToast(`${f.name} exceeds 10MB limit for images.`, '⚠️');
-                    continue;
-                }
-                if (isVideo && f.size > 50 * 1024 * 1024) {
-                    showToast(`${f.name} exceeds 50MB limit for videos.`, '⚠️');
-                    continue;
-                }
-                selectedDeviceFiles.push(f);
-            }
-
-            renderMediaPreviews();
-            event.target.value = '';
-        }
-
-        function renderMediaPreviews() {
-            const container = document.getElementById('postMediaPreviewContainer');
-            const grid = document.getElementById('postMediaPreviewGrid');
-            const countText = document.getElementById('previewCountText');
-            const indicator = document.getElementById('attachedMediaIndicator');
-            const attachedCount = document.getElementById('attachedCount');
-
-            if (selectedDeviceFiles.length === 0) {
-                container.style.display = 'none';
-                indicator.style.display = 'none';
-                return;
-            }
-
-            container.style.display = 'block';
-            indicator.style.display = 'inline';
-            if (countText) countText.textContent = selectedDeviceFiles.length;
-            if (attachedCount) attachedCount.textContent = selectedDeviceFiles.length;
-
-            grid.innerHTML = selectedDeviceFiles.map((f, idx) => {
-                const url = URL.createObjectURL(f);
-                const isVideo = f.type.startsWith('video/');
-                const sizeMb = (f.size / (1024 * 1024)).toFixed(1);
-                return `
-                    <div style="position: relative; flex-shrink: 0; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); background: #1E293B;">
-                        ${isVideo 
-                            ? `<video src="${url}" style="width: 100%; height: 100%; object-fit: cover;"></video><div style="position: absolute; bottom: 4px; left: 4px; font-size: 9px; background: rgba(0,0,0,0.7); color: white; padding: 1px 4px; border-radius: 4px;">▶ Video</div>`
-                            : `<img src="${url}" style="width: 100%; height: 100%; object-fit: cover;">`
-                        }
-                        <button type="button" onclick="removeSelectedFile(${idx})" title="Remove item" style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(220, 38, 38, 0.9); color: white; border: none; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1;">✕</button>
-                        <div style="position: absolute; bottom: 2px; right: 4px; font-size: 8.5px; color: #CBD5E1; text-shadow: 0 1px 2px black;">${sizeMb}MB</div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function removeSelectedFile(index) {
-            if (index >= 0 && index < selectedDeviceFiles.length) {
-                selectedDeviceFiles.splice(index, 1);
-                renderMediaPreviews();
-            }
-        }
-
-        function clearSelectedMedia() {
-            selectedDeviceFiles = [];
-            attachedMediaUrl = null;
-            renderMediaPreviews();
-            const fileInput = document.getElementById('postDeviceFileInput');
-            if (fileInput) fileInput.value = '';
-        }
-
         function promptMediaUrl() {
             const url = prompt("Enter Image URL (e.g. Unsplash URL or hosted photo):");
             if (url && url.trim()) {
                 attachedMediaUrl = url.trim();
                 document.getElementById('attachedMediaIndicator').style.display = 'inline';
-                if (document.getElementById('attachedCount')) document.getElementById('attachedCount').textContent = '1';
-                showToast('Media URL attached to post!', '📷');
+                showToast('Media attached to post!', '📷');
             }
+        }
+
+        async function handlePostPhotoSelected(input) {
+            const file = input.files?.[0];
+            if (!file) return;
+            try {
+                showToast('Uploading photo…', '📷');
+                const result = await SocialAPI.uploadMedia(file, 'post');
+                attachedMediaUrl = result.url;
+                document.getElementById('attachedMediaIndicator').style.display = 'inline';
+                showToast('Photo attached to your post.', '✅');
+            } catch (err) {
+                input.value = '';
+                showToast(err.message || 'Photo upload failed.', '❌');
+            }
+        }
+
+        async function uploadSOSProofs() {
+            const audio = document.getElementById('sosAudioProof')?.files?.[0] || null;
+            const video = document.getElementById('sosVideoProof')?.files?.[0] || null;
+            let audioUrl = null;
+            let videoUrl = null;
+
+            if (audio) {
+                const result = await SocialAPI.uploadMedia(audio, 'sos');
+                audioUrl = result.url;
+            }
+            if (video) {
+                const result = await SocialAPI.uploadMedia(video, 'sos');
+                videoUrl = result.url;
+            }
+
+            const status = document.getElementById('sosProofStatus');
+            if (status) {
+                status.textContent = audioUrl || videoUrl
+                    ? `Attached: ${audioUrl ? 'audio' : ''}${audioUrl && videoUrl ? ' + ' : ''}${videoUrl ? 'video' : ''}`
+                    : 'No proof attached — SOS will still be sent.';
+            }
+            return { audioUrl, videoUrl };
         }
 
         async function publishPost() {
             const content = document.getElementById('postContentInput').value.trim();
-            if (!content && selectedDeviceFiles.length === 0) {
-                showToast('Please enter post text or attach media before sharing.', '⚠️');
+            if (!content) {
+                showToast('Please enter post text before sharing.', '⚠️');
                 return;
             }
 
-            const btn = document.getElementById('btnPublishPost');
-            const originalBtnText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = 'Publishing... ⏳';
-
             try {
-                let mediaUrl = attachedMediaUrl;
-                let mediaUrlsList = [];
-                let mediaType = "text";
-
-                // Multipart upload for device media files
-                if (selectedDeviceFiles.length > 0) {
-                    btn.innerHTML = `Uploading ${selectedDeviceFiles.length} item(s)... ⏳`;
-                    const uploadRes = await MediaAPI.uploadMultiple(selectedDeviceFiles);
-                    if (uploadRes && uploadRes.urls && uploadRes.urls.length > 0) {
-                        mediaUrl = uploadRes.urls[0];
-                        mediaUrlsList = uploadRes.urls;
-                        mediaType = uploadRes.items[0]?.media_type || (selectedDeviceFiles[0].type.startsWith('video/') ? 'video' : 'image');
-                        if (uploadRes.urls.length > 1) {
-                            mediaType = 'carousel';
-                        }
-                    }
-                } else if (attachedMediaUrl) {
-                    mediaType = 'image';
-                }
-
-                const title = content.length > 50 ? content.substring(0, 48) + '...' : (content || 'Safety Media Update');
+                const title = content.length > 50 ? content.substring(0, 48) + '...' : content;
                 await SocialAPI.createPost({
-                    author_id: currentUser.id,
-                    author_name: currentUser.name,
-                    author_role: currentUser.role,
-                    author_badge: currentUser.badge_title || "Citizen User",
-                    author_avatar: currentUser.avatar || "U",
                     title: title,
-                    content: content || "Attached media update from local device.",
+                    content: content,
                     tag: selectedCategory,
                     location_name: currentUser.location || "Mumbai Metro Area",
-                    media_url: mediaUrl,
-                    media_type: mediaType,
-                    media_urls: mediaUrlsList.length > 0 ? JSON.stringify(mediaUrlsList) : null
+                    media_url: attachedMediaUrl,
+                    media_type: attachedMediaUrl ? 'image' : 'text'
                 });
 
                 document.getElementById('postContentInput').value = '';
-                clearSelectedMedia();
+                attachedMediaUrl = null;
+                document.getElementById('attachedMediaIndicator').style.display = 'none';
                 showToast('Safety update published to live feed!', '🎉');
                 loadFeed('ALL');
             } catch (err) {
                 showToast(err.message || 'Failed to post update.', '❌');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalBtnText;
             }
         }
 
@@ -2075,40 +1942,10 @@
                     return;
                 }
 
-                container.innerHTML = posts.map(p => {
-                    let mediaMarkup = '';
-                    if (p.media_urls) {
-                        try {
-                            const urls = typeof p.media_urls === 'string' ? JSON.parse(p.media_urls) : p.media_urls;
-                            if (Array.isArray(urls) && urls.length > 1) {
-                                mediaMarkup = `
-                                    <div class="post-media-gallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 4px; max-height: 440px; overflow: hidden; background: #0B0E1B;">
-                                        ${urls.slice(0, 4).map((u, i) => `
-                                            <div style="position: relative; height: ${urls.length > 2 ? '180px' : '300px'}; overflow: hidden;">
-                                                <img src="${u}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">
-                                                ${(i === 3 && urls.length > 4) ? `<div style="position: absolute; inset:0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: 800;">+${urls.length - 4}</div>` : ''}
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                `;
-                            }
-                        } catch(e) {}
-                    }
-                    if (!mediaMarkup && p.media_url) {
-                        mediaMarkup = `
-                            <div class="post-media-container">
-                                ${p.media_type === 'video' 
-                                    ? `<video src="${p.media_url}" controls style="width: 100%; max-height: 440px;"></video>`
-                                    : `<img src="${p.media_url}" alt="Post Media" loading="lazy" onerror="this.style.display='none'">`
-                                }
-                            </div>
-                        `;
-                    }
-
-                    return `
+                container.innerHTML = posts.map(p => `
                     <div class="feed-post-card">
                         <div class="post-header">
-                            <div class="post-author-box" style="cursor: pointer;" onclick="window.location.href='profile.html?id=${p.author_id || ''}'" title="View Profile">
+                            <div class="post-author-box">
                                 <div class="post-author-avatar">${p.author_avatar || 'U'}</div>
                                 <div>
                                     <div class="post-author-name">
@@ -2120,17 +1957,19 @@
                             </div>
                         </div>
 
-                        ${mediaMarkup}
+                        ${p.media_url ? `
+                            <div class="post-media-container">
+                                <img src="${p.media_url}" alt="Post Media" loading="lazy" onerror="this.style.display='none'">
+                            </div>
+                        ` : ''}
 
                         <div class="post-body">
                             <div class="post-title">${p.title}</div>
                             <div class="post-content">${p.content}</div>
-`;
-                }).join('');
 
                             <div class="post-interactions">
                                 <div class="interaction-left">
-                                    <button type="button" class="interact-btn ${p.is_liked ? 'liked' : ''}" onclick="event.preventDefault(); event.stopPropagation(); toggleLike('${p.id}', this); return false;">
+                                    <button class="interact-btn ${p.is_liked ? 'liked' : ''}" onclick="toggleLike('${p.id}', this)">
                                         <span>${p.is_liked ? '❤️' : '🤍'}</span>
                                         <span class="like-num">${p.upvotes || 0}</span>
                                     </button>
@@ -2341,73 +2180,32 @@
 
         /* ------------------ EXPLORE & FOLLOWS ------------------ */
 
-        let currentExploreRole = 'all';
-        let currentExploreQuery = '';
-        let activeModalUser = null;
-
-        function filterExploreRole(btn, role) {
-            document.querySelectorAll('.role-filter-pill').forEach(p => p.classList.remove('active'));
-            if (btn) btn.classList.add('active');
-            currentExploreRole = role;
-            loadExploreUsers(currentExploreQuery, currentExploreRole);
-        }
-
-        async function loadExploreUsers(q = null, role = null) {
-            if (q !== null) currentExploreQuery = q;
-            if (role !== null) currentExploreRole = role;
-
+        async function loadExploreUsers(q = '') {
             const grid = document.getElementById('exploreUsersGrid');
-            grid.innerHTML = '<div style="color: var(--gray); grid-column: span 3; text-align: center; padding: 30px;">Searching safety community & accounts... ⏳</div>';
+            grid.innerHTML = '<div style="color: var(--gray);">Searching safety community... ⏳</div>';
 
             try {
-                const users = await SocialAPI.searchUsers(currentExploreQuery, currentExploreRole);
+                const users = q ? await SocialAPI.searchUsers(q) : await SocialAPI.searchUsers('a');
                 if (!users || users.length === 0) {
-                    const roleLabel = currentExploreRole !== 'all' ? ` in role '${currentExploreRole}'` : '';
-                    grid.innerHTML = `<div style="color: var(--gray); grid-column: span 3; text-align: center; padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line);">
-                        <div style="font-size: 28px; margin-bottom: 8px;">🔍</div>
-                        <div style="font-weight: 700; color: var(--ink);">No safety accounts found${roleLabel}</div>
-                        <div style="font-size: 13px; color: var(--gray); margin-top: 4px;">Try selecting "All Members" or clearing your search keywords.</div>
-                    </div>`;
+                    grid.innerHTML = '<div style="color: var(--gray); grid-column: span 3; text-align: center; padding: 30px;">No users found matching your search.</div>';
                     return;
                 }
 
-                grid.innerHTML = users.map(u => {
-                    let credHtml = '';
-                    if (u.role === 'volunteer') {
-                        credHtml = `<div class="user-card-credential">🪪 ${u.dynamic_field_1 || 'Verified Volunteer'} · 📍 ${u.dynamic_field_2 || 'Active Sector'}</div>`;
-                    } else if (u.role === 'police') {
-                        credHtml = `<div class="user-card-credential">🛡️ Badge: ${u.dynamic_field_1 || 'City Police'} · 🏢 ${u.dynamic_field_2 || 'Precinct'}</div>`;
-                    } else if (u.role === 'journalist') {
-                        credHtml = `<div class="user-card-credential">📰 Press ID: ${u.dynamic_field_1 || 'Accredited Press'} · ✍️ ${u.dynamic_field_2 || 'Bureau'}</div>`;
-                    } else if (u.role === 'user' && u.dynamic_field_2) {
-                        credHtml = `<div class="user-card-credential">📍 Zone: ${u.dynamic_field_2}</div>`;
-                    }
-
-                    return `
+                grid.innerHTML = users.map(u => `
                     <div class="user-card">
                         <div class="user-card-avatar">${u.avatar || 'U'}</div>
                         <div style="font-weight: 800; font-size: 15px;">${u.name}</div>
                         <div style="font-size: 12px; color: var(--gray); font-family: var(--mono);">${u.username || '@member'}</div>
                         <span class="badge-role ${u.role}" style="display: inline-block; margin: 6px 0;">${u.badge_title}</span>
-                        ${credHtml}
-                        <div style="font-size: 12px; color: #475569; margin: 6px 0; min-height: 32px;">${u.bio || 'Active safety network member.'}</div>
-                        <div style="font-size: 11.5px; color: var(--gray); margin-bottom: 8px;">👥 ${u.followers_count || 0} followers</div>
-                        <div class="user-card-actions">
-                            <button class="btn-card-view" onclick="viewUserProfile('${u.id}')">
-                                👁️ Profile
-                            </button>
-                            <button class="btn-follow ${u.is_following ? 'following' : ''}" style="margin-top: 0;" onclick="toggleFollowUser('${u.id}', this)">
-                                ${u.is_following ? 'Following' : '+ Follow'}
-                            </button>
-                        </div>
+                        <div style="font-size: 12px; color: #475569; margin: 6px 0; min-height: 36px;">${u.bio || 'Active safety network member.'}</div>
+                        <div style="font-size: 11.5px; color: var(--gray);">👥 ${u.followers_count || 0} followers</div>
+                        <button class="btn-follow ${u.is_following ? 'following' : ''}" onclick="toggleFollowUser('${u.id}', this)">
+                            ${u.is_following ? 'Following' : '+ Follow'}
+                        </button>
                     </div>
-                    `;
-                }).join('');
+                `).join('');
             } catch (e) {
-                grid.innerHTML = `<div style="color: #DC2626; grid-column: span 3; text-align: center; padding: 30px; background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 12px;">
-                    <div style="font-weight: 700; margin-bottom: 6px;">Unable to fetch accounts:</div>
-                    <div>${e.message}</div>
-                </div>`;
+                grid.innerHTML = `<div style="color: #DC2626;">Error: ${e.message}</div>`;
             }
         }
 
@@ -2415,90 +2213,8 @@
         function handleExploreSearch(val) {
             clearTimeout(searchDebounce);
             searchDebounce = setTimeout(() => {
-                loadExploreUsers(val.trim(), currentExploreRole);
+                loadExploreUsers(val.trim());
             }, 300);
-        }
-
-        async function viewUserProfile(userId) {
-            try {
-                showToast('Fetching profile...', '⏳', 1500);
-                const prof = await SocialAPI.getUserProfile(userId);
-                activeModalUser = prof;
-
-                document.getElementById('modalProfileAvatar').textContent = prof.avatar || prof.name.substring(0, 2).toUpperCase();
-                document.getElementById('modalProfileName').textContent = prof.name;
-                document.getElementById('modalProfileUsername').textContent = prof.username || `@${prof.name.toLowerCase().replace(' ', '_')}`;
-                
-                const badgeEl = document.getElementById('modalProfileBadge');
-                badgeEl.className = `badge-role ${prof.role}`;
-                badgeEl.textContent = prof.badge_title;
-
-                let credText = '';
-                if (prof.role === 'volunteer') {
-                    credText = `<strong>Volunteer ID:</strong> ${prof.dynamic_field_1 || 'VOL-2026'} | <strong>Sector:</strong> ${prof.dynamic_field_2 || 'Zone'}`;
-                } else if (prof.role === 'police') {
-                    credText = `<strong>Badge #:</strong> ${prof.dynamic_field_1 || 'MH-CID'} | <strong>Precinct:</strong> ${prof.dynamic_field_2 || 'Command'}`;
-                } else if (prof.role === 'journalist') {
-                    credText = `<strong>Press ID:</strong> ${prof.dynamic_field_1 || 'PID-2026'} | <strong>Media House:</strong> ${prof.dynamic_field_2 || 'Bureau'}`;
-                } else {
-                    credText = `<strong>Primary Emergency Contact:</strong> ${prof.dynamic_field_1 || 'Configured'} | <strong>Safe Sector:</strong> ${prof.dynamic_field_2 || 'Metro Area'}`;
-                }
-                document.getElementById('modalProfileCredentials').innerHTML = credText;
-
-                document.getElementById('modalProfileBio').textContent = prof.bio || 'Active verified member of the PERIMETER safety platform.';
-                document.getElementById('modalStatPosts').textContent = prof.posts_count || 0;
-                document.getElementById('modalStatFollowers').textContent = prof.followers_count || 0;
-                document.getElementById('modalStatFollowing').textContent = prof.following_count || 0;
-                document.getElementById('modalProfileLocation').textContent = `📍 Location: ${prof.location || 'Mumbai Metro Area'}`;
-                document.getElementById('modalProfileEmail').textContent = `✉️ Registered Email: ${prof.email || 'Confidential'}`;
-
-                const followBtn = document.getElementById('modalFollowBtn');
-                followBtn.className = `btn-follow ${prof.is_following ? 'following' : ''}`;
-                followBtn.textContent = prof.is_following ? 'Following' : '+ Follow';
-
-                document.getElementById('userProfileModal').classList.add('show');
-            } catch (err) {
-                showToast(err.message, '❌');
-            }
-        }
-
-        async function toggleModalFollow() {
-            if (!activeModalUser) return;
-            const btn = document.getElementById('modalFollowBtn');
-            const isFollowing = btn.classList.contains('following');
-
-            try {
-                if (isFollowing) {
-                    await SocialAPI.unfollowUser(activeModalUser.id);
-                    btn.classList.remove('following');
-                    btn.textContent = '+ Follow';
-                    activeModalUser.is_following = false;
-                    showToast(`Unfollowed ${activeModalUser.name}`, '👋');
-                } else {
-                    await SocialAPI.followUser(activeModalUser.id);
-                    btn.classList.add('following');
-                    btn.textContent = 'Following';
-                    activeModalUser.is_following = true;
-                    showToast(`Now following ${activeModalUser.name}!`, '🌟');
-                }
-                loadExploreUsers();
-            } catch (err) {
-                showToast(err.message, '❌');
-            }
-        }
-
-        async function openModalChat() {
-            if (!activeModalUser) return;
-            closeModal('userProfileModal');
-            try {
-                const conv = await SocialAPI.startConversation(activeModalUser.id);
-                switchNavView('messages');
-                loadConversations();
-                selectConversation(conv.id, activeModalUser.name, activeModalUser.avatar);
-                showToast(`Opened chat with ${activeModalUser.name}!`, '💬');
-            } catch (err) {
-                showToast(err.message, '❌');
-            }
         }
 
         async function toggleFollowUser(userId, btn) {
@@ -2542,7 +2258,7 @@
                             <div style="font-size: 11px; opacity: 0.8; margin-top: 6px;">🎵 ${r.audio_title}</div>
                         </div>
                         <div class="reel-actions-rail">
-                            <button type="button" class="reel-action-btn" onclick="event.preventDefault(); event.stopPropagation(); likeReel('${r.id}', this)">
+                            <button class="reel-action-btn" onclick="likeReel('${r.id}', this)">
                                 <span>❤️</span>
                                 <span style="font-size: 10px; font-weight: 700;">${r.likes_count || 0}</span>
                             </button>
@@ -2758,15 +2474,6 @@
         /* ------------------ PROFILE & 14-SECTION ACTIVITY ------------------ */
 
         async function loadProfileData() {
-            if (currentUser) {
-                if (document.getElementById('profileNameBig')) document.getElementById('profileNameBig').textContent = currentUser.name;
-                if (document.getElementById('profileAvatarBig')) document.getElementById('profileAvatarBig').textContent = currentUser.avatar || 'AS';
-                if (document.getElementById('profileRoleBadge')) document.getElementById('profileRoleBadge').textContent = currentUser.badge_title || 'Citizen User';
-                if (document.getElementById('profileUsername')) document.getElementById('profileUsername').textContent = currentUser.username || `@${currentUser.name.toLowerCase().replace(' ', '_')}`;
-                if (document.getElementById('profileBio')) document.getElementById('profileBio').textContent = currentUser.bio || 'Active community safety member.';
-                if (document.getElementById('profileLocation')) document.getElementById('profileLocation').textContent = currentUser.location || 'Mumbai Metro Area';
-            }
-
             try {
                 const prof = await SocialAPI.getMyProfile();
                 document.getElementById('profileNameBig').textContent = prof.name;
@@ -2782,9 +2489,7 @@
 
                 // Load initial activity tab
                 switchProfileActivity(document.querySelector('.activity-tab-btn.active') || document.querySelector('.activity-tab-btn'), 'my-posts');
-            } catch (e) {
-                console.warn('[Profile Data Load]', e.message);
-            }
+            } catch (e) {}
         }
 
         function openEditProfileModal() {
@@ -2976,396 +2681,577 @@
             }
         }
 
-        /* ------------------ EMERGENCY SOS & LIVE TRACKING ------------------ */
+        /* Small HTML escaping helper for responder names/status text. */
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>\"']/g, ch => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;',
+                '\"': '&quot;', "'": '&#039;'
+            }[ch]));
+        }
+
+        /* ------------------ SMART SOS & DISPATCH ------------------ */
+
+        let sosCategory = 'public';
+        let sosSeverity = 'MEDIUM';
+        let sosCoords = null;
+        let sosActiveCase = null;
+        // Responders already shown to this citizen; prevents duplicate acceptance notifications.
+        let knownResponderIds = new Set();
+        let responderBaselineReady = false;
+        let sosTriggered = false;
+        let sosHoldStart = 0;
+        let sosRafId = null;
+        let sosElapsedTimer = null;
+        let sosPollTimer = null;
+        let sosElapsedSec = 0;
+        const SOS_HOLD_MS = 2000;
+        const SOS_POLL_MS = 5000;
+        const sosPrefs = { share_location: true, record_audio: true, silent_mode: false };
+
+        function getSOSCurrentUser() {
+            return currentUser || {};
+        }
+
+        function setSOSLocationStatus(type, text) {
+            const chip = document.getElementById('sosLocationStatus');
+            const label = document.getElementById('sosLocationText');
+            if (!chip || !label) return;
+            chip.classList.remove('searching', 'denied');
+            if (type === 'searching') chip.classList.add('searching');
+            if (type === 'denied') chip.classList.add('denied');
+            label.textContent = text;
+        }
+
+        function formatSOSCoords(c) {
+            if (!c) return 'Unavailable';
+            return `${c.lat.toFixed(5)}, ${c.lng.toFixed(5)} ±${Math.round(c.accuracy || 0)}m`;
+        }
+
+        function getBrowserLocation(options = {}) {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    reject(new Error('This browser does not support GPS location.'));
+                    return;
+                }
+                navigator.geolocation.getCurrentPosition(
+                    pos => resolve({
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude,
+                        accuracy: pos.coords.accuracy
+                    }),
+                    err => {
+                        const messages = {
+                            1: 'Location permission was denied.',
+                            2: 'Your location could not be determined.',
+                            3: 'Location request timed out.'
+                        };
+                        reject(new Error(messages[err.code] || 'Unable to get your location.'));
+                    },
+                    { enableHighAccuracy: true, timeout: options.timeout || 10000, maximumAge: options.maximumAge || 5000 }
+                );
+            });
+        }
+
+        async function refreshSOSLocation(showMessage = true) {
+            setSOSLocationStatus('searching', 'Getting GPS location…');
+            try {
+                sosCoords = await getBrowserLocation({ timeout: 10000, maximumAge: 5000 });
+                setSOSLocationStatus('ready', `GPS ready ±${Math.round(sosCoords.accuracy)}m`);
+                if (showMessage) showToast('Current GPS location updated.', '📍');
+                return sosCoords;
+            } catch (err) {
+                sosCoords = null;
+                setSOSLocationStatus('denied', err.message);
+                if (showMessage) showToast(err.message, '⚠️');
+                return null;
+            }
+        }
+
+        function selectSOSSeverity(level) {
+            if (sosTriggered) return;
+            sosSeverity = level;
+            const medium = document.getElementById('sosSeverityMedium');
+            const high = document.getElementById('sosSeverityHigh');
+            if (medium) {
+                medium.style.borderColor = level === 'MEDIUM' ? '#10B981' : '#CBD5E1';
+                medium.style.background = level === 'MEDIUM' ? '#ECFDF5' : 'white';
+            }
+            if (high) {
+                high.style.borderColor = level === 'HIGH' ? '#EF4444' : '#CBD5E1';
+                high.style.background = level === 'HIGH' ? '#FEF2F2' : 'white';
+            }
+            const hint = document.getElementById('sosRoutingHint');
+            if (hint) {
+                hint.textContent = level === 'HIGH'
+                    ? 'Immediate danger → live alert sent to Police Command.'
+                    : 'Need assistance → live alert sent to verified volunteers.';
+            }
+        }
+
+        function selectSOSCategory(cat) {
+            if (sosTriggered) return;
+            sosCategory = cat;
+            document.querySelectorAll('.sos-category-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.sosCat === cat);
+            });
+        }
+
+        function selectSOSCategoryVisual(cat) {
+            document.querySelectorAll('.sos-category-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.sosCat === cat);
+                btn.disabled = true;
+            });
+        }
+
+        function toggleSOSPreference(btn, key) {
+            if (sosTriggered) return;
+            sosPrefs[key] = !sosPrefs[key];
+            btn.classList.toggle('on', sosPrefs[key]);
+            btn.setAttribute('aria-checked', String(sosPrefs[key]));
+        }
+
+        function startSOSHold(e) {
+            if (e && e.type === 'touchstart') e.preventDefault();
+            if (sosTriggered) return;
+            const btn = document.getElementById('sosMainBtn');
+            const progress = document.getElementById('sosHoldProgress');
+            if (!btn || btn.disabled) return;
+            sosHoldStart = performance.now();
+            btn.classList.add('holding');
+            progress.classList.add('visible');
+
+            const step = now => {
+                if (sosTriggered) return;
+                const pct = Math.min(100, ((now - sosHoldStart) / SOS_HOLD_MS) * 100);
+                progress.style.setProperty('--p', pct.toFixed(1));
+                if (pct >= 100) { triggerSmartSOS(); return; }
+                sosRafId = requestAnimationFrame(step);
+            };
+            sosRafId = requestAnimationFrame(step);
+        }
+
+        function endSOSHold() {
+            if (sosTriggered) return;
+            cancelAnimationFrame(sosRafId);
+            const btn = document.getElementById('sosMainBtn');
+            const progress = document.getElementById('sosHoldProgress');
+            if (btn) btn.classList.remove('holding');
+            if (progress) {
+                progress.classList.remove('visible');
+                progress.style.setProperty('--p', 0);
+            }
+        }
+
+        function setupSOSHoldButton() {
+            const btn = document.getElementById('sosMainBtn');
+            if (!btn || btn.dataset.bound === '1') return;
+            btn.dataset.bound = '1';
+            btn.addEventListener('mousedown', startSOSHold);
+            btn.addEventListener('touchstart', startSOSHold, { passive: false });
+            btn.addEventListener('mouseup', endSOSHold);
+            btn.addEventListener('mouseleave', endSOSHold);
+            btn.addEventListener('touchend', endSOSHold);
+            btn.addEventListener('keydown', e => {
+                if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) startSOSHold(e);
+            });
+            btn.addEventListener('keyup', e => {
+                if (e.key === ' ' || e.key === 'Enter') endSOSHold();
+            });
+        }
 
         async function triggerSOSInstant() {
-            showToast('Acquiring high-accuracy GPS coordinates for SOS...', '🚨');
-            const pos = await LocationService.getCurrentPosition(true);
+            switchNavView('sos');
+            showToast('SOS Radar opened. Hold the SOS button for 2 seconds to dispatch.', '🚨');
+            if (!sosCoords) await refreshSOSLocation(false);
+            document.getElementById('sosMainBtn')?.focus();
+        }
+
+        async function triggerSmartSOS() {
+            cancelAnimationFrame(sosRafId);
+            sosTriggered = true;
+            const btn = document.getElementById('sosMainBtn');
+            const label = document.getElementById('sosMainBtnLabel');
+            const progress = document.getElementById('sosHoldProgress');
+            const hint = document.getElementById('sosHint');
+            btn.disabled = true;
+            btn.classList.remove('holding');
+            progress.classList.remove('visible');
+            label.innerHTML = 'SENDING…';
+            hint.textContent = 'Alerting responders…';
+
+            if (!sosCoords) {
+                await refreshSOSLocation(false);
+            }
+            if (!sosCoords) {
+                sosTriggered = false;
+                btn.disabled = false;
+                label.innerHTML = 'HOLD FOR<br>SOS';
+                hint.innerHTML = 'Location is required for this SOS prototype.';
+                showToast('Could not obtain your GPS location. Allow location access and try again.', '❌');
+                return;
+            }
+
+            if (!sosPrefs.silent_mode && navigator.vibrate) navigator.vibrate([120, 60, 120]);
 
             try {
-                const res = await SocialAPI.triggerSOS({
-                    user_name: currentUser.name,
-                    user_id: currentUser.id,
-                    phone: currentUser.phone,
-                    trigger_type: "MANUAL_HOLD",
-                    severity: "CRITICAL",
+                const current = getSOSCurrentUser();
+                const proof = await uploadSOSProofs();
+                const res = await apiCall('/sos/trigger', 'POST', {
+                    user_name: current.name || 'Citizen',
+                    user_id: current.id || null,
+                    phone: current.phone || null,
+                    trigger_type: sosCategory === 'medical' ? 'MEDICAL_EMERGENCY' : 'MANUAL_HOLD',
+                    severity: sosSeverity,
+                    category: sosCategory,
                     location: {
-                        latitude: pos.latitude,
-                        longitude: pos.longitude,
-                        accuracy_meters: pos.accuracy,
-                        address: pos.address || currentUser.location || "Live GPS Coordinates"
+                        latitude: sosCoords.lat,
+                        longitude: sosCoords.lng,
+                        accuracy_meters: sosCoords.accuracy,
+                        address: current.location || 'Current GPS location'
                     },
-                    notes: "High priority citizen SOS triggered via social platform header."
+                    share_location: sosPrefs.share_location,
+                    record_audio: sosPrefs.record_audio,
+                    silent_mode: sosPrefs.silent_mode,
+                    audio_proof_url: proof.audioUrl,
+                    video_proof_url: proof.videoUrl,
+                    notes: sosSeverity === 'HIGH'
+                        ? 'Citizen marked this SOS as an immediate-danger emergency.'
+                        : 'Citizen requested verified volunteer assistance.'
                 });
 
-                activeEmergencyIncidentId = res.incident_id;
-                showToast(`EMERGENCY SOS BROADCASTED! Case ID: ${res.case_id}`, '🚨', 8000);
+                if (!res || !res.incident_id) throw new Error('Backend did not return an SOS incident ID.');
+                sosActiveCase = res;
+                enterSOSActiveState(res);
+                showToast(
+                    '🚨 SOS sent to Police Command + nearby verified volunteers.',
+                    '🚨', 6000
+                );
+            } catch (err) {
+                sosTriggered = false;
+                btn.disabled = false;
+                label.innerHTML = 'HOLD FOR<br>SOS';
+                hint.innerHTML = 'Press and hold — release to cancel before <b>2s</b>';
+                showToast(err.message || 'Could not send SOS. Check your connection and try again.', '❌');
+            }
+        }
 
-                // Reveal active emergency banner
-                const emergencyBanner = document.getElementById('activeEmergencyBanner');
-                if (emergencyBanner) emergencyBanner.style.display = 'flex';
+        async function resumeActiveSOS() {
+            try {
+                const list = await apiCall('/sos/active', 'GET');
+                const res = Array.isArray(list) ? list[0] : list;
+                if (res && res.incident_id) {
+                    sosTriggered = true;
+                    sosActiveCase = res;
+                    sosCategory = res.category || 'public';
+                    sosSeverity = res.severity || 'MEDIUM';
+                    selectSOSCategoryVisual(sosCategory);
+                    selectSOSSeverity(sosSeverity);
+                    if (!sosCoords) await refreshSOSLocation(false);
+                    enterSOSActiveState(res, 0);
+                }
+            } catch (err) {
+                // No active SOS is the normal state.
+            }
+        }
 
-                // Switch to SOS Safety Map so user sees their beacon
-                switchNavView('sos');
+        function enterSOSActiveState(sos, startFrom = 0) {
+            connectCitizenSOSChannel();
+            document.getElementById('sosMainBtnLabel').innerHTML = 'SOS<br>ACTIVE';
+            document.getElementById('sosPulse1').classList.add('animate');
+            const p2 = document.getElementById('sosPulse2');
+            p2.classList.add('animate');
+            p2.style.animationDelay = '.9s';
+            document.getElementById('sosHint').textContent = '🚨 Police Command + verified volunteers notified — live location is being shared';
+            document.getElementById('sosActivePanel').classList.add('show');
+            document.getElementById('sosCaseIdText').textContent = sos.reference || sos.incident_id || sos.id;
+            document.getElementById('sosCoordText').textContent = sosCoords ? formatSOSCoords(sosCoords) : 'Acquiring…';
+            document.getElementById('sosAudioText').textContent = sos.record_audio ? 'Enabled' : 'Off';
+            selectSOSCategoryVisual(sosCategory);
+            renderSOSDispatch(sos);
+            const initialResponders = sos.active_responders || sos.responders || [];
+            knownResponderIds = new Set(initialResponders.map(r =>
+                String(r.responder_id || r.id || r.responder_name || r.name || '')
+            ));
+            responderBaselineReady = true;
+            sosElapsedSec = startFrom;
+            tickSOSTimer();
+            clearInterval(sosElapsedTimer);
+            clearInterval(sosPollTimer);
+            sosElapsedTimer = setInterval(tickSOSTimer, 1000);
+            sosPollTimer = setInterval(pollActiveSOS, SOS_POLL_MS);
+        }
 
-                // Continuous Live Location Streaming to Police Command
-                LocationService.startEmergencyTracking(async (updatedPos) => {
-                    if (activeEmergencyIncidentId) {
-                        try {
-                            await SocialAPI.updateSOSLocation(activeEmergencyIncidentId, {
-                                latitude: updatedPos.latitude,
-                                longitude: updatedPos.longitude,
-                                accuracy_meters: updatedPos.accuracy,
-                                address: updatedPos.address || `GPS Lat ${updatedPos.latitude.toFixed(4)}, Lng ${updatedPos.longitude.toFixed(4)}`
-                            });
-                            console.log(`[SOS Live GPS] Location synced to Police: (${updatedPos.latitude.toFixed(4)}, ${updatedPos.longitude.toFixed(4)})`);
-                        } catch (e) {
-                            console.warn('[SOS Live GPS] Location update failed:', e.message);
+        function tickSOSTimer() {
+            const m = String(Math.floor(sosElapsedSec / 60)).padStart(2, '0');
+            const s = String(sosElapsedSec % 60).padStart(2, '0');
+            document.getElementById('sosTimerText').textContent = `${m}:${s}`;
+            sosElapsedSec++;
+        }
+
+        function getSOSIncidentId(sos) {
+            if (!sos) return null;
+            return sos.incident_id || sos.reference || sos.id || null;
+        }
+
+        function notifyVolunteerAccepted(responder) {
+            const name = responder.responder_name || responder.name || 'A verified volunteer';
+            showToast('🟢 SOS Accepted! Help is on the way. A verified volunteer will reach your location shortly.', '🛡️', 7000);
+
+            // Also update the active SOS panel with a persistent message.
+            const slot = document.getElementById('sosResponderSlot');
+            if (slot) {
+                const notice = document.createElement('div');
+                notice.className = 'sos-responder-row';
+                notice.style.cssText = 'border:1px solid #86EFAC;background:#F0FDF4;margin-bottom:10px;';
+                notice.innerHTML = `
+                    <div class="sos-responder-avatar" style="background:#16A34A;">✓</div>
+                    <div class="sos-responder-info">
+                        <div class="sos-responder-name">SOS Accepted Successfully</div>
+                        <div class="sos-responder-meta">A verified volunteer has accepted your request. Help is on the way and a volunteer will arrive near your location shortly.</div>
+                    </div>`;
+                slot.prepend(notice);
+            }
+
+            if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
+        }
+
+        let citizenSOSSocket = null;
+        let citizenSOSReconnectTimer = null;
+
+        function connectCitizenSOSChannel() {
+            const token = getAuthToken();
+            const user = getSOSCurrentUser();
+            if (!token || !user) return;
+
+            try {
+                if (citizenSOSSocket && [WebSocket.OPEN, WebSocket.CONNECTING].includes(citizenSOSSocket.readyState)) return;
+                const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const wsHost = location.hostname || '127.0.0.1';
+                const wsUrl = `${wsProtocol}//${wsHost}:8000/api/v1/sos/ws?role=user&token=${encodeURIComponent(token)}`;
+                citizenSOSSocket = new WebSocket(wsUrl);
+
+                citizenSOSSocket.onopen = () => console.log('PERIMETER: Live citizen SOS channel connected.');
+                citizenSOSSocket.onmessage = async (event) => {
+                    try {
+                        const msg = JSON.parse(event.data);
+                        if (msg.type === 'volunteer_accepted') {
+                            const incident = msg.incident || {};
+                            const accepted = msg.accepted_responder || incident.accepted_responder;
+                            const activeId = getSOSIncidentId(sosActiveCase);
+                            const eventId = getSOSIncidentId(incident);
+                            if (accepted && (!activeId || !eventId || String(activeId) === String(eventId))) {
+                                notifyVolunteerAccepted(accepted);
+                                sosActiveCase = incident;
+                                renderSOSDispatch(incident);
+                                if (accepted.responder_id) knownResponderIds.add(String(accepted.responder_id));
+                                responderBaselineReady = true;
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Citizen SOS live notification error:', e);
+                    }
+                };
+                citizenSOSSocket.onclose = () => {
+                    clearTimeout(citizenSOSReconnectTimer);
+                    citizenSOSReconnectTimer = setTimeout(() => {
+                        if (document.visibilityState !== 'hidden') connectCitizenSOSChannel();
+                    }, 3000);
+                };
+                citizenSOSSocket.onerror = () => {
+                    try { citizenSOSSocket.close(); } catch (e) {}
+                };
+            } catch (e) {
+                console.warn('Could not connect citizen SOS channel:', e);
+            }
+        }
+
+        async function pollActiveSOS() {
+            if (!sosActiveCase) return;
+            try {
+                const incidentId = getSOSIncidentId(sosActiveCase);
+                if (!incidentId) {
+                    console.error('SOS polling skipped: missing incident ID', sosActiveCase);
+                    return;
+                }
+
+                const res = await apiCall(`/sos/${encodeURIComponent(incidentId)}`, 'GET');
+                if (!res) return;
+
+                const status = String(res.status || '').toUpperCase();
+                if (status === 'RESOLVED' || status === 'STOOD_DOWN') {
+                    exitSOSActiveState();
+                    showToast('This SOS was closed by the control room.', '✅');
+                    return;
+                }
+                const responders = res.active_responders || res.responders || [];
+
+                // The citizen page polls the incident because the responder WebSocket
+                // is intentionally restricted to police/volunteer roles.
+                const currentResponderIds = new Set(
+                    responders.map(r => String(r.responder_id || r.id || r.responder_name || r.name || ''))
+                );
+
+                if (!responderBaselineReady) {
+                    // Do not show an "accepted" notification for a responder that
+                    // was already assigned before this browser loaded.
+                    knownResponderIds = currentResponderIds;
+                    responderBaselineReady = true;
+                } else {
+                    for (const responder of responders) {
+                        const responderKey = String(
+                            responder.responder_id || responder.id || responder.responder_name || responder.name || ''
+                        );
+                        if (responderKey && !knownResponderIds.has(responderKey)) {
+                            knownResponderIds.add(responderKey);
+                            if (String(responder.role || '').toLowerCase() === 'volunteer') {
+                                notifyVolunteerAccepted(responder);
+                            }
                         }
                     }
-                });
+                }
 
+                sosActiveCase = res;
+                renderSOSDispatch(res);
             } catch (err) {
-                showToast(err.message || 'SOS dispatch failed.', '❌');
+                // Keep active state visible if a polling request temporarily fails.
             }
         }
 
-        async function cancelActiveEmergency() {
-            if (!activeEmergencyIncidentId) return;
-            try {
-                showToast('Resolving distress broadcast...', '⏳');
-                await SocialAPI.resolveSOS(activeEmergencyIncidentId, currentUser.name, 'Citizen marked safe and cancelled distress beacon.');
-                LocationService.stopEmergencyTracking();
-                activeEmergencyIncidentId = null;
-                const emergencyBanner = document.getElementById('activeEmergencyBanner');
-                if (emergencyBanner) emergencyBanner.style.display = 'none';
-                showToast('Emergency SOS resolved. Live location streaming stopped.', '✅', 5000);
-            } catch (err) {
-                showToast(err.message || 'Failed to resolve emergency.', '❌');
-            }
-        }
-
-        function requestUserLocationConsent(granted) {
-            const banner = document.getElementById('locationConsentBanner');
-            if (banner) banner.style.display = 'none';
-            if (granted) {
-                locateUserOnMap();
+        function renderSOSDispatch(sos) {
+            const slot = document.getElementById('sosResponderSlot');
+            const responders = sos.active_responders || sos.responders || [];
+            if (!responders.length) {
+                slot.innerHTML = '<div class="sos-empty">Dispatching to responders in your 5 km radius…</div>';
             } else {
-                showToast('Location permission skipped. Default regional map displayed.', '📍');
+                slot.innerHTML = responders.map(r => {
+                    const initials = (r.responder_name || r.name || '??').trim().split(/\s+/).slice(0,2).map(w => w[0]).join('').toUpperCase();
+                    const meta = r.eta_minutes != null ? `ETA ${r.eta_minutes} min` : (r.status || 'EN ROUTE').toUpperCase();
+                    return `<div class="sos-responder-row">
+                        <div class="sos-responder-avatar">${escapeHtml(initials)}</div>
+                        <div class="sos-responder-info">
+                            <div class="sos-responder-name">${escapeHtml(r.responder_name || r.name || 'Responder')} — ${escapeHtml(r.role || 'assigned')}</div>
+                            <div class="sos-responder-meta">${escapeHtml(meta)}</div>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+            const vols = sos.notified_volunteers != null ? sos.notified_volunteers : 0;
+            const cts = sos.notified_contacts != null ? sos.notified_contacts : 0;
+            document.getElementById('sosSharedText').textContent = `${vols} volunteers · ${cts} contacts`;
+        }
+
+        async function standDownSOS() {
+            if (!sosActiveCase) return;
+            const btn = document.getElementById('sosStandBtn');
+            btn.disabled = true;
+            btn.textContent = 'Standing down…';
+            try {
+                const incidentId = getSOSIncidentId(sosActiveCase);
+                if (!incidentId) {
+                    throw new Error('No SOS incident ID is available.');
+                }
+
+                await apiCall(
+                    `/sos/${encodeURIComponent(incidentId)}/stand-down`,
+                    'POST',
+                    { reason: 'user_stand_down' }
+                );
+
+                exitSOSActiveState();
+                showToast('SOS stood down. Responders have been told you are safe.', '🟢');
+            } catch (err) {
+                showToast(err.message || 'Could not stand down. Try again or call directly.', '❌');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Stand Down';
             }
         }
 
-        function openAccidentModal() {
-            document.getElementById('accidentModal').classList.add('show');
+        function exitSOSActiveState() {
+            sosTriggered = false;
+            sosActiveCase = null;
+            knownResponderIds = new Set();
+            responderBaselineReady = false;
+            clearInterval(sosElapsedTimer);
+            clearInterval(sosPollTimer);
+            sosElapsedSec = 0;
+            document.getElementById('sosPulse1').classList.remove('animate');
+            document.getElementById('sosPulse2').classList.remove('animate');
+            document.getElementById('sosActivePanel').classList.remove('show');
+            document.getElementById('sosTimerText').textContent = '00:00';
+            document.querySelectorAll('.sos-category-btn').forEach(b => { b.disabled = false; });
+            const btn = document.getElementById('sosMainBtn');
+            btn.disabled = false;
+            document.getElementById('sosMainBtnLabel').innerHTML = 'HOLD FOR<br>SOS';
+            document.getElementById('sosHint').innerHTML = 'Press and hold — release to cancel before <b>2s</b>';
+            selectSOSCategory(sosCategory);
+            selectSOSSeverity('MEDIUM');
+        }
+
+        function callSOSControlRoom() {
+            const number = (sosActiveCase && sosActiveCase.control_room_number) || '112';
+            window.location.href = `tel:${number}`;
         }
 
         async function submitAccidentReport() {
             const severity = document.getElementById('accidentSeverity').value;
             const notes = document.getElementById('accidentNotes').value.trim();
-
-            showToast('Acquiring incident GPS coordinates...', '📍');
-            const pos = await LocationService.getCurrentPosition(true);
+            const btn = document.getElementById('accidentDispatchBtn');
+            const status = document.getElementById('accidentGpsStatus');
+            btn.disabled = true;
+            btn.textContent = 'Getting GPS…';
+            status.textContent = '📍 Getting your current browser GPS…';
 
             try {
+                const accidentCoords = await getBrowserLocation({ timeout: 10000, maximumAge: 3000 });
+                status.textContent = `📍 GPS ready: ${formatSOSCoords(accidentCoords)}`;
+                btn.textContent = 'Dispatching…';
+
                 const res = await SocialAPI.triggerSOS({
-                    user_name: currentUser.name,
-                    user_id: currentUser.id,
-                    phone: currentUser.phone,
-                    trigger_type: "ACCIDENT_REPORT",
+                    user_name: getSOSCurrentUser().name,
+                    user_id: getSOSCurrentUser().id,
+                    phone: getSOSCurrentUser().phone,
+                    trigger_type: 'ACCIDENT_REPORT',
                     severity: severity,
                     location: {
-                        latitude: pos.latitude,
-                        longitude: pos.longitude,
-                        accuracy_meters: pos.accuracy,
-                        address: pos.address || "Collision Scene"
+                        latitude: accidentCoords.lat,
+                        longitude: accidentCoords.lng,
+                        accuracy_meters: accidentCoords.accuracy,
+                        address: getSOSCurrentUser().location || 'Current GPS location'
                     },
-                    notes: notes || "Accident report submitted by citizen."
+                    notes: notes || 'Accident report submitted by citizen.'
                 });
 
                 closeModal('accidentModal');
-                showToast(`Accident dispatch sent! Case ID: ${res.case_id}`, '🚑', 5000);
-                switchNavView('sos');
+                showToast(`Accident dispatch sent! Case ID: ${res.case_id || res.id || res.reference || 'created'}`, '🚑', 5000);
+                switchNavView('profile');
+                setTimeout(() => switchProfileActivity(null, 'my-cases'), 400);
             } catch (err) {
-                showToast(err.message, '❌');
+                status.textContent = `⚠️ ${err.message}`;
+                showToast(err.message || 'Accident dispatch failed.', '❌');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Dispatch Emergency Units →';
             }
         }
+
+        // ---------------- LIVE RESPONDER NOTIFICATION ----------------
+        function connectSOSResponderChannel() {
+            const user = getSOSCurrentUser();
+            if (!user || !user.role || user.role !== 'user') return;
+            // Citizen dashboard does not need a responder socket; its active case is polled.
+        }
+
+        // Prepare the SOS UI after the dashboard DOM is ready.
+        window.addEventListener('DOMContentLoaded', async () => {
+            // The main dashboard guard above owns authentication; this only initializes SOS.
+            setupSOSHoldButton();
+            await refreshSOSLocation(false);
+            await resumeActiveSOS();
+        });
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('show');
-        }
-
-        /* ------------------ LEAFLET SAFETY MAP & SAFE ROUTING ------------------ */
-
-        let currentEvaluatedRoutes = [];
-
-        async function initUserSafetyMap() {
-            const mapEl = document.getElementById('userSafetyMap');
-            if (!mapEl) return;
-
-            // Check location permission and display consent banner if prompt
-            const perm = await LocationService.queryPermission();
-            const consentBanner = document.getElementById('locationConsentBanner');
-            if (perm === 'prompt' && consentBanner) {
-                consentBanner.style.display = 'flex';
-            }
-
-            if (!userSafetyMap) {
-                userSafetyMap = L.map('userSafetyMap').setView([19.0596, 72.8295], 13);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '© OpenStreetMap contributors | PERIMETER Safety Map'
-                }).addTo(userSafetyMap);
-
-                heatLayerGroup = L.layerGroup().addTo(userSafetyMap);
-                routeLayerGroup = L.layerGroup().addTo(userSafetyMap);
-            }
-
-            setTimeout(() => {
-                userSafetyMap.invalidateSize();
-            }, 250);
-
-            await locateUserOnMap();
-            await loadHeatmapData();
-        }
-
-        async function locateUserOnMap() {
-            if (!userSafetyMap) return;
-            showToast('Acquiring high-accuracy GPS position...', '📍');
-            const pos = await LocationService.getCurrentPosition(true);
-
-            // Update Live GPS Status Row
-            const coordsEl = document.getElementById('liveGpsCoordsText');
-            const accEl = document.getElementById('liveGpsAccuracyBadge');
-            const updatedEl = document.getElementById('liveGpsUpdatedText');
-            if (coordsEl) coordsEl.textContent = `${pos.latitude.toFixed(5)}, ${pos.longitude.toFixed(5)}`;
-            if (accEl) accEl.textContent = `± ${Math.round(pos.accuracy)}m`;
-            if (updatedEl) updatedEl.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
-
-            if (userMarker) {
-                userSafetyMap.removeLayer(userMarker);
-            }
-
-            const userIcon = L.divIcon({
-                className: 'custom-user-marker',
-                html: `<div style="background: #2563EB; width: 18px; height: 18px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 12px rgba(37,99,235,0.8); animation: pulse-sos 2s infinite;"></div>`,
-                iconSize: [24, 24],
-                iconAnchor: [12, 12]
-            });
-
-            userMarker = L.marker([pos.latitude, pos.longitude], { icon: userIcon }).addTo(userSafetyMap)
-                .bindPopup(`<b>📍 Your Current Location</b><br>${pos.address}<br>Accuracy: ±${Math.round(pos.accuracy)}m`)
-                .openPopup();
-
-            userSafetyMap.setView([pos.latitude, pos.longitude], 14);
-
-            const originInput = document.getElementById('routeOriginInput');
-            if (originInput) {
-                originInput.value = `${pos.latitude.toFixed(4)}, ${pos.longitude.toFixed(4)} (My Current GPS)`;
-            }
-        }
-
-        async function loadHeatmapData() {
-            if (!userSafetyMap || !heatLayerGroup) return;
-            heatLayerGroup.clearLayers();
-
-            try {
-                const data = await SafetyMapAPI.getHeatmap('Mumbai');
-                if (!data) return;
-
-                if (data.areas) {
-                    data.areas.forEach(area => {
-                        const color = area.risk_level === 'HIGH_REPORTED_RISK' ? '#EF4444' :
-                                      (area.risk_level === 'MODERATE_REPORTED_RISK' ? '#F59E0B' : '#10B981');
-
-                        const circle = L.circle([area.latitude, area.longitude], {
-                            color: color,
-                            fillColor: color,
-                            fillOpacity: 0.22,
-                            radius: 900
-                        }).addTo(heatLayerGroup);
-
-                        circle.bindPopup(`
-                            <div style="font-size:13px; font-family:var(--sans);">
-                                <b style="font-size:14px;">${area.area}</b><br>
-                                <span style="display:inline-block; margin:4px 0; padding:2px 8px; border-radius:100px; background:${color}; color:white; font-size:11px; font-weight:700;">
-                                    ${area.risk_level.replace(/_/g, ' ')}
-                                </span><br>
-                                Perimeter Safety Risk Score: <b>${area.risk_score} / 100</b><br>
-                                Crime Trend: <b>${area.crime_trend}</b><br>
-                                <small style="color:#64748B;">Data Sources: ${area.data_sources.join(', ')}</small>
-                            </div>
-                        `);
-                    });
-                }
-
-                if (data.incidents) {
-                    data.incidents.forEach(inc => {
-                        const incIcon = L.divIcon({
-                            className: 'incident-marker-icon',
-                            html: `<div style="background:#DC2626; color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; border:2px solid white; box-shadow:0 4px 10px rgba(0,0,0,0.3);">🚨</div>`,
-                            iconSize: [26, 26],
-                            iconAnchor: [13, 13]
-                        });
-
-                        L.marker([inc.latitude, inc.longitude], { icon: incIcon }).addTo(heatLayerGroup)
-                            .bindPopup(`
-                                <div style="font-size:13px;">
-                                    <b style="color:#DC2626;">🚨 ${inc.type.replace(/_/g, ' ')}</b><br>
-                                    Case: <b>${inc.incident_id}</b> (${inc.severity})<br>
-                                    Status: <b>${inc.status}</b><br>
-                                    Location: ${inc.address}
-                                </div>
-                            `);
-                    });
-                }
-            } catch (err) {
-                console.warn('Could not load safety heatmap:', err.message);
-            }
-        }
-
-        let heatmapVisible = true;
-        function toggleHeatmapLayer() {
-            if (!userSafetyMap || !heatLayerGroup) return;
-            if (heatmapVisible) {
-                userSafetyMap.removeLayer(heatLayerGroup);
-                heatmapVisible = false;
-                showToast('Safety Heatmap layer hidden.', '🗺️');
-            } else {
-                userSafetyMap.addLayer(heatLayerGroup);
-                heatmapVisible = true;
-                showToast('Safety Heatmap layer enabled.', '🗺️');
-            }
-        }
-
-        async function triggerSOSInstant() {
-            if (!currentUser) return;
-            showToast('Acquiring live GPS coordinates for emergency dispatch...', '📡');
-
-            const pos = await LocationService.getCurrentPosition();
-
-            try {
-                const res = await SOSAPI.triggerSOS({
-                    user_name: currentUser.name,
-                    user_id: currentUser.id,
-                    phone: currentUser.phone,
-                    trigger_type: "MANUAL_HOLD",
-                    severity: "CRITICAL",
-                    location: {
-                        latitude: pos.latitude,
-                        longitude: pos.longitude,
-                        accuracy_meters: pos.accuracy,
-                        address: pos.address
-                    },
-                    notes: "Emergency SOS distress beacon activated by Citizen from PERIMETER Hub."
-                });
-
-                activeEmergencyIncidentId = res.incident_id;
-
-                const banner = document.getElementById('activeEmergencyBanner');
-                if (banner) banner.style.display = 'flex';
-
-                LocationService.startEmergencyTracking((updatedPos) => {
-                    console.log('[SOS Tracking] Live position update sent to responders:', updatedPos);
-                });
-
-                showToast(`🚨 EMERGENCY DISPATCH SENT! Case: ${res.case_id}. Police & nearby volunteers alerted!`, '🚨', 8000);
-
-                switchNavView('sos');
-                if (userSafetyMap) {
-                    userSafetyMap.setView([pos.latitude, pos.longitude], 15);
-                    L.popup()
-                        .setLatLng([pos.latitude, pos.longitude])
-                        .setContent(`<b>🚨 Active SOS Dispatched</b><br>Your location is live-shared with City Police & Volunteers.`)
-                        .openOn(userSafetyMap);
-                }
-            } catch (err) {
-                showToast(`SOS dispatch error: ${err.message}`, '⚠️', 6000);
-            }
-        }
-
-        async function cancelActiveEmergency() {
-            LocationService.stopEmergencyTracking();
-            const banner = document.getElementById('activeEmergencyBanner');
-            if (banner) banner.style.display = 'none';
-
-            if (activeEmergencyIncidentId) {
-                try {
-                    await SOSAPI.resolveSOS(activeEmergencyIncidentId, currentUser.name, "Distress cancelled by user.");
-                } catch(e) {}
-                activeEmergencyIncidentId = null;
-            }
-            showToast('Emergency tracking stopped and distress status resolved.', '✔', 4000);
-        }
-
-        async function calculateSafeRoutes() {
-            showToast('Analyzing road corridors & safety risks...', '🚶');
-            const pos = await LocationService.getCurrentPosition();
-            const destVal = document.getElementById('routeDestSelect').value;
-            const [destLat, destLng] = destVal.split(',').map(Number);
-
-            try {
-                const data = await SafetyMapAPI.getSafeRoutes(pos.latitude, pos.longitude, destLat, destLng);
-                if (!data || !data.routes || data.routes.length === 0) {
-                    showToast('Could not calculate routes for this destination.', '⚠️');
-                    return;
-                }
-
-                currentEvaluatedRoutes = data.routes;
-                const container = document.getElementById('routeResultsContainer');
-                container.style.display = 'grid';
-
-                container.innerHTML = data.routes.map((r, idx) => `
-                    <div style="background:#F8FAFC; border:2px solid ${r.is_recommended_safety ? '#10B981' : (r.is_fastest ? '#3B82F6' : '#E2E8F0')}; border-radius:14px; padding:18px; position:relative; box-shadow:var(--shadow-subtle);">
-                        ${r.is_recommended_safety ? `<span style="position:absolute; top:-10px; right:16px; background:#10B981; color:white; font-size:10.5px; font-weight:800; padding:2px 10px; border-radius:100px; text-transform:uppercase;">★ Recommended Lower Risk</span>` : ''}
-                        ${r.is_fastest && !r.is_recommended_safety ? `<span style="position:absolute; top:-10px; right:16px; background:#3B82F6; color:white; font-size:10.5px; font-weight:800; padding:2px 10px; border-radius:100px; text-transform:uppercase;">⚡ Fastest</span>` : ''}
-                        
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                            <h4 style="font-size:16px; font-weight:800;">${r.name}</h4>
-                            <span style="font-size:12px; font-weight:700; color:${r.color_hex};">${r.badge_icon} ${r.risk_label}</span>
-                        </div>
-
-                        <div style="display:flex; gap:16px; margin:10px 0; font-size:14px; font-weight:700;">
-                            <div>📏 <span>${r.distance_km} km</span></div>
-                            <div>⏱️ <span>${r.duration_mins} min</span></div>
-                            <div>🛡️ Risk Score: <span style="color:${r.color_hex};">${r.safety_risk_score} / 100</span></div>
-                        </div>
-
-                        <p style="font-size:12px; color:var(--gray); margin-bottom:12px; line-height:1.4;">
-                            ${r.description}
-                        </p>
-
-                        <button class="nav-tab-btn" style="width:100%; justify-content:center; background:${r.is_recommended_safety ? '#10B981' : '#1E293B'}; color:white; font-weight:700;" onclick="selectRoute('${r.route_id}')">
-                            Display & Navigate This Route →
-                        </button>
-                    </div>
-                `).join('');
-
-                selectRoute(data.routes[0].route_id);
-                showToast('Route options analyzed: Fastest vs Lower Reported Risk corridor.', '🟢');
-            } catch (err) {
-                showToast(`Route analysis error: ${err.message}`, '⚠️');
-            }
-        }
-
-        function selectRoute(routeId) {
-            if (!userSafetyMap || !routeLayerGroup) return;
-            routeLayerGroup.clearLayers();
-
-            const route = currentEvaluatedRoutes.find(r => r.route_id === routeId);
-            if (!route || !route.path_coordinates) return;
-
-            const latLngs = route.path_coordinates.map(pt => [pt[1], pt[0]]);
-            const color = route.color_hex || '#10B981';
-
-            const polyline = L.polyline(latLngs, {
-                color: color,
-                weight: 6,
-                opacity: 0.85,
-                dashArray: route.is_recommended_safety ? null : '8, 8'
-            }).addTo(routeLayerGroup);
-
-            userSafetyMap.fitBounds(polyline.getBounds(), { padding: [50, 50] });
-            showToast(`Selected: ${route.name} (${route.risk_label})`, '🗺️');
         }
     </script>
 </body>

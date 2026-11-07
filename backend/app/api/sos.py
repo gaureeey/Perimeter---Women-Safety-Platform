@@ -1,534 +1,448 @@
 """
 PERIMETER Emergency SOS & Incident Dispatch API
-Authoritative emergency orchestration with PostGIS proximity routing,
-role-based notification dispatch, and immutable case timeline tracking.
+
+Routing priority:
+    CRITICAL / HIGH  -> Police priority
+    MEDIUM / MINOR   -> Volunteer priority
+    All SOS events are mirrored to police, volunteers, and admin dashboards.
+
+A lightweight in-memory WebSocket hub is used for local development so
+police/volunteer dashboards receive new SOS events without refreshing.
 """
-from fastapi import APIRouter, Depends, HTTPException, status, Query, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect, Request
 from sqlalchemy.orm import Session
 from typing import List, Optional
 import uuid
-from datetime import datetime, timedelta
+import json
 
 from app.db.session import get_db
 from app.models.sos import SOSIncident, Responder
 from app.models.case import IncidentCase, TimelineEvent
 from app.models.user import User
-from app.models.location import UserLocation
-from app.schemas.sos import SOSTriggerRequest, SOSIncidentResponse, ResponderInfo, SOSLocationUpdate
-from app.core.security import get_current_user, get_optional_user, require_role
-from app.db.spatial import haversine_distance_km, point_to_wkt
-from app.api.notification import dispatch_sos_notifications, manager
+from app.models.feed import FeedPost
+from app.schemas.sos import SOSTriggerRequest, SOSIncidentResponse, ResponderInfo
+from app.core.security import get_current_user, get_optional_user, decode_access_token
 
 router = APIRouter(prefix="/sos", tags=["Emergency SOS & Dispatch"])
 
-# In-memory rate limiting tracker: {ip_or_user_id: [timestamps]}
-_sos_rate_limits = {}
+POLICE_SEVERITIES = {"CRITICAL", "HIGH"}
+VOLUNTEER_SEVERITIES = {"MEDIUM", "MINOR"}
 
-def check_sos_rate_limit(key: str, max_calls: int = 5, window_seconds: int = 60):
-    now = datetime.utcnow()
-    calls = _sos_rate_limits.get(key, [])
-    recent_calls = [t for t in calls if (now - t).total_seconds() < window_seconds]
-    if len(recent_calls) >= max_calls:
-        raise HTTPException(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail="Emergency SOS rate limit exceeded. Please wait a moment before sending another alert."
-        )
-    recent_calls.append(now)
-    _sos_rate_limits[key] = recent_calls
+# role -> connected WebSocket clients
+_ws_clients = {"police": set(), "volunteer": set(), "admin": set()}
+# Citizen sockets are keyed by the authenticated citizen user id.
+_citizen_ws = {}
 
-@router.post("/trigger", response_model=SOSIncidentResponse)
-def trigger_sos(
-    req: SOSTriggerRequest,
-    background_tasks: BackgroundTasks,
-    db: Session = Depends(get_db),
-    current_user: Optional[User] = Depends(get_optional_user)
-):
-    """
-    Trigger emergency SOS or submit an incident report.
-    1. Validates real GPS coordinates.
-    2. Persists the SOS event to database with PostGIS spatial point.
-    3. Provisions an IncidentCase and appends chronological timeline events.
-    4. Performs authoritative spatial proximity query for nearby active volunteers.
-    5. Dispatches role-tailored notifications to Police, Volunteers, and Journalists.
-    """
-    # 1. Coordinate Validation
-    lat = req.location.latitude
-    lng = req.location.longitude
-    if lat < -90.0 or lat > 90.0 or lng < -180.0 or lng > 180.0:
-        raise HTTPException(status_code=400, detail="Invalid GPS coordinates. Latitude must be -90..90 and Longitude -180..180.")
 
-    # Rate limiting
-    rate_key = current_user.id if current_user else req.user_name
-    check_sos_rate_limit(rate_key)
+def route_for_severity(severity: Optional[str]):
+    severity = (severity or "MEDIUM").upper()
+    if severity in POLICE_SEVERITIES:
+        return "police", "High-risk emergency routed to Police Command."
+    return "volunteer", "Non-critical request routed to verified volunteers."
 
-    inc_id = f"SOS-2026-{uuid.uuid4().hex[:4].upper()}"
-    case_id = f"CAS-2026-{uuid.uuid4().hex[:4].upper()}"
-    now = datetime.utcnow()
 
-    # 2. Persist SOS event with Spatial Point
-    incident = SOSIncident(
-        incident_id=inc_id,
-        user_id=req.user_id or (current_user.id if current_user else None),
-        user_name=req.user_name,
-        phone=req.phone or (current_user.phone if current_user else None),
-        trigger_type=req.trigger_type,
-        severity=req.severity or "HIGH",
-        notes=req.notes,
-        status="ACTIVE_DISPATCH",
-        latitude=lat,
-        longitude=lng,
-        location_point=point_to_wkt(lat, lng),
-        accuracy_meters=req.location.accuracy_meters or 10.0,
-        address=req.location.address or f"GPS Lat {lat:.4f}, Lng {lng:.4f}",
-        geofence_radius_km=5.0,
-        case_id=case_id,
-        created_at=now
-    )
-    db.add(incident)
-
-    # 3. Provision corresponding IncidentCase
-    case_title = (
-        f"Emergency SOS Alert ({req.trigger_type.replace('_', ' ')})"
-        if req.trigger_type != "ACCIDENT_REPORT"
-        else f"Accident & Collision Dispatch ({req.severity})"
-    )
-    new_case = IncidentCase(
-        case_id=case_id,
-        title=case_title,
-        victim_identifier=f"Citizen {req.user_name}",
-        status="ACTIVE_DISPATCH",
-        priority=req.severity or "HIGH",
-        location=incident.address,
-        assigned_precinct="Central Police Precinct #01",
-        opened_at=now
-    )
-    db.add(new_case)
-
-    # 4. Chronological Timeline Event: Step 1 - SOS Triggered
-    ev_triggered = TimelineEvent(
-        case_id=case_id,
-        event_type="SOS_TRIGGERED",
-        title=f"SOS Distress Beacon Triggered ({req.trigger_type})",
-        description=f"Emergency activated by {req.user_name}. Trigger mode: {req.trigger_type}. Notes: {req.notes or 'None'}",
-        actor_role="citizen",
-        actor_name=req.user_name,
-        timestamp=now
-    )
-    db.add(ev_triggered)
-
-    # Chronological Timeline Event: Step 2 - Location Captured
-    ev_location = TimelineEvent(
-        case_id=case_id,
-        event_type="LOCATION_CAPTURED",
-        title="High-Accuracy GPS Coordinates Locked",
-        description=f"Coordinates ({lat:.5f}, {lng:.5f}) with accuracy ±{incident.accuracy_meters:.1f}m confirmed.",
-        actor_role="system",
-        actor_name="PERIMETER Geofence Engine",
-        timestamp=now
-    )
-    db.add(ev_location)
-
-    # 5. Authoritative PostGIS Proximity Search for Active Volunteers (within 5 km radius)
-    volunteers = db.query(UserLocation, User).join(
-        User, UserLocation.user_id == User.id
-    ).filter(
-        UserLocation.is_current == True,
-        User.role == "volunteer",
-        User.is_active == True
-    ).all()
-
-    nearby_volunteers = []
-    for loc, u in volunteers:
-        dist = haversine_distance_km(lat, lng, loc.latitude, loc.longitude)
-        if dist <= incident.geofence_radius_km:
-            nearby_volunteers.append((u, dist))
-
-    # Chronological Timeline Event: Step 3 - Police & Volunteers Dispatched
-    ev_dispatched = TimelineEvent(
-        case_id=case_id,
-        event_type="POLICE_NOTIFIED",
-        title="Police Command & Geofence Alert Broadcasted",
-        description=f"City Police Command alerted with priority {incident.severity}. {len(nearby_volunteers)} active volunteers within 5km perimeter notified.",
-        actor_role="system",
-        actor_name="PERIMETER Dispatch Router",
-        timestamp=now
-    )
-    db.add(ev_dispatched)
-
-    # Update or persist current user location
-    if current_user:
-        db.query(UserLocation).filter(
-            UserLocation.user_id == current_user.id,
-            UserLocation.is_current == True
-        ).update({"is_current": False})
-        user_loc = UserLocation(
-            user_id=current_user.id,
-            latitude=lat,
-            longitude=lng,
-            location_point=point_to_wkt(lat, lng),
-            accuracy=incident.accuracy_meters,
-            source="emergency_sos",
-            is_current=True,
-            privacy_level="EMERGENCY"
-        )
-        db.add(user_loc)
-        current_user.last_active_at = now
-
-    db.commit()
-    db.refresh(incident)
-
-    # 6. Dispatch role-tailored persistent notifications
-    dispatch_sos_notifications(
-        db=db,
-        incident_id=inc_id,
-        user_name=req.user_name,
-        phone=incident.phone,
-        lat=lat,
-        lng=lng,
-        accuracy=incident.accuracy_meters,
-        address=incident.address,
-        severity=incident.severity,
-        trigger_type=req.trigger_type,
-        nearby_volunteers_count=len(nearby_volunteers)
-    )
-
-    # 7. WebSocket live alerts in background
-    police_payload = {
-        "type": "NEW_SOS_INCIDENT",
-        "incident_id": inc_id,
-        "case_id": case_id,
-        "user_name": req.user_name,
-        "phone": incident.phone,
-        "trigger_type": req.trigger_type,
-        "severity": incident.severity,
-        "location": {"latitude": lat, "longitude": lng, "address": incident.address},
-        "created_at": incident.created_at.isoformat()
-    }
-    volunteer_payload = {
-        "type": "NEW_SOS_INCIDENT",
-        "incident_id": inc_id,
-        "case_id": case_id,
-        "trigger_type": req.trigger_type,
-        "severity": incident.severity,
-        "location": {"latitude": lat, "longitude": lng, "address": incident.address},
-        "created_at": incident.created_at.isoformat()
-    }
-    journalist_payload = {
-        "type": "VERIFIED_INCIDENT_OPENED",
-        "incident_id": inc_id,
-        "case_id": case_id,
-        "area": incident.address.split(",")[0],
-        "severity": incident.severity,
-        "created_at": incident.created_at.isoformat()
-    }
-    background_tasks.add_task(
-        manager.broadcast_emergency,
-        police_payload,
-        volunteer_payload,
-        journalist_payload
-    )
-
-    return {
-        "incident_id": incident.incident_id,
-        "user_id": incident.user_id,
-        "user_name": incident.user_name,
-        "trigger_type": incident.trigger_type,
-        "severity": incident.severity,
-        "notes": incident.notes,
-        "status": incident.status,
-        "created_at": incident.created_at,
-        "location": {
-            "latitude": incident.latitude,
-            "longitude": incident.longitude,
-            "accuracy_meters": incident.accuracy_meters,
-            "address": incident.address
-        },
-        "geofence_radius_km": incident.geofence_radius_km,
-        "active_responders": [],
-        "case_id": incident.case_id
-    }
-
-@router.get("/active", response_model=List[SOSIncidentResponse])
-def get_active_incidents(
-    lat: Optional[float] = Query(None, description="Volunteer latitude for proximity calculation"),
-    lng: Optional[float] = Query(None, description="Volunteer longitude for proximity calculation"),
-    radius_km: Optional[float] = Query(5.0, description="Max geofence radius in km (default: 5.0 km)"),
-    db: Session = Depends(get_db),
-    current_user: Optional[User] = Depends(get_optional_user)
-):
-    """
-    Retrieve all active emergency SOS dispatches.
-    Enforces role-based privacy filters:
-    - Police & Admin: Full victim details, exact coordinates, all active emergencies.
-    - Volunteer: Filtered by 5km radius proximity using authoritative PostGIS distance; includes calculated distance_km.
-    - Journalist: Sanitized coordinates and privacy-safe victim identity.
-    """
-    incidents = db.query(SOSIncident).filter(
-        SOSIncident.status.in_(["ACTIVE_DISPATCH", "ACKNOWLEDGED"])
-    ).order_by(SOSIncident.created_at.desc()).all()
-
-    # Determine reference coordinates for volunteer if applicable
-    ref_lat = lat
-    ref_lng = lng
-    if (ref_lat is None or ref_lng is None) and current_user and current_user.role == "volunteer":
-        last_loc = db.query(UserLocation).filter(
-            UserLocation.user_id == current_user.id,
-            UserLocation.is_current == True
-        ).order_by(UserLocation.timestamp.desc()).first()
-        if last_loc:
-            ref_lat = last_loc.latitude
-            ref_lng = last_loc.longitude
-
-    results = []
-    is_police_or_admin = current_user and current_user.role in ["police", "admin"]
-    is_volunteer = current_user and current_user.role == "volunteer"
-    is_police_or_vol = is_police_or_admin or is_volunteer
-
-    for inc in incidents:
-        # Distance calculation
-        dist = None
-        if ref_lat is not None and ref_lng is not None:
-            dist = haversine_distance_km(ref_lat, ref_lng, inc.latitude, inc.longitude)
-            # If requesting as volunteer with active geofence, skip incidents outside configured radius
-            if is_volunteer and radius_km is not None and dist > radius_km:
-                continue
-
-        responders = [
-            ResponderInfo(
-                responder_id=r.responder_id,
-                responder_name=r.responder_name,
-                role=r.role,
-                eta_minutes=r.eta_minutes,
-                distance_km=r.distance_km,
-                status=r.status
-            )
-            for r in inc.responders
-        ]
-
-        # For journalists / public viewers, protect victim's full identity
-        display_name = inc.user_name if is_police_or_vol else f"Citizen #{inc.incident_id[-4:]}"
-        display_phone = inc.phone if is_police_or_admin else None
-
-        results.append({
-            "incident_id": inc.incident_id,
-            "user_id": inc.user_id if is_police_or_vol else None,
-            "user_name": display_name,
-            "trigger_type": inc.trigger_type,
-            "severity": inc.severity,
-            "notes": inc.notes,
-            "status": inc.status,
-            "created_at": inc.created_at,
-            "location": {
-                "latitude": inc.latitude,
-                "longitude": inc.longitude,
-                "accuracy_meters": inc.accuracy_meters,
-                "address": inc.address
-            },
-            "geofence_radius_km": inc.geofence_radius_km,
-            "distance_km": round(dist, 2) if dist is not None else None,
-            "active_responders": responders,
-            "case_id": inc.case_id
-        })
-
-    return results
-
-@router.get("/{incident_id}")
-def get_incident_by_id(
-    incident_id: str,
-    db: Session = Depends(get_db),
-    current_user: Optional[User] = Depends(get_optional_user)
-):
-    """Retrieve details for a single SOS incident."""
-    inc = db.query(SOSIncident).filter(SOSIncident.incident_id == incident_id).first()
-    if not inc:
-        raise HTTPException(status_code=404, detail="Incident not found.")
-    
-    case = db.query(IncidentCase).filter(IncidentCase.case_id == inc.case_id).first()
-    timeline = []
-    if case:
-        timeline = [
-            {
-                "id": t.id,
-                "event_type": t.event_type,
-                "title": t.title,
-                "description": t.description,
-                "actor_role": t.actor_role,
-                "actor_name": t.actor_name,
-                "timestamp": t.timestamp
-            }
-            for t in sorted(case.timeline_events, key=lambda x: x.timestamp)
-        ]
-
+def incident_to_dict(inc: SOSIncident):
+    dispatch_role, routing_reason = route_for_severity(inc.severity)
     return {
         "incident_id": inc.incident_id,
+        "id": inc.incident_id,  # frontend compatibility
+        "reference": inc.incident_id,
+        "user_id": inc.user_id,
         "user_name": inc.user_name,
-        "phone": inc.phone if (current_user and current_user.role in ["police", "admin"]) else None,
+        "phone": inc.phone,
         "trigger_type": inc.trigger_type,
         "severity": inc.severity,
+        "notes": inc.notes,
+        "audio_proof_url": inc.audio_proof_url,
+        "video_proof_url": inc.video_proof_url,
         "status": inc.status,
+        "created_at": inc.created_at,
         "location": {
             "latitude": inc.latitude,
             "longitude": inc.longitude,
             "accuracy_meters": inc.accuracy_meters,
             "address": inc.address
         },
-        "created_at": inc.created_at,
-        "resolved_at": inc.resolved_at,
-        "resolved_by": inc.resolved_by,
+        "geofence_radius_km": inc.geofence_radius_km,
+        "active_responders": [
+            {
+                "responder_id": r.responder_id,
+                "responder_name": r.responder_name,
+                "name": r.responder_name,
+                "role": r.role,
+                "eta_minutes": r.eta_minutes,
+                "distance_km": r.distance_km,
+                "status": r.status
+            }
+            for r in inc.responders
+        ],
         "case_id": inc.case_id,
-        "timeline": timeline
+        "dispatch_role": dispatch_role,
+        "routing_reason": routing_reason,
+        "category": "medical" if "MEDICAL" in (inc.trigger_type or "").upper() else "public"
     }
 
-@router.post("/{incident_id}/location")
-def update_incident_location(
-    incident_id: str,
-    req: SOSLocationUpdate,
-    background_tasks: BackgroundTasks,
+
+async def broadcast(role: str, payload: dict):
+    dead = []
+    for ws in list(_ws_clients.get(role, set())):
+        try:
+            await ws.send_json(payload)
+        except Exception:
+            dead.append(ws)
+    for ws in dead:
+        _ws_clients.get(role, set()).discard(ws)
+
+
+async def broadcast_citizen(user_id: str, payload: dict):
+    """Send an event only to the citizen who owns the SOS."""
+    sockets = _citizen_ws.get(str(user_id), set())
+    dead = []
+    for ws in list(sockets):
+        try:
+            await ws.send_json(payload)
+        except Exception:
+            dead.append(ws)
+    for ws in dead:
+        sockets.discard(ws)
+
+
+@router.websocket("/ws")
+async def sos_websocket(websocket: WebSocket, role: str, token: str):
+    """
+    Connect a police or volunteer dashboard to live SOS events.
+    The JWT is passed as a query parameter because browser WebSocket
+    connections cannot reliably set an Authorization header.
+    """
+    role = role.lower()
+    payload = decode_access_token(token)
+    if not payload:
+        await websocket.close(code=1008)
+        return
+
+    if role == "user":
+        user_id = str(payload.get("sub") or "")
+        if not user_id or payload.get("role") != "user":
+            await websocket.close(code=1008)
+            return
+        await websocket.accept()
+        _citizen_ws.setdefault(user_id, set()).add(websocket)
+        try:
+            await websocket.send_json({
+                "type": "connected",
+                "role": "user",
+                "message": "Live citizen SOS channel connected."
+            })
+            while True:
+                await websocket.receive_text()
+        except WebSocketDisconnect:
+            pass
+        except Exception:
+            pass
+        finally:
+            _citizen_ws.get(user_id, set()).discard(websocket)
+            if not _citizen_ws.get(user_id):
+                _citizen_ws.pop(user_id, None)
+        return
+
+    if role not in {"police", "volunteer", "admin"} or payload.get("role") not in {role, "admin"}:
+        await websocket.close(code=1008)
+        return
+
+    await websocket.accept()
+    _ws_clients[role].add(websocket)
+    try:
+        await websocket.send_json({
+            "type": "connected",
+            "role": role,
+            "message": f"Live {role} SOS channel connected."
+        })
+        while True:
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        pass
+    except Exception:
+        pass
+    finally:
+        _ws_clients[role].discard(websocket)
+
+
+@router.post("/trigger", response_model=SOSIncidentResponse)
+async def trigger_sos(
+    req: SOSTriggerRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Create an SOS case and route it according to severity.
+    Only an authenticated citizen account can create an SOS.
+    """
+    # Never trust the browser for identity.
+    if current_user.role != "user" and current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Only citizen accounts can trigger a citizen SOS.")
+
+    severity = (req.severity or "MEDIUM").upper()
+    if severity not in POLICE_SEVERITIES | VOLUNTEER_SEVERITIES:
+        raise HTTPException(status_code=400, detail="Invalid severity. Use CRITICAL, HIGH, MEDIUM or MINOR.")
+
+    dispatch_role, routing_reason = route_for_severity(severity)
+
+    inc_id = f"SOS-2026-{uuid.uuid4().hex[:4].upper()}"
+    case_id = f"CAS-2026-{uuid.uuid4().hex[:4].upper()}"
+
+    incident = SOSIncident(
+        incident_id=inc_id,
+        user_id=current_user.id,
+        user_name=current_user.name,
+        phone=current_user.phone,
+        trigger_type=req.trigger_type,
+        severity=severity,
+        notes=req.notes,
+        audio_proof_url=req.audio_proof_url,
+        video_proof_url=req.video_proof_url,
+        status="ACTIVE_DISPATCH",
+        latitude=req.location.latitude,
+        longitude=req.location.longitude,
+        accuracy_meters=req.location.accuracy_meters or 10.0,
+        address=req.location.address or current_user.location or "Live GPS Geofence Alert",
+        geofence_radius_km=5.0,
+        case_id=case_id
+    )
+    db.add(incident)
+
+    case_title = f"{severity} SOS Alert — {req.trigger_type.replace('_', ' ').title()}"
+    new_case = IncidentCase(
+        case_id=case_id,
+        user_id=current_user.id,
+        title=case_title,
+        victim_identifier=f"Citizen {current_user.name}",
+        status="ACTIVE_DISPATCH",
+        priority=severity,
+        location=req.location.address or f"Lat {req.location.latitude:.4f}, Lng {req.location.longitude:.4f}",
+        assigned_precinct="Central Police Precinct #01"
+    )
+    db.add(new_case)
+
+    initial_event = TimelineEvent(
+        case_id=case_id,
+        title=f"SOS Routed to {dispatch_role.title()}",
+        description=(
+            f"{current_user.name} triggered a {severity} SOS. "
+            f"{routing_reason} Live GPS: {req.location.latitude:.6f}, {req.location.longitude:.6f}."
+        ),
+        actor_role="citizen",
+        actor_name=current_user.name
+    )
+    db.add(initial_event)
+
+    # Create a persistent community safety post for every citizen SOS.
+    # This makes the SOS visible in police/admin community feeds even if
+    # their live WebSocket was temporarily disconnected.
+    sos_post = FeedPost(
+        id=f"sos_post_{uuid.uuid4().hex[:8]}",
+        author_id=current_user.id,
+        author_name=current_user.name,
+        author_role="user",
+        author_badge="Citizen Emergency Alert",
+        author_avatar=("".join(w[0] for w in (current_user.name or "Citizen").split())[:2].upper() or "C"),
+        title=f"🚨 {severity} SOS Alert",
+        content=(
+            f"Citizen {current_user.name} triggered an SOS emergency. "
+            f"Case {case_id}. Location: {req.location.address or 'Live GPS location'}. "
+            f"Police Command and verified volunteers have been notified."
+        ),
+        tag="SOS_ALERT",
+        location_name=req.location.address or "Live GPS Location",
+        media_url=req.video_proof_url or req.audio_proof_url,
+        media_type="video" if req.video_proof_url else ("audio" if req.audio_proof_url else "image"),
+        upvotes=0,
+        shares_count=0,
+        saves_count=0,
+        verified_by_police=False,
+        comments_count=0
+    )
+    db.add(sos_post)
+
+    db.commit()
+    db.refresh(incident)
+
+    response = incident_to_dict(incident)
+    response["category"] = req.category or "public"
+
+    # Every SOS is sent to BOTH responder desks.
+    # Police and volunteers can then prioritize by severity.
+    response["dispatch_role"] = "both"
+    response["routing_reason"] = (
+        "SOS shared with Police Command and verified volunteers. "
+        "Severity determines response priority."
+    )
+    for target_role in ("police", "volunteer", "admin"):
+        await broadcast(target_role, {
+            "type": "new_sos",
+            "incident": response
+        })
+    await broadcast("admin", {
+        "type": "new_sos",
+        "incident": response
+    })
+
+    return response
+
+
+@router.get("/active", response_model=List[SOSIncidentResponse])
+def get_active_incidents(
+    request: Request,
     db: Session = Depends(get_db),
     current_user: Optional[User] = Depends(get_optional_user)
 ):
     """
-    Live GPS update for an active SOS incident.
-    Persists updated victim coordinates and broadcasts live position to authorized emergency responders.
+    Return the live SOS queue.
+
+    Normal operation is authenticated:
+      police/admin/volunteer -> all active incidents
+      citizen                 -> only their own incidents
+
+    Local-development compatibility:
+      Some older Perimeter police pages did not send the JWT with their
+      polling request. When the request comes from localhost/127.0.0.1 and
+      no user is authenticated, we still return the active queue so the
+      Police Command dashboard can work during local four-persona testing.
+      This fallback is deliberately limited to local requests.
     """
-    inc = db.query(SOSIncident).filter(SOSIncident.incident_id == incident_id).first()
+    query = db.query(SOSIncident).filter(SOSIncident.status == "ACTIVE_DISPATCH")
+
+    if current_user is None:
+        client_host = request.client.host if request.client else ""
+        if client_host not in {"127.0.0.1", "::1", "localhost"}:
+            raise HTTPException(status_code=401, detail="Authentication required.")
+        # Local prototype fallback for legacy polling clients.
+    elif current_user.role in {"police", "volunteer", "admin"}:
+        pass
+    elif current_user.role == "user":
+        query = query.filter(SOSIncident.user_id == current_user.id)
+    else:
+        return []
+
+    incidents = query.order_by(SOSIncident.created_at.desc()).all()
+    return [incident_to_dict(inc) for inc in incidents]
+
+
+@router.get("/{incident_id}", response_model=SOSIncidentResponse)
+def get_incident(
+    incident_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Return one SOS incident for the citizen/responder dashboard."""
+    inc = db.query(SOSIncident).filter(
+        SOSIncident.incident_id == incident_id
+    ).first()
+
     if not inc:
         raise HTTPException(status_code=404, detail="Incident not found.")
-    
-    if inc.status not in ["ACTIVE_DISPATCH", "ACKNOWLEDGED"]:
-        raise HTTPException(status_code=400, detail="Cannot update location for resolved incident.")
 
-    inc.latitude = req.latitude
-    inc.longitude = req.longitude
-    inc.accuracy_meters = req.accuracy_meters or 10.0
-    if req.address:
-        inc.address = req.address
-    inc.location_point = point_to_wkt(req.latitude, req.longitude)
-    
-    # Update current user location record
-    if inc.user_id:
-        db.query(UserLocation).filter(
-            UserLocation.user_id == inc.user_id,
-            UserLocation.is_current == True
-        ).update({"is_current": False})
-        
-        user_loc = UserLocation(
-            user_id=inc.user_id,
-            latitude=req.latitude,
-            longitude=req.longitude,
-            location_point=point_to_wkt(req.latitude, req.longitude),
-            accuracy=inc.accuracy_meters,
-            source="emergency_live_update",
-            is_current=True,
-            privacy_level="EMERGENCY"
-        )
-        db.add(user_loc)
-        
+    # Citizens may only read their own SOS records.
+    if current_user.role == "user" and inc.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="You cannot access this incident.")
+
+    # Both responder roles can inspect any active SOS.
+    # Severity is used for prioritization, not access control.
+
+    return incident_to_dict(inc)
+
+
+@router.post("/{incident_id}/stand-down")
+async def stand_down_incident(
+    incident_id: str,
+    reason: str = "user_stand_down",
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Allow the citizen who created an SOS to safely stand it down."""
+    inc = db.query(SOSIncident).filter(
+        SOSIncident.incident_id == incident_id
+    ).first()
+
+    if not inc:
+        raise HTTPException(status_code=404, detail="Incident not found.")
+
+    if current_user.role == "user" and inc.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="You can only stand down your own SOS.")
+
+    if inc.status != "ACTIVE_DISPATCH":
+        return {
+            "status": inc.status,
+            "message": f"Incident {incident_id} is already closed."
+        }
+
+    inc.status = "STOOD_DOWN"
+
+    case = db.query(IncidentCase).filter(
+        IncidentCase.case_id == inc.case_id
+    ).first()
+
+    if case:
+        case.status = "RESOLVED"
+        db.add(TimelineEvent(
+            case_id=inc.case_id,
+            title="SOS Stood Down by Citizen",
+            description=f"SOS stood down by the citizen. Reason: {reason}",
+            actor_role="citizen",
+            actor_name=current_user.name
+        ))
+
     db.commit()
+    db.refresh(inc)
 
-    # Broadcast to Police & Admin map in background
-    police_update = {
-        "type": "SOS_LOCATION_UPDATE",
-        "incident_id": inc.incident_id,
-        "latitude": req.latitude,
-        "longitude": req.longitude,
-        "accuracy_meters": inc.accuracy_meters,
-        "address": inc.address,
-        "updated_at": datetime.utcnow().isoformat()
+    event = incident_to_dict(inc)
+    event["status"] = "STOOD_DOWN"
+
+    await broadcast("police", {
+        "type": "incident_stood_down",
+        "incident": event
+    })
+    await broadcast("volunteer", {
+        "type": "incident_stood_down",
+        "incident": event
+    })
+    await broadcast("admin", {
+        "type": "incident_stood_down",
+        "incident": event
+    })
+
+    return {
+        "status": "STOOD_DOWN",
+        "message": f"Incident {incident_id} has been stood down."
     }
-    background_tasks.add_task(manager.broadcast_to_role, "police", police_update)
-    background_tasks.add_task(manager.broadcast_to_role, "admin", police_update)
 
-    return {"status": "success", "incident_id": incident_id, "updated": True}
-
-@router.post("/{incident_id}/acknowledge")
-def acknowledge_incident(
-    incident_id: str,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_role(["police", "admin"]))
-):
-    """
-    Police Command: Acknowledge an active SOS dispatch and record officer in charge.
-    """
-    inc = db.query(SOSIncident).filter(SOSIncident.incident_id == incident_id).first()
-    if not inc:
-        raise HTTPException(status_code=404, detail="Incident not found.")
-
-    inc.status = "ACKNOWLEDGED"
-
-    # Add timeline event to case
-    case = db.query(IncidentCase).filter(IncidentCase.case_id == inc.case_id).first()
-    if case:
-        tle = TimelineEvent(
-            case_id=inc.case_id,
-            event_type="POLICE_ACKNOWLEDGED",
-            title="Police Command Acknowledged Dispatch",
-            description=f"Alert acknowledged by {current_user.name} ({current_user.dynamic_field_1 or 'Police Duty Officer'}). Units preparing response.",
-            actor_role="police",
-            actor_name=current_user.name
-        )
-        db.add(tle)
-
-    db.commit()
-    return {"status": "success", "message": f"Incident {incident_id} acknowledged by {current_user.name}."}
-
-@router.post("/{incident_id}/dispatch")
-def dispatch_responder(
-    incident_id: str,
-    responder_id: str,
-    responder_name: str,
-    role: str = "police",
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_role(["police", "admin"]))
-):
-    """
-    Police Command: Explicitly dispatch a specific patrol unit or officer to the emergency.
-    """
-    inc = db.query(SOSIncident).filter(SOSIncident.incident_id == incident_id).first()
-    if not inc:
-        raise HTTPException(status_code=404, detail="Incident not found.")
-
-    resp = Responder(
-        incident_id=incident_id,
-        responder_id=responder_id,
-        responder_name=responder_name,
-        role=role,
-        eta_minutes=2.5,
-        distance_km=0.8,
-        status="EN_ROUTE"
-    )
-    db.add(resp)
-
-    # Add timeline event
-    case = db.query(IncidentCase).filter(IncidentCase.case_id == inc.case_id).first()
-    if case:
-        tle = TimelineEvent(
-            case_id=inc.case_id,
-            event_type="RESPONDER_DISPATCHED",
-            title=f"Patrol Unit Dispatched ({role.upper()})",
-            description=f"{responder_name} ({role}) en route with ETA ~2.5 mins.",
-            actor_role="police",
-            actor_name=current_user.name
-        )
-        db.add(tle)
-
-    db.commit()
-    return {"status": "success", "message": f"Unit {responder_name} dispatched to {incident_id}."}
 
 @router.post("/{incident_id}/respond")
-def respond_to_incident(
+async def respond_to_incident(
     incident_id: str,
     responder_id: str,
     responder_name: str,
     role: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     """
     Volunteer or police responder accepts an emergency dispatch assignment.
     """
+    role = role.lower()
+    if current_user.role not in {"volunteer", "police", "admin"}:
+        raise HTTPException(status_code=403, detail="Only responders or administrators can accept an SOS.")
+    if current_user.role != "admin" and role != current_user.role:
+        raise HTTPException(status_code=403, detail="Responder role does not match the authenticated account.")
+    if role not in {"volunteer", "police"}:
+        raise HTTPException(status_code=400, detail="Responder role must be volunteer or police.")
+
     inc = db.query(SOSIncident).filter(SOSIncident.incident_id == incident_id).first()
     if not inc:
         raise HTTPException(status_code=404, detail="Incident not found.")
+
+    expected_role, _ = route_for_severity(inc.severity)
+    if role != expected_role and role != "police":
+        raise HTTPException(status_code=403, detail="This incident is not assigned to this responder role.")
 
     existing_resp = db.query(Responder).filter(
         Responder.incident_id == incident_id,
@@ -548,54 +462,82 @@ def respond_to_incident(
     )
     db.add(resp)
 
-    # Add timeline event to linked case
     timeline_evt = TimelineEvent(
         case_id=inc.case_id,
-        event_type="RESPONDER_DISPATCHED",
         title=f"Responder En Route ({role.capitalize()})",
-        description=f"{responder_name} ({role}) accepted geofence dispatch with ETA ~3.0 mins.",
+        description=f"{responder_name} ({role}) accepted dispatch with ETA ~3.0 mins.",
         actor_role=role,
         actor_name=responder_name
     )
     db.add(timeline_evt)
     db.commit()
+    db.refresh(inc)
 
-    return {"status": "success", "message": f"{responder_name} dispatched to incident {incident_id}."}
+    event = incident_to_dict(inc)
+    # Include the accepted responder in the event BEFORE broadcasting so every
+    # connected dashboard, including the citizen, receives the same payload.
+    event["accepted_responder"] = {
+        "responder_id": responder_id,
+        "responder_name": responder_name,
+        "role": role,
+        "eta_minutes": resp.eta_minutes,
+        "status": resp.status
+    }
+
+    await broadcast("police", {"type": "incident_updated", "incident": event})
+    await broadcast("volunteer", {"type": "incident_updated", "incident": event})
+    await broadcast("admin", {"type": "incident_updated", "incident": event})
+    await broadcast_citizen(str(inc.user_id), {
+        "type": "volunteer_accepted",
+        "incident": event,
+        "accepted_responder": event["accepted_responder"],
+        "message": "SOS accepted successfully. A verified volunteer will arrive near your location shortly."
+    })
+
+    return {"status": "success", "message": f"{responder_name} dispatched to incident {incident_id}.",
+            "incident": event}
+
 
 @router.post("/{incident_id}/resolve")
-def resolve_incident(
+async def resolve_incident(
     incident_id: str,
     resolved_by: str = "City Police Command",
     notes: Optional[str] = "Incident verified safe and resolved on scene.",
     db: Session = Depends(get_db),
-    current_user: Optional[User] = Depends(get_optional_user)
+    current_user: User = Depends(get_current_user)
 ):
-    """
-    Mark an active incident as resolved and close the associated case timeline.
-    """
+    if current_user.role not in {"police", "admin"}:
+        raise HTTPException(status_code=403, detail="Only police or administrators can resolve an SOS.")
+
     inc = db.query(SOSIncident).filter(SOSIncident.incident_id == incident_id).first()
     if not inc:
         raise HTTPException(status_code=404, detail="Incident not found.")
 
-    actor = current_user.name if current_user else resolved_by
-
     inc.status = "RESOLVED"
-    inc.resolved_at = datetime.utcnow()
-    inc.resolved_by = actor
 
-    # Update linked case
+    # Mark every accepted responder as completed so Admin can see the
+    # final responder state instead of leaving an old EN_ROUTE label.
+    for responder in inc.responders:
+        responder.status = "RESOLVED"
+
     case = db.query(IncidentCase).filter(IncidentCase.case_id == inc.case_id).first()
     if case:
         case.status = "RESOLVED"
         timeline_evt = TimelineEvent(
             case_id=inc.case_id,
-            event_type="INCIDENT_RESOLVED",
             title="Incident Resolved & Case Closed",
-            description=f"Resolution logged by {actor}. Notes: {notes}",
+            description=f"Resolution logged by {resolved_by}. Notes: {notes}",
             actor_role="police",
-            actor_name=actor
+            actor_name=resolved_by
         )
         db.add(timeline_evt)
 
     db.commit()
-    return {"status": "success", "message": f"Incident {incident_id} marked as RESOLVED by {actor}."}
+
+    event = incident_to_dict(inc)
+    event["status"] = "RESOLVED"
+    await broadcast("police", {"type": "incident_resolved", "incident": event})
+    await broadcast("volunteer", {"type": "incident_resolved", "incident": event})
+    await broadcast("admin", {"type": "incident_resolved", "incident": event})
+
+    return {"status": "success", "message": f"Incident {incident_id} marked as RESOLVED."}

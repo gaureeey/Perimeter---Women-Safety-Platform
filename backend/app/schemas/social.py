@@ -41,8 +41,6 @@ class UserSearchItem(BaseModel):
     id: str
     name: str
     username: Optional[str] = None
-    email: Optional[str] = None
-    phone: Optional[str] = None
     role: str
     badge_title: str
     avatar: str
@@ -50,8 +48,6 @@ class UserSearchItem(BaseModel):
     location: Optional[str] = None
     followers_count: int = 0
     is_following: bool = False
-    dynamic_field_1: Optional[str] = None
-    dynamic_field_2: Optional[str] = None
 
 # ----------------- Follows -----------------
 class FollowUserResponse(BaseModel):

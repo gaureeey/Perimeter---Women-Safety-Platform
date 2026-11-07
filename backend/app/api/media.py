@@ -1,137 +1,64 @@
-"""
-PERIMETER Platform — Device Media Upload & Validation Engine
-Handles secure device file uploads (camera, gallery, file picker),
-enforces strict MIME/extension/size validation, and stores files locally
-with UUID sanitization.
-"""
-from fastapi import APIRouter, UploadFile, File, HTTPException, status, Depends
-from typing import List, Optional
-import os
+from fastapi import APIRouter, UploadFile, File, HTTPException, Request
+from pathlib import Path
 import uuid
-from app.core.security import get_optional_user
-from app.models.user import User
 
-router = APIRouter(prefix="/media", tags=["Media Upload & Storage"])
+router = APIRouter(prefix="/media", tags=["Media Uploads"])
 
-# Directory configuration
-BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-UPLOAD_DIR = os.path.join(BACKEND_DIR, "uploads")
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-# Validation rules
-ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
-ALLOWED_IMAGE_MIMES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
-MAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10 MB
-
-ALLOWED_VIDEO_EXTENSIONS = {".mp4", ".webm", ".mov"}
-ALLOWED_VIDEO_MIMES = {"video/mp4", "video/webm", "video/quicktime"}
-MAX_VIDEO_SIZE = 50 * 1024 * 1024  # 50 MB
-
-FORBIDDEN_EXTENSIONS = {
-    ".exe", ".bat", ".cmd", ".sh", ".php", ".py", ".js", ".html",
-    ".htm", ".svg", ".dll", ".so", ".jar", ".vbs", ".ps1"
-}
-
-def validate_and_save_file(file: UploadFile) -> dict:
-    original_filename = file.filename or "upload.bin"
-    ext = os.path.splitext(original_filename)[1].lower()
-
-    if ext in FORBIDDEN_EXTENSIONS:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Security alert: Executable or script file extension '{ext}' is forbidden."
-        )
-
-    content_type = (file.content_type or "").lower()
-
-    # Determine media type
-    if ext in ALLOWED_IMAGE_EXTENSIONS or content_type in ALLOWED_IMAGE_MIMES:
-        media_type = "image"
-        max_size = MAX_IMAGE_SIZE
-    elif ext in ALLOWED_VIDEO_EXTENSIONS or content_type in ALLOWED_VIDEO_MIMES:
-        media_type = "video"
-        max_size = MAX_VIDEO_SIZE
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Unsupported media type. Allowed formats: JPG, PNG, WEBP, GIF, MP4, WEBM, MOV."
-        )
-
-    # Read and validate file size
-    try:
-        contents = file.file.read()
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Failed to read uploaded file: {str(e)}"
-        )
-
-    size = len(contents)
-    if size == 0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Uploaded file is empty (0 bytes)."
-        )
-
-    if size > max_size:
-        max_mb = max_size // (1024 * 1024)
-        raise HTTPException(
-            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail=f"File exceeds maximum allowed size of {max_mb} MB."
-        )
-
-    # Generate secure unique filename
-    unique_filename = f"{uuid.uuid4().hex}{ext}"
-    dest_path = os.path.join(UPLOAD_DIR, unique_filename)
-
-    with open(dest_path, "wb") as f:
-        f.write(contents)
-
-    return {
-        "url": f"/uploads/{unique_filename}",
-        "filename": unique_filename,
-        "original_name": original_filename,
-        "media_type": media_type,
-        "size_bytes": size,
-        "content_type": content_type
+UPLOAD_ROOT = Path(__file__).resolve().parents[2] / "uploads"
+ALLOWED = {
+    "post": {
+        "image/jpeg", "image/png", "image/webp", "image/gif"
+    },
+    "sos": {
+        "audio/mpeg", "audio/mp3", "audio/wav", "audio/ogg", "audio/webm",
+        "video/mp4", "video/webm", "video/quicktime", "video/x-matroska"
     }
+}
+MAX_BYTES = 25 * 1024 * 1024
 
 @router.post("/upload")
-def upload_single_media(
-    file: UploadFile = File(...),
-    current_user: Optional[User] = Depends(get_optional_user)
+async def upload_media(
+    request: Request,
+    kind: str = "post",
+    file: UploadFile = File(...)
 ):
-    """
-    Upload a single photo or video from device camera/gallery/file-picker.
-    """
-    result = validate_and_save_file(file)
-    if current_user:
-        result["uploaded_by"] = current_user.name
-    return result
+    kind = kind.lower().strip()
+    if kind not in ALLOWED:
+        raise HTTPException(status_code=400, detail="Invalid upload type.")
 
-@router.post("/upload-multiple")
-def upload_multiple_media(
-    files: List[UploadFile] = File(...),
-    current_user: Optional[User] = Depends(get_optional_user)
-):
-    """
-    Upload multiple photos or videos (carousel support, up to 10 items).
-    """
-    if len(files) > 10:
+    content_type = (file.content_type or "").lower()
+    if content_type not in ALLOWED[kind]:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Maximum 10 media items allowed per post."
+            status_code=400,
+            detail="Unsupported file type. Posts accept images; SOS proof accepts audio/video."
         )
 
-    uploaded_items = []
-    urls = []
-    for f in files:
-        item = validate_and_save_file(f)
-        uploaded_items.append(item)
-        urls.append(item["url"])
+    data = await file.read()
+    if not data:
+        raise HTTPException(status_code=400, detail="The uploaded file is empty.")
+    if len(data) > MAX_BYTES:
+        raise HTTPException(status_code=413, detail="File is too large. Maximum size is 25 MB.")
+
+    suffix = Path(file.filename or "").suffix.lower()
+    if not suffix:
+        suffix = {
+            "image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp",
+            "image/gif": ".gif", "audio/mpeg": ".mp3", "audio/mp3": ".mp3",
+            "audio/wav": ".wav", "audio/ogg": ".ogg", "audio/webm": ".webm",
+            "video/mp4": ".mp4", "video/webm": ".webm",
+            "video/quicktime": ".mov", "video/x-matroska": ".mkv"
+        }.get(content_type, ".bin")
+
+    folder = UPLOAD_ROOT / kind
+    folder.mkdir(parents=True, exist_ok=True)
+    filename = f"{uuid.uuid4().hex}{suffix}"
+    target = folder / filename
+    target.write_bytes(data)
 
     return {
-        "count": len(uploaded_items),
-        "items": uploaded_items,
-        "urls": urls
+        "url": f"{str(request.base_url).rstrip('/')}/media/{kind}/{filename}",
+        "filename": filename,
+        "content_type": content_type,
+        "size": len(data),
+        "kind": kind
     }

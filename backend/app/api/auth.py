@@ -3,11 +3,14 @@ PERIMETER Authentication & Profiles API
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List
 import uuid
 
 from app.db.session import get_db
 from app.models.user import User
+from app.models.admin_tracking import LoginHistory, UserPresence
+from datetime import datetime
+import uuid
 from app.schemas.auth import UserRegisterRequest, UserLoginRequest, TokenResponse, UserProfileResponse
 from app.core.security import (
     get_password_hash,
@@ -125,11 +128,22 @@ def login_user(req: UserLoginRequest, db: Session = Depends(get_db)):
     ).first()
 
     if not user or not verify_password(req.password, user.password):
+        db.add(LoginHistory(user_id=user.id if user else None, identity=identity[:255], success=False))
+        db.commit()
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email/badge identity or password."
         )
 
+    session_id = str(uuid.uuid4())
+    db.add(LoginHistory(user_id=user.id, identity=identity[:255], success=True, session_id=session_id))
+    presence = db.query(UserPresence).filter(UserPresence.user_id == user.id).first()
+    if presence is None:
+        presence = UserPresence(user_id=user.id)
+        db.add(presence)
+    presence.last_seen = datetime.utcnow()
+    presence.session_id = session_id
+    db.commit()
     profile = build_profile(user, db)
     token = create_access_token(data={"sub": user.id, "email": user.email, "role": user.role})
 
@@ -150,16 +164,9 @@ def get_current_user_profile(
     return build_profile(current_user, db)
 
 @router.get("/users", response_model=List[UserProfileResponse])
-def get_all_users(
-    role: Optional[str] = None,
-    db: Session = Depends(get_db)
-):
+def get_all_users(db: Session = Depends(get_db)):
     """
     Retrieve registered users across all roles for coordination and directory.
     """
-    query = db.query(User)
-    if role and role.strip() and role.strip().lower() != 'all':
-        query = query.filter(User.role == role.strip().lower())
-    users = query.order_by(User.created_at.desc()).all()
+    users = db.query(User).order_by(User.created_at.desc()).all()
     return [build_profile(u, db) for u in users]
-

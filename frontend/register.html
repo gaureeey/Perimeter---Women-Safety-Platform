@@ -789,6 +789,15 @@
             const dynamic2 = document.getElementById('regDynamic2').value.trim();
             const config = ROLE_CONFIG[currentRole];
 
+            if (!config) {
+                showToast('Please select a valid account role.', '⚠️');
+                return;
+            }
+            if (!fullName || !email || !phone || !dynamic1 || !dynamic2) {
+                showToast('Please complete all required registration fields.', '⚠️');
+                return;
+            }
+
             const btn = document.getElementById('submitRegBtn');
             btn.disabled = true;
             btn.innerHTML = `<span>Registering profile with database...</span> <span>⏳</span>`;
@@ -818,65 +827,33 @@
             } catch (err) {
                 btn.disabled = false;
                 btn.innerHTML = `<span id="btnRegText">${config.btnText}</span> <span>→</span>`;
-                showToast(err.message || 'Registration failed. Check network or duplicate email.', '❌');
+                showToast(err.message || 'Registration failed. Check the API server and make sure the email is not already registered.', '❌');
             }
         }
 
         async function quickLoginPersona(identity) {
-
-const notify = (message, icon = 'ℹ️') => {
-    if (typeof showToast === 'function') {
-        showToast(message, icon);
-    } else if (typeof toast === 'function') {
-        toast(message, icon);
-    } else {
-        console.log(`${icon} ${message}`);
-    }
-};
-
-// Clear any previous persona session before Quick Test Login.
-localStorage.removeItem('perimeter_token');
-localStorage.removeItem('perimeter_session');
-localStorage.removeItem('perimeter_user_profile');
-localStorage.removeItem('perimeter_vol_profile');
-localStorage.removeItem('perimeter_police_profile');
-localStorage.removeItem('perimeter_press_profile');
-
-notify(`Logging in as ${identity.split('@')[0]}...`, '↻');
-
-try {
-    const res = await apiCall('/auth/login', 'POST', {
-        identity: identity,
-        password: 'password123'
-    });
-
-    if (res && res.access_token && res.user) {
-
-        saveSession(res.access_token, res.user);
-
-        notify(
-            `Logged in as ${res.user.name} (${res.user.badge_title})`,
-            '✓'
-        );
-
-        const target =
-            ROLE_DASHBOARDS[res.user.role] || 'user.html';
-
-        setTimeout(() => {
-            window.location.href = target;
-        }, 500);
-    }
-
-} catch (err) {
-    notify(
-        err.message || 'Quick login failed.',
-        '✕'
-    );
-}
-}
+            showToast(`Logging in as ${identity.split('@')[0]}...`, '⚡');
+            try {
+                const res = await apiCall('/auth/login', 'POST', {
+                    identity: identity,
+                    password: 'password123'
+                });
+                if (res && res.access_token && res.user) {
+                    saveSession(res.access_token, res.user);
+                    showToast(`Logged in as ${res.user.name} (${res.user.badge_title})!`, '✅');
+                    const target = ROLE_DASHBOARDS[res.user.role] || 'user.html';
+                    setTimeout(() => {
+                        window.location.href = target;
+                    }, 500);
+                }
+            } catch (err) {
+                showToast(err.message || 'Quick login failed.', '❌');
+            }
+        }
 
         // On load: check if already authenticated first
         window.addEventListener('DOMContentLoaded', () => {
+            if (guardPublicPage()) return;
 
             const params = new URLSearchParams(window.location.search);
             const roleParam = params.get('role');
