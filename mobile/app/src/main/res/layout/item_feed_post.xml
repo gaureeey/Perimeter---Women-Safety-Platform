@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="@color/card_dark"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/card_dark_stroke"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Post Header -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Author Avatar -->
+            <FrameLayout
+                android:id="@+id/flAuthorAvatar"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_story_ring"
+                android:padding="2dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_circle_dark">
+
+                    <TextView
+                        android:id="@+id/tvPostAvatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="IP"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </FrameLayout>
+            </FrameLayout>
+
+            <!-- Name, Role & Location -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/flAuthorAvatar"
+                android:layout_toStartOf="@id/tvPostTag"
+                android:layout_marginStart="12dp"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvPostAuthorName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="Inspector K. Patil"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvPostAuthorBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_pill_dark"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:text="Police"
+                        android:textColor="@color/status_info"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvPostLocationAndTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="📍 Linking Road Corridor • Just now"
+                    android:textColor="@color/text_muted"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <!-- Category / Tag Pill -->
+            <TextView
+                android:id="@+id/tvPostTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/bg_pill_dark"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:text="#SAFE_ROUTE"
+                android:textColor="@color/primary_light"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <!-- Post Title -->
+        <TextView
+            android:id="@+id/tvPostTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Verified Safe Corridor: Linking Road to Bandra"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <!-- Post Content Body -->
+        <TextView
+            android:id="@+id/tvPostContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:lineSpacingExtra="3dp"
+            android:text="Special Women Safety night patrol unit dispatched on Linking Road stretch between 8 PM to 4 AM. CCTV surveillance active along all 12 junction points."
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
+
+        <!-- Post Image (if any) -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivPostImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="12dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.MediumComponent" />
+
+        <!-- Police Verification Pill (if applicable) -->
+        <TextView
+            android:id="@+id/tvPoliceVerified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="🛡️ Police Command Verified Safety Corridor"
+            android:textColor="@color/status_safe"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/divider" />
+
+        <!-- Instagram Action Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- Like Button -->
+            <LinearLayout
+                android:id="@+id/btnLikePost"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center_vertical"
+                android:paddingStart="4dp"
+                android:paddingEnd="12dp">
+
+                <ImageView
+                    android:id="@+id/ivHeartIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_heart" />
+
+                <TextView
+                    android:id="@+id/tvLikeCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="42"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Comment Button -->
+            <LinearLayout
+                android:id="@+id/btnCommentPost"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center_vertical"
+                android:paddingStart="4dp"
+                android:paddingEnd="12dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_comment" />
+
+                <TextView
+                    android:id="@+id/tvCommentCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="2"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Share Button -->
+            <LinearLayout
+                android:id="@+id/btnSharePost"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center_vertical"
+                android:paddingStart="4dp"
+                android:paddingEnd="12dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_share" />
+
+                <TextView
+                    android:id="@+id/tvShareCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="14"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <!-- Save Bookmark -->
+            <ImageView
+                android:id="@+id/ivSavePost"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_bookmark" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+

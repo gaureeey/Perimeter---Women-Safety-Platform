@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "org.perimeter.safety.app-mergeDebugResources-45:/values-w320dp-land-v13/values-w320dp-land-v13.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Gauri Rajesh\\.gradle\\caches\\transforms-3\\d134e56955a17d7da3828c11d5a07c42\\transformed\\material-1.11.0\\res\\values-w320dp-land-v13\\values-w320dp-land-v13.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,110",
+                        "endColumns": "54,61",
+                        "endOffsets": "105,167"
+                    }
+                }
+            ]
+        }
+    ]
+}

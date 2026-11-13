@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingStart="6dp"
+    android:paddingEnd="6dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="6dp">
+
+    <FrameLayout
+        android:layout_width="68dp"
+        android:layout_height="68dp">
+
+        <!-- Colorful Instagram Gradient Ring -->
+        <View
+            android:id="@+id/viewStoryRing"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_story_ring" />
+
+        <!-- Dark Inset Spacing -->
+        <View
+            android:layout_width="62dp"
+            android:layout_height="62dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_circle_dark" />
+
+        <!-- Circular Avatar -->
+        <FrameLayout
+            android:id="@+id/flAvatarContainer"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_story_avatar_circle">
+
+            <TextView
+                android:id="@+id/tvStoryAvatarInitials"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="AS"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <!-- Plus Badge for "Add Story" -->
+        <TextView
+            android:id="@+id/tvAddStoryBadge"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/bg_circle_dark"
+            android:gravity="center"
+            android:text="+"
+            android:textColor="@color/primary"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvStoryAuthorName"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="Aarohi"
+        android:textColor="@color/text_primary"
+        android:textSize="11sp" />
+
+</LinearLayout>
+

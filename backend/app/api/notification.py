@@ -10,8 +10,9 @@ import json
 import asyncio
 
 from app.db.session import get_db, SessionLocal
-from app.models.notification import Notification
+from app.models.notification import Notification, DeviceToken
 from app.models.user import User
+from app.schemas.notification import DeviceTokenRegisterRequest, DeviceTokenResponse
 from app.core.security import get_current_user, get_optional_user
 
 router = APIRouter(prefix="/notifications", tags=["Notifications & Real-Time Alerts"])
@@ -187,6 +188,65 @@ def mark_notification_read(
     notif.is_read = True
     db.commit()
     return {"status": "success", "id": notification_id}
+
+@router.post("/device-token", response_model=DeviceTokenResponse)
+def register_device_token(
+    req: DeviceTokenRegisterRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Register or update an FCM push device token for the authenticated user.
+    """
+    token_str = req.token.strip()
+    if not token_str:
+        raise HTTPException(status_code=400, detail="Device token cannot be empty.")
+
+    # Check if token is already registered
+    dt = db.query(DeviceToken).filter(DeviceToken.token == token_str).first()
+    if dt:
+        dt.user_id = current_user.id
+        dt.platform = req.platform or "android"
+        dt.device_name = req.device_name
+        dt.is_active = True
+        dt.updated_at = datetime.utcnow()
+    else:
+        dt = DeviceToken(
+            user_id=current_user.id,
+            token=token_str,
+            platform=req.platform or "android",
+            device_name=req.device_name,
+            is_active=True,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
+        )
+        db.add(dt)
+
+    db.commit()
+    return DeviceTokenResponse(
+        status="success",
+        token=token_str,
+        platform=dt.platform,
+        message="Device token registered successfully for push notifications."
+    )
+
+@router.delete("/device-token")
+def unregister_device_token(
+    token: str = Query(..., description="FCM device token to unregister"),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Deactivate a device token upon logout.
+    """
+    dt = db.query(DeviceToken).filter(
+        DeviceToken.token == token.strip(),
+        DeviceToken.user_id == current_user.id
+    ).first()
+    if dt:
+        dt.is_active = False
+        db.commit()
+    return {"status": "success", "message": "Device token deactivated."}
 
 @router.websocket("/ws/{role}")
 async def websocket_alerts_endpoint(websocket: WebSocket, role: str):

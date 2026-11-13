@@ -9,6 +9,9 @@ ALLOWED = {
     "post": {
         "image/jpeg", "image/png", "image/webp", "image/gif"
     },
+    "story": {
+        "image/jpeg", "image/png", "image/webp", "image/gif"
+    },
     "sos": {
         "audio/mpeg", "audio/mp3", "audio/wav", "audio/ogg", "audio/webm",
         "video/mp4", "video/webm", "video/quicktime", "video/x-matroska"

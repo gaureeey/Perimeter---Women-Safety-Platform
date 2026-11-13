@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_feed"
+        android:icon="@drawable/ic_home"
+        android:title="Feed" />
+
+    <item
+        android:id="@+id/nav_radar"
+        android:icon="@drawable/ic_map_radar"
+        android:title="Radar" />
+
+    <item
+        android:id="@+id/nav_sos"
+        android:icon="@drawable/ic_shield_check"
+        android:title="SOS" />
+
+    <item
+        android:id="@+id/nav_channels"
+        android:icon="@drawable/ic_channels_broadcast"
+        android:title="Channels" />
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_person"
+        android:title="Profile" />
+</menu>

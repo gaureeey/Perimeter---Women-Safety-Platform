@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Double-Shake Sensor Engine"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Configure hardware accelerometer sensitivity &amp; live test"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
+
+        <!-- Protection Session State -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:cardBackgroundColor="@color/card_dark"
+            app:cardCornerRadius="14dp"
+            app:strokeColor="@color/card_dark_stroke"
+            app:strokeWidth="1dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/switchProtectionDetailed"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvProtectionHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Background Protection Session"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Runs foreground service with lock-screen wake-lock"
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchProtectionDetailed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Sensitivity Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="ACCELEROMETER SENSITIVITY"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleSensitivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:singleSelection="true">
+
+            <Button
+                android:id="@+id/btnSensLow"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="LOW (28 m/s²)"
+                android:textColor="@color/text_primary"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnSensMed"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="MED (22 m/s²)"
+                android:textColor="@color/text_primary"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnSensHigh"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="HIGH (16 m/s²)"
+                android:textColor="@color/text_primary"
+                android:textSize="12sp" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <!-- Double-Shake Window Interval -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="DOUBLE-SHAKE DETECTION WINDOW"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleInterval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:singleSelection="true">
+
+            <Button
+                android:id="@+id/btnInt20"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="2.0s"
+                android:textColor="@color/text_primary" />
+
+            <Button
+                android:id="@+id/btnInt25"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="2.5s"
+                android:textColor="@color/text_primary" />
+
+            <Button
+                android:id="@+id/btnInt30"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="3.0s"
+                android:textColor="@color/text_primary" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <!-- Live Sensor Debug Card -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="LIVE HARDWARE SENSOR TELEMETRY &amp; TESTING"
+            android:textColor="@color/primary_light"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cardBackgroundColor="@color/card_dark"
+            app:cardCornerRadius="14dp"
+            app:strokeColor="@color/primary"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="FSM State:"
+                        android:textColor="@color/text_muted"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvFsmState"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="IDLE"
+                        android:textColor="@color/status_info"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dynamic Acceleration (Δa):"
+                        android:textColor="@color/text_muted"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvDeltaA"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="0.0 m/s²"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <!-- Live Acceleration Bar -->
+                <ProgressBar
+                    android:id="@+id/pbAcceleration"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="8dp"
+                    android:max="40"
+                    android:progress="0"
+                    android:progressTint="@color/primary" />
+
+                <TextView
+                    android:id="@+id/tvRawValues"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="X: 0.00  |  Y: 0.00  |  Z: 9.81 m/s²"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="12dp"
+                    android:background="@color/divider" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Test Detected Shakes:"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvShakesCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="0 / 2"
+                        android:textColor="@color/status_warning"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/btnSaveSettings"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/primary"
+            android:text="Save &amp; Apply Sensitivity"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</ScrollView>
+

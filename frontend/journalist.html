@@ -13,42 +13,138 @@
     <style>
         /* ── ONE-TIME REGISTRATION OVERLAY ── */
         #regOverlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(4,10,12,0.93); backdrop-filter: blur(12px);
-            z-index: 9999; align-items: center; justify-content: center;
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 10, 12, 0.93);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
         }
-        #regOverlay.show { display: flex; }
+
+        #regOverlay.show {
+            display: flex;
+        }
+
         .reg-box {
-            background: #0B191B; border: 1px solid rgba(13,148,136,0.35);
-            border-radius: 24px; width: 100%; max-width: 440px;
-            padding: 40px 36px; box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-            animation: regSlide 0.4s cubic-bezier(.22,1,.36,1);
+            background: #0B191B;
+            border: 1px solid rgba(13, 148, 136, 0.35);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 440px;
+            padding: 40px 36px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            animation: regSlide 0.4s cubic-bezier(.22, 1, .36, 1);
         }
-        @keyframes regSlide { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }
-        .reg-logo  { font-size: 22px; font-weight: 800; color: #5EEAD4; letter-spacing: -0.5px; margin-bottom: 4px; }
-        .reg-sub   { font-size: 12.5px; color: #64748B; margin-bottom: 28px; }
-        .reg-title { font-size: 18px; font-weight: 700; color: #F1F5F9; margin-bottom: 6px; }
-        .reg-desc  { font-size: 12.5px; color: #64748B; margin-bottom: 22px; }
-        .reg-field { margin-bottom: 14px; }
-        .reg-label { display:block;font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px; }
+
+        @keyframes regSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .reg-logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #5EEAD4;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .reg-sub {
+            font-size: 12.5px;
+            color: #64748B;
+            margin-bottom: 28px;
+        }
+
+        .reg-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #F1F5F9;
+            margin-bottom: 6px;
+        }
+
+        .reg-desc {
+            font-size: 12.5px;
+            color: #64748B;
+            margin-bottom: 22px;
+        }
+
+        .reg-field {
+            margin-bottom: 14px;
+        }
+
+        .reg-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 6px;
+        }
+
         .reg-input {
-            width:100%;padding:12px 14px;background:#15282B;border:1.5px solid #1E3A3D;
-            border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;
-            color:#F1F5F9;outline:none;transition:border-color 0.2s,box-shadow 0.2s;
+            width: 100%;
+            padding: 12px 14px;
+            background: #15282B;
+            border: 1.5px solid #1E3A3D;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: #F1F5F9;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .reg-input:focus { border-color:#0D9488; box-shadow:0 0 0 3px rgba(13,148,136,0.2); }
-        .reg-input::placeholder { color:#475569; }
+
+        .reg-input:focus {
+            border-color: #0D9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
+        }
+
+        .reg-input::placeholder {
+            color: #475569;
+        }
+
         .reg-btn {
-            width:100%;padding:13px;background:#0D9488;color:white;border:none;
-            border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;
-            transition:background 0.2s,transform 0.15s;font-family:'Inter',sans-serif;
+            width: 100%;
+            padding: 13px;
+            background: #0D9488;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s, transform 0.15s;
+            font-family: 'Inter', sans-serif;
         }
-        .reg-btn:hover { background:#0F6E6E; transform:translateY(-1px); }
+
+        .reg-btn:hover {
+            background: #0F6E6E;
+            transform: translateY(-1px);
+        }
+
         #regAlertBox {
-            display:none;background:#0A1A1A;border:1.5px solid #0D9488;
-            color:#5EEAD4;border-radius:8px;padding:10px 14px;
-            font-size:13px;font-weight:600;margin-bottom:12px;
+            display: none;
+            background: #0A1A1A;
+            border: 1.5px solid #0D9488;
+            color: #5EEAD4;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
         }
+
         :root {
             --ink: #0D1B1E;
             --ink-surface: #15282B;
@@ -504,6 +600,7 @@
             .container {
                 grid-template-columns: 1fr;
             }
+
             .press-stats-bar {
                 display: none;
             }
@@ -513,39 +610,41 @@
 
 <body>
 
-<!-- ══ ONE-TIME REGISTRATION: JOURNALIST ══ -->
-<div id="regOverlay">
-    <div class="reg-box">
-        <div class="reg-logo">📰 PERIMETER PRESS</div>
-        <div class="reg-sub">Journalist Press Desk — One-time Credential Setup</div>
-        <div id="regAlertBox"></div>
-        <div class="reg-title">Register Your Press Profile</div>
-        <div class="reg-desc">Enter your credentials once. You'll be recognised automatically every time you open this page.</div>
+    <!-- ══ ONE-TIME REGISTRATION: JOURNALIST ══ -->
+    <div id="regOverlay">
+        <div class="reg-box">
+            <div class="reg-logo">📰 PERIMETER PRESS</div>
+            <div class="reg-sub">Journalist Press Desk — One-time Credential Setup</div>
+            <div id="regAlertBox"></div>
+            <div class="reg-title">Register Your Press Profile</div>
+            <div class="reg-desc">Enter your credentials once. You'll be recognised automatically every time you open
+                this page.</div>
 
-        <div class="reg-field">
-            <label class="reg-label" for="regName">Full Name</label>
-            <input class="reg-input" type="text" id="regName" placeholder="e.g. Rhea Nair" autocomplete="name">
-        </div>
-        <div class="reg-field">
-            <label class="reg-label" for="regPressId">Press ID / News Outlet</label>
-            <input class="reg-input" type="text" id="regPressId" placeholder="e.g. Deccan Herald · PID-2026-044">
-        </div>
-        <div class="reg-field">
-            <label class="reg-label" for="regPass">Password</label>
-            <input class="reg-input" type="password" id="regPass" placeholder="At least 6 characters">
-        </div>
-        <div class="reg-field">
-            <label class="reg-label" for="regConf">Confirm Password</label>
-            <input class="reg-input" type="password" id="regConf" placeholder="Re-enter password">
-        </div>
+            <div class="reg-field">
+                <label class="reg-label" for="regName">Full Name</label>
+                <input class="reg-input" type="text" id="regName" placeholder="e.g. Rhea Nair" autocomplete="name">
+            </div>
+            <div class="reg-field">
+                <label class="reg-label" for="regPressId">Press ID / News Outlet</label>
+                <input class="reg-input" type="text" id="regPressId" placeholder="e.g. Deccan Herald · PID-2026-044">
+            </div>
+            <div class="reg-field">
+                <label class="reg-label" for="regPass">Password</label>
+                <input class="reg-input" type="password" id="regPass" placeholder="At least 6 characters">
+            </div>
+            <div class="reg-field">
+                <label class="reg-label" for="regConf">Confirm Password</label>
+                <input class="reg-input" type="password" id="regConf" placeholder="Re-enter password">
+            </div>
 
-        <button class="reg-btn" onclick="submitPressReg()">📰 Register & Enter Press Desk</button>
+            <button class="reg-btn" onclick="submitPressReg()">📰 Register & Enter Press Desk</button>
 
-        <div style="text-align:center;font-size:12px;color:#64748B;margin-top:16px;">
-            Need help or switching persona? <a href="register.html" style="color:#0F6E6E;font-weight:600;text-decoration:none;">Go to Register / Switch Persona</a>
+            <div style="text-align:center;font-size:12px;color:#64748B;margin-top:16px;">
+                Need help or switching persona? <a href="register.html"
+                    style="color:#0F6E6E;font-weight:600;text-decoration:none;">Go to Register / Switch Persona</a>
+            </div>
         </div>
     </div>
-</div>
 
 
 
@@ -564,7 +663,9 @@
     <!-- Header -->
     <header>
         <nav class="nav">
-            <div class="logo">PERIMETER <span>.</span> <span style="font-size: 13px; color: var(--teal); font-weight: 600; margin-left: 4px;">PRESS DESK</span></div>
+            <div class="logo">PERIMETER <span>.</span> <span
+                    style="font-size: 13px; color: var(--teal); font-weight: 600; margin-left: 4px;">PRESS DESK</span>
+            </div>
 
             <div class="press-stats-bar">
                 <div class="press-stat">Articles: <b id="statArticles">34</b></div>
@@ -598,13 +699,15 @@
                 <form onsubmit="handlePublishReport(event)">
                     <div class="form-row">
                         <label class="form-label">Report Headline</label>
-                        <input type="text" class="press-input" id="reportHeadline" placeholder="e.g. Verified Safe Night Corridor Established along MG Road Metro" required>
+                        <input type="text" class="press-input" id="reportHeadline"
+                            placeholder="e.g. Verified Safe Night Corridor Established along MG Road Metro" required>
                     </div>
 
                     <div class="grid-2 form-row">
                         <div>
                             <label class="form-label">Target Sector / Location</label>
-                            <input type="text" class="press-input" id="reportLocation" placeholder="e.g. MG Road & Brigade Junction" required>
+                            <input type="text" class="press-input" id="reportLocation"
+                                placeholder="e.g. MG Road & Brigade Junction" required>
                         </div>
                         <div>
                             <label class="form-label">Link Directly to Open Case</label>
@@ -619,7 +722,9 @@
 
                     <div class="form-row">
                         <label class="form-label">Investigation Summary & Safety Notice</label>
-                        <textarea class="press-textarea" id="reportContent" placeholder="Provide verified details, police confirmation, volunteer escorts active, or guidance for citizens..." required></textarea>
+                        <textarea class="press-textarea" id="reportContent"
+                            placeholder="Provide verified details, police confirmation, volunteer escorts active, or guidance for citizens..."
+                            required></textarea>
                     </div>
 
                     <button type="submit" class="btn-publish-press">
@@ -642,15 +747,19 @@
                     <div class="press-feed-item">
                         <div class="press-feed-header">
                             <span class="badge-verified">Verified Press Bulletin</span>
-                            <span style="font-size: 11.5px; color: var(--gray);">Linked to Case #2026-092 · 12 mins ago</span>
+                            <span style="font-size: 11.5px; color: var(--gray);">Linked to Case #2026-092 · 12 mins
+                                ago</span>
                         </div>
-                        <div class="press-feed-title">Verified Safe Corridor Established near MG Road Metro Station</div>
+                        <div class="press-feed-title">Verified Safe Corridor Established near MG Road Metro Station
+                        </div>
                         <div class="press-feed-body">
-                            Following volunteer risk reports, city police and volunteer marshals have set up illuminated night patrol checkpoints active until 2:00 AM.
+                            Following volunteer risk reports, city police and volunteer marshals have set up illuminated
+                            night patrol checkpoints active until 2:00 AM.
                         </div>
                         <div class="press-feed-footer">
                             <span>Author: Rhea Nair (Deccan Herald)</span>
-                            <span style="color: var(--teal); font-weight: 600; cursor: pointer;" onclick="toast('Press link copied!', '↗️')">Share Article ↗️</span>
+                            <span style="color: var(--teal); font-weight: 600; cursor: pointer;"
+                                onclick="toast('Press link copied!', '↗️')">Share Article ↗️</span>
                         </div>
                     </div>
 
@@ -678,8 +787,10 @@
                         <span class="case-status open">Under Police Investigation</span>
                     </div>
                     <div class="case-title">Motion SOS Beacon · Sector 4 Alleyway</div>
-                    <div class="case-meta">Triggered 10:42 AM · Volunteer Priya D. arrived on scene · Police Unit #4 secured.</div>
-                    <button class="btn-attach-note" onclick="attachNoteToCase('CASE-2026-089')">Attach Press Report Note →</button>
+                    <div class="case-meta">Triggered 10:42 AM · Volunteer Priya D. arrived on scene · Police Unit #4
+                        secured.</div>
+                    <button class="btn-attach-note" onclick="attachNoteToCase('CASE-2026-089')">Attach Press Report Note
+                        →</button>
                 </div>
 
                 <!-- Case 2 -->
@@ -690,7 +801,8 @@
                     </div>
                     <div class="case-title">MG Road Night Corridor Establishment</div>
                     <div class="case-meta">Verified safe passage operational. 2 volunteer checkpoints confirmed.</div>
-                    <button class="btn-attach-note" onclick="attachNoteToCase('CASE-2026-092')">Attach Press Report Note →</button>
+                    <button class="btn-attach-note" onclick="attachNoteToCase('CASE-2026-092')">Attach Press Report Note
+                        →</button>
                 </div>
             </div>
 
@@ -701,7 +813,8 @@
                         <span>⚡ Universal Incident Timeline (Live Sync)</span>
                     </div>
                 </div>
-                <p style="font-size: 11.5px; color: var(--gray); margin-bottom: 12px;">Real-time dispatch log across Citizens, Volunteers, Press, and Police.</p>
+                <p style="font-size: 11.5px; color: var(--gray); margin-bottom: 12px;">Real-time dispatch log across
+                    Citizens, Volunteers, Press, and Police.</p>
                 <div class="timeline-container" id="timelineContainer">
                     <div class="timeline-item">
                         <div class="timeline-time">10:52 AM · JOURNALIST ACTION</div>
@@ -824,7 +937,15 @@
             }
 
             try {
-                // 1. Save press post to feed
+                // 1. Post to official Press Broadcast Channel (chan_002)
+                try {
+                    await apiCall('/social/channels/chan_002/posts', 'POST', {
+                        title: headline,
+                        content: content
+                    });
+                } catch (_) { }
+
+                // 2. Save press post to feed
                 await apiCall('/feed/', 'POST', {
                     author_name: pressName,
                     author_role: 'journalist',

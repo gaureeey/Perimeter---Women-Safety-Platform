@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/llStoryRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Progress Timer Bar -->
+    <ProgressBar
+        android:id="@+id/pbStoryTimer"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_marginTop="8dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="100"
+        android:progressTint="@color/white" />
+
+    <!-- Story Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <FrameLayout
+            android:id="@+id/flStoryAvatar"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_story_ring"
+            android:padding="2dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_circle_dark">
+
+                <TextView
+                    android:id="@+id/tvStoryDialogAvatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="AS"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:layout_toEndOf="@id/flStoryAvatar"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvStoryDialogAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aarohi Sharma"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvStoryDialogLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="📍 Linking Road, Bandra • Active"
+                android:textColor="@color/text_muted"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnCloseStory"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Close"
+            android:src="@drawable/ic_stop"
+            app:tint="@color/white" />
+    </RelativeLayout>
+
+    <!-- Story Main Body Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cvStoryBody"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        app:cardBackgroundColor="@color/card_dark"
+        app:cardCornerRadius="24dp"
+        app:strokeColor="@color/card_dark_stroke"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="28dp">
+
+            <TextView
+                android:id="@+id/tvStoryTagPill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_circle_dark"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:text="🛡️ #SAFE_STATUS"
+                android:textColor="@color/primary_light"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvStoryCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:lineSpacingExtra="6dp"
+                android:text="Walking home via Linking Road safe corridor. Brightly lit and verified!"
+                android:textColor="@color/white"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <!-- Interactive Poll Section -->
+            <LinearLayout
+                android:id="@+id/llStoryPoll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/bg_circle_dark"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvStoryPollQuestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Is your route home lit tonight?"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnPollOptionA"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="12dp"
+                    android:backgroundTint="@color/primary"
+                    android:text="Yes, well-lit (18 votes)"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/btnPollOptionB"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="8dp"
+                    android:text="No, need escort (4 votes)"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:strokeColor="@color/card_dark_stroke" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>
+

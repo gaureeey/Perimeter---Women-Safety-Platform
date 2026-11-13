@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Essential Network & Communication Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Geolocation & High Accuracy Tracking Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <!-- Foreground Services & System Notifications -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+    <!-- Hardware Sensor & Feedback Permissions -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" tools:ignore="HighSamplingRate" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:name=".PerimeterApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Perimeter"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        tools:targetApi="34">
+
+        <!-- Splash & Auth Flow -->
+        <activity
+            android:name=".ui.auth.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Perimeter.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Citizen Main Dashboard -->
+        <activity
+            android:name=".ui.dashboard.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop" />
+
+        <!-- Motion Protection & Sensor Debug Screen -->
+        <activity
+            android:name=".ui.protection.MotionProtectionActivity"
+            android:exported="false"
+            android:label="@string/title_motion_protection" />
+
+        <!-- Fullscreen Emergency SOS Alarm Screen (Shows Over Keyguard/LockScreen) -->
+        <activity
+            android:name=".ui.sos.EmergencySosActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:theme="@style/Theme.Perimeter.Emergency" />
+
+        <!-- Live Incident Tracking Screen -->
+        <activity
+            android:name=".ui.sos.EmergencyTrackingActivity"
+            android:exported="false"
+            android:label="@string/title_emergency_tracking" />
+
+        <!-- SOS Incident History Screen -->
+        <activity
+            android:name=".ui.history.SosHistoryActivity"
+            android:exported="false"
+            android:label="@string/title_sos_history" />
+
+        <!-- Notification Centre -->
+        <activity
+            android:name=".ui.notifications.NotificationCenterActivity"
+            android:exported="false"
+            android:label="@string/title_notifications" />
+
+        <!-- Profile & Settings Screen -->
+        <activity
+            android:name=".ui.profile.ProfileSettingsActivity"
+            android:exported="false"
+            android:label="@string/title_settings" />
+
+        <!-- Background Services -->
+        <service
+            android:name=".service.SafetyProtectionService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <service
+            android:name=".service.LocationTrackingService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
+        <service
+            android:name=".service.PerimeterFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+    </application>
+
+</manifest>
+

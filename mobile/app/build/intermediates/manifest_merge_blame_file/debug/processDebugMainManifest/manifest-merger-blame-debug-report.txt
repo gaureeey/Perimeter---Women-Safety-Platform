@@ -1,0 +1,658 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="org.perimeter.safety"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+9        android:targetSdkVersion="34" />
+10
+11    <!-- Essential Network & Communication Permissions -->
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:6:5-67
+12-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:6:22-64
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:7:5-79
+13-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:7:22-76
+14
+15    <!-- Geolocation & High Accuracy Tracking Permissions -->
+16    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+16-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:10:5-79
+16-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:10:22-76
+17    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+17-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:11:5-81
+17-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:11:22-78
+18    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+18-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:12:5-85
+18-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:12:22-82
+19
+20    <!-- Foreground Services & System Notifications -->
+21    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+21-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:15:5-77
+21-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:15:22-74
+22    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+22-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:16:5-86
+22-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:16:22-83
+23    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+23-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:17:5-87
+23-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:17:22-84
+24    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+24-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:18:5-77
+24-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:18:22-74
+25    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+25-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:19:5-81
+25-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:19:22-78
+26
+27    <!-- Hardware Sensor & Feedback Permissions -->
+28    <uses-permission android:name="android.permission.WAKE_LOCK" />
+28-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:22:5-68
+28-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:22:22-65
+29    <uses-permission android:name="android.permission.VIBRATE" />
+29-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:23:5-66
+29-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:23:22-63
+30    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
+30-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:24:5-117
+30-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:24:22-82
+31    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+31-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:25:5-81
+31-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:25:22-78
+32
+33    <!-- Required by older versions of Google Play services to create IID tokens -->
+34    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+34-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:26:5-82
+34-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:26:22-79
+35
+36    <permission
+36-->[androidx.core:core:1.12.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\b00dd36e019d77eae2222765881ef20f\transformed\core-1.12.0\AndroidManifest.xml:22:5-24:47
+37        android:name="org.perimeter.safety.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+37-->[androidx.core:core:1.12.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\b00dd36e019d77eae2222765881ef20f\transformed\core-1.12.0\AndroidManifest.xml:23:9-81
+38        android:protectionLevel="signature" />
+38-->[androidx.core:core:1.12.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\b00dd36e019d77eae2222765881ef20f\transformed\core-1.12.0\AndroidManifest.xml:24:9-44
+39
+40    <uses-permission android:name="org.perimeter.safety.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+40-->[androidx.core:core:1.12.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\b00dd36e019d77eae2222765881ef20f\transformed\core-1.12.0\AndroidManifest.xml:26:5-97
+40-->[androidx.core:core:1.12.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\b00dd36e019d77eae2222765881ef20f\transformed\core-1.12.0\AndroidManifest.xml:26:22-94
+41
+42    <application
+42-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:27:5-124:19
+43        android:name="org.perimeter.safety.PerimeterApplication"
+43-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:28:9-45
+44        android:allowBackup="true"
+44-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:29:9-35
+45        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+45-->[androidx.core:core:1.12.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\b00dd36e019d77eae2222765881ef20f\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
+46        android:debuggable="true"
+47        android:extractNativeLibs="false"
+48        android:icon="@mipmap/ic_launcher"
+48-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:30:9-43
+49        android:label="@string/app_name"
+49-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:31:9-41
+50        android:networkSecurityConfig="@xml/network_security_config"
+50-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:36:9-69
+51        android:roundIcon="@mipmap/ic_launcher_round"
+51-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:32:9-54
+52        android:supportsRtl="true"
+52-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:33:9-35
+53        android:theme="@style/Theme.Perimeter"
+53-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:34:9-47
+54        android:usesCleartextTraffic="true" >
+54-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:35:9-44
+55
+56        <!-- Splash & Auth Flow -->
+57        <activity
+57-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:40:9-48:20
+58            android:name="org.perimeter.safety.ui.auth.SplashActivity"
+58-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:41:13-51
+59            android:exported="true"
+59-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:42:13-36
+60            android:theme="@style/Theme.Perimeter.Splash" >
+60-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:43:13-58
+61            <intent-filter>
+61-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:44:13-47:29
+62                <action android:name="android.intent.action.MAIN" />
+62-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:45:17-69
+62-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:45:25-66
+63
+64                <category android:name="android.intent.category.LAUNCHER" />
+64-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:46:17-77
+64-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:46:27-74
+65            </intent-filter>
+66        </activity>
+67        <activity
+67-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:50:9-53:58
+68            android:name="org.perimeter.safety.ui.auth.LoginActivity"
+68-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:51:13-50
+69            android:exported="false"
+69-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:52:13-37
+70            android:windowSoftInputMode="adjustResize" />
+70-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:53:13-55
+71        <activity
+71-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:55:9-58:58
+72            android:name="org.perimeter.safety.ui.auth.RegisterActivity"
+72-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:56:13-53
+73            android:exported="false"
+73-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:57:13-37
+74            android:windowSoftInputMode="adjustResize" />
+74-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:58:13-55
+75
+76        <!-- Citizen Main Dashboard -->
+77        <activity
+77-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:61:9-64:46
+78            android:name="org.perimeter.safety.ui.dashboard.MainActivity"
+78-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:62:13-54
+79            android:exported="true"
+79-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:63:13-36
+80            android:launchMode="singleTop" />
+80-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:64:13-43
+81
+82        <!-- Motion Protection & Sensor Debug Screen -->
+83        <activity
+83-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:67:9-70:63
+84            android:name="org.perimeter.safety.ui.protection.MotionProtectionActivity"
+84-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:68:13-67
+85            android:exported="false"
+85-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:69:13-37
+86            android:label="@string/title_motion_protection" />
+86-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:70:13-60
+87
+88        <!-- Fullscreen Emergency SOS Alarm Screen (Shows Over Keyguard/LockScreen) -->
+89        <activity
+89-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:73:9-79:64
+90            android:name="org.perimeter.safety.ui.sos.EmergencySosActivity"
+90-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:74:13-56
+91            android:exported="true"
+91-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:75:13-36
+92            android:launchMode="singleTask"
+92-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:76:13-44
+93            android:showWhenLocked="true"
+93-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:77:13-42
+94            android:theme="@style/Theme.Perimeter.Emergency"
+94-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:79:13-61
+95            android:turnScreenOn="true" />
+95-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:78:13-40
+96
+97        <!-- Live Incident Tracking Screen -->
+98        <activity
+98-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:82:9-85:64
+99            android:name="org.perimeter.safety.ui.sos.EmergencyTrackingActivity"
+99-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:83:13-61
+100            android:exported="false"
+100-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:84:13-37
+101            android:label="@string/title_emergency_tracking" />
+101-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:85:13-61
+102
+103        <!-- SOS Incident History Screen -->
+104        <activity
+104-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:88:9-91:57
+105            android:name="org.perimeter.safety.ui.history.SosHistoryActivity"
+105-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:89:13-58
+106            android:exported="false"
+106-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:90:13-37
+107            android:label="@string/title_sos_history" />
+107-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:91:13-54
+108
+109        <!-- Notification Centre -->
+110        <activity
+110-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:94:9-97:59
+111            android:name="org.perimeter.safety.ui.notifications.NotificationCenterActivity"
+111-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:95:13-72
+112            android:exported="false"
+112-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:96:13-37
+113            android:label="@string/title_notifications" />
+113-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:97:13-56
+114
+115        <!-- Profile & Settings Screen -->
+116        <activity
+116-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:100:9-103:54
+117            android:name="org.perimeter.safety.ui.profile.ProfileSettingsActivity"
+117-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:101:13-63
+118            android:exported="false"
+118-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:102:13-37
+119            android:label="@string/title_settings" />
+119-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:103:13-51
+120
+121        <!-- Background Services -->
+122        <service
+122-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:106:9-109:56
+123            android:name="org.perimeter.safety.service.SafetyProtectionService"
+123-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:107:13-60
+124            android:exported="false"
+124-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:108:13-37
+125            android:foregroundServiceType="dataSync" />
+125-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:109:13-53
+126        <service
+126-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:111:9-114:56
+127            android:name="org.perimeter.safety.service.LocationTrackingService"
+127-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:112:13-60
+128            android:exported="false"
+128-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:113:13-37
+129            android:foregroundServiceType="location" />
+129-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:114:13-53
+130        <service
+130-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:116:9-122:19
+131            android:name="org.perimeter.safety.service.PerimeterFirebaseMessagingService"
+131-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:117:13-70
+132            android:exported="false" >
+132-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:118:13-37
+133            <intent-filter>
+133-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:119:13-121:29
+134                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+134-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:120:17-78
+134-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:120:25-75
+135            </intent-filter>
+136        </service>
+137
+138        <provider
+138-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\7f45247a7c302b256344aca3d44cd266\transformed\emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+139            android:name="androidx.startup.InitializationProvider"
+139-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\7f45247a7c302b256344aca3d44cd266\transformed\emoji2-1.2.0\AndroidManifest.xml:25:13-67
+140            android:authorities="org.perimeter.safety.androidx-startup"
+140-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\7f45247a7c302b256344aca3d44cd266\transformed\emoji2-1.2.0\AndroidManifest.xml:26:13-68
+141            android:exported="false" >
+141-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\7f45247a7c302b256344aca3d44cd266\transformed\emoji2-1.2.0\AndroidManifest.xml:27:13-37
+142            <meta-data
+142-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\7f45247a7c302b256344aca3d44cd266\transformed\emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+143                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+143-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\7f45247a7c302b256344aca3d44cd266\transformed\emoji2-1.2.0\AndroidManifest.xml:30:17-75
+144                android:value="androidx.startup" />
+144-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\7f45247a7c302b256344aca3d44cd266\transformed\emoji2-1.2.0\AndroidManifest.xml:31:17-49
+145            <meta-data
+145-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:34:13-36:52
+146                android:name="androidx.work.WorkManagerInitializer"
+146-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:35:17-68
+147                android:value="androidx.startup" />
+147-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:36:17-49
+148            <meta-data
+148-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\ca14a402fea47065537c12417cc10490\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
+149                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+149-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\ca14a402fea47065537c12417cc10490\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
+150                android:value="androidx.startup" />
+150-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\ca14a402fea47065537c12417cc10490\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
+151            <meta-data
+151-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:29:13-31:52
+152                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+152-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:30:17-85
+153                android:value="androidx.startup" />
+153-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:31:17-49
+154        </provider>
+155
+156        <receiver
+156-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:29:9-40:20
+157            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+157-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:30:13-78
+158            android:exported="true"
+158-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:31:13-36
+159            android:permission="com.google.android.c2dm.permission.SEND" >
+159-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:32:13-73
+160            <intent-filter>
+160-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:33:13-35:29
+161                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+161-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:34:17-81
+161-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:34:25-78
+162            </intent-filter>
+163
+164            <meta-data
+164-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:37:13-39:40
+165                android:name="com.google.android.gms.cloudmessaging.FINISHED_AFTER_HANDLED"
+165-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:38:17-92
+166                android:value="true" />
+166-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:39:17-37
+167        </receiver>
+168        <!--
+169             FirebaseMessagingService performs security checks at runtime,
+170             but set to not exported to explicitly avoid allowing another app to call it.
+171        -->
+172        <service
+172-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:46:9-53:19
+173            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+173-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:47:13-82
+174            android:directBootAware="true"
+174-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:48:13-43
+175            android:exported="false" >
+175-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:49:13-37
+176            <intent-filter android:priority="-500" >
+176-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:119:13-121:29
+177                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+177-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:120:17-78
+177-->C:\Users\Gauri Rajesh\Desktop\Perimeter\Perimeter---Women-Safety-Platform\mobile\app\src\main\AndroidManifest.xml:120:25-75
+178            </intent-filter>
+179        </service>
+180        <service
+180-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:54:9-63:19
+181            android:name="com.google.firebase.components.ComponentDiscoveryService"
+181-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:55:13-84
+182            android:directBootAware="true"
+182-->[com.google.firebase:firebase-common:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\1fdefc8ee6e4d918dbc379d408ed869f\transformed\firebase-common-20.4.2\AndroidManifest.xml:32:13-43
+183            android:exported="false" >
+183-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:56:13-37
+184            <meta-data
+184-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:57:13-59:85
+185                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingKtxRegistrar"
+185-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:58:17-122
+186                android:value="com.google.firebase.components.ComponentRegistrar" />
+186-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:59:17-82
+187            <meta-data
+187-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:60:13-62:85
+188                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+188-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:61:17-119
+189                android:value="com.google.firebase.components.ComponentRegistrar" />
+189-->[com.google.firebase:firebase-messaging:23.4.1] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\13d09c028ee04038877d23879b91f7e2\transformed\firebase-messaging-23.4.1\AndroidManifest.xml:62:17-82
+190            <meta-data
+190-->[com.google.firebase:firebase-installations:17.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3c17b4f9ca1f1071ca2aa4ce020c87cc\transformed\firebase-installations-17.2.0\AndroidManifest.xml:15:13-17:85
+191                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsKtxRegistrar"
+191-->[com.google.firebase:firebase-installations:17.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3c17b4f9ca1f1071ca2aa4ce020c87cc\transformed\firebase-installations-17.2.0\AndroidManifest.xml:16:17-130
+192                android:value="com.google.firebase.components.ComponentRegistrar" />
+192-->[com.google.firebase:firebase-installations:17.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3c17b4f9ca1f1071ca2aa4ce020c87cc\transformed\firebase-installations-17.2.0\AndroidManifest.xml:17:17-82
+193            <meta-data
+193-->[com.google.firebase:firebase-installations:17.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3c17b4f9ca1f1071ca2aa4ce020c87cc\transformed\firebase-installations-17.2.0\AndroidManifest.xml:18:13-20:85
+194                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+194-->[com.google.firebase:firebase-installations:17.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3c17b4f9ca1f1071ca2aa4ce020c87cc\transformed\firebase-installations-17.2.0\AndroidManifest.xml:19:17-127
+195                android:value="com.google.firebase.components.ComponentRegistrar" />
+195-->[com.google.firebase:firebase-installations:17.2.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3c17b4f9ca1f1071ca2aa4ce020c87cc\transformed\firebase-installations-17.2.0\AndroidManifest.xml:20:17-82
+196            <meta-data
+196-->[com.google.firebase:firebase-common-ktx:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\e7745084ab26de3a6351a57a1ea4a502\transformed\firebase-common-ktx-20.4.2\AndroidManifest.xml:12:13-14:85
+197                android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonLegacyRegistrar"
+197-->[com.google.firebase:firebase-common-ktx:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\e7745084ab26de3a6351a57a1ea4a502\transformed\firebase-common-ktx-20.4.2\AndroidManifest.xml:13:17-116
+198                android:value="com.google.firebase.components.ComponentRegistrar" />
+198-->[com.google.firebase:firebase-common-ktx:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\e7745084ab26de3a6351a57a1ea4a502\transformed\firebase-common-ktx-20.4.2\AndroidManifest.xml:14:17-82
+199            <meta-data
+199-->[com.google.firebase:firebase-common:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\1fdefc8ee6e4d918dbc379d408ed869f\transformed\firebase-common-20.4.2\AndroidManifest.xml:35:13-37:85
+200                android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar"
+200-->[com.google.firebase:firebase-common:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\1fdefc8ee6e4d918dbc379d408ed869f\transformed\firebase-common-20.4.2\AndroidManifest.xml:36:17-109
+201                android:value="com.google.firebase.components.ComponentRegistrar" />
+201-->[com.google.firebase:firebase-common:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\1fdefc8ee6e4d918dbc379d408ed869f\transformed\firebase-common-20.4.2\AndroidManifest.xml:37:17-82
+202            <meta-data
+202-->[com.google.firebase:firebase-datatransport:18.1.7] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\aa6e4f8dd5747971e47979771803bcf0\transformed\firebase-datatransport-18.1.7\AndroidManifest.xml:27:13-29:85
+203                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+203-->[com.google.firebase:firebase-datatransport:18.1.7] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\aa6e4f8dd5747971e47979771803bcf0\transformed\firebase-datatransport-18.1.7\AndroidManifest.xml:28:17-115
+204                android:value="com.google.firebase.components.ComponentRegistrar" />
+204-->[com.google.firebase:firebase-datatransport:18.1.7] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\aa6e4f8dd5747971e47979771803bcf0\transformed\firebase-datatransport-18.1.7\AndroidManifest.xml:29:17-82
+205        </service>
+206
+207        <activity
+207-->[com.google.android.gms:play-services-base:18.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\524b3c6f39ad711e02e4f70060681a4f\transformed\play-services-base-18.3.0\AndroidManifest.xml:20:9-22:45
+208            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+208-->[com.google.android.gms:play-services-base:18.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\524b3c6f39ad711e02e4f70060681a4f\transformed\play-services-base-18.3.0\AndroidManifest.xml:20:19-85
+209            android:exported="false"
+209-->[com.google.android.gms:play-services-base:18.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\524b3c6f39ad711e02e4f70060681a4f\transformed\play-services-base-18.3.0\AndroidManifest.xml:22:19-43
+210            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+210-->[com.google.android.gms:play-services-base:18.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\524b3c6f39ad711e02e4f70060681a4f\transformed\play-services-base-18.3.0\AndroidManifest.xml:21:19-78
+211
+212        <service
+212-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:39:9-45:35
+213            android:name="androidx.work.impl.background.systemalarm.SystemAlarmService"
+213-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:40:13-88
+214            android:directBootAware="false"
+214-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:41:13-44
+215            android:enabled="@bool/enable_system_alarm_service_default"
+215-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:42:13-72
+216            android:exported="false" />
+216-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:43:13-37
+217        <service
+217-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:46:9-52:35
+218            android:name="androidx.work.impl.background.systemjob.SystemJobService"
+218-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:47:13-84
+219            android:directBootAware="false"
+219-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:48:13-44
+220            android:enabled="@bool/enable_system_job_service_default"
+220-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:49:13-70
+221            android:exported="true"
+221-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:50:13-36
+222            android:permission="android.permission.BIND_JOB_SERVICE" />
+222-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:51:13-69
+223        <service
+223-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:53:9-59:35
+224            android:name="androidx.work.impl.foreground.SystemForegroundService"
+224-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:54:13-81
+225            android:directBootAware="false"
+225-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:55:13-44
+226            android:enabled="@bool/enable_system_foreground_service_default"
+226-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:56:13-77
+227            android:exported="false" />
+227-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:57:13-37
+228
+229        <receiver
+229-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:61:9-66:35
+230            android:name="androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver"
+230-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:62:13-88
+231            android:directBootAware="false"
+231-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:63:13-44
+232            android:enabled="true"
+232-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:64:13-35
+233            android:exported="false" />
+233-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:65:13-37
+234        <receiver
+234-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:67:9-77:20
+235            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy"
+235-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:68:13-106
+236            android:directBootAware="false"
+236-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:69:13-44
+237            android:enabled="false"
+237-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:70:13-36
+238            android:exported="false" >
+238-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:71:13-37
+239            <intent-filter>
+239-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:73:13-76:29
+240                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+240-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:74:17-87
+240-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:74:25-84
+241                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+241-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:75:17-90
+241-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:75:25-87
+242            </intent-filter>
+243        </receiver>
+244        <receiver
+244-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:78:9-88:20
+245            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy"
+245-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:79:13-104
+246            android:directBootAware="false"
+246-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:80:13-44
+247            android:enabled="false"
+247-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:81:13-36
+248            android:exported="false" >
+248-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:82:13-37
+249            <intent-filter>
+249-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:84:13-87:29
+250                <action android:name="android.intent.action.BATTERY_OKAY" />
+250-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:85:17-77
+250-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:85:25-74
+251                <action android:name="android.intent.action.BATTERY_LOW" />
+251-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:86:17-76
+251-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:86:25-73
+252            </intent-filter>
+253        </receiver>
+254        <receiver
+254-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:89:9-99:20
+255            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy"
+255-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:90:13-104
+256            android:directBootAware="false"
+256-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:91:13-44
+257            android:enabled="false"
+257-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:92:13-36
+258            android:exported="false" >
+258-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:93:13-37
+259            <intent-filter>
+259-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:95:13-98:29
+260                <action android:name="android.intent.action.DEVICE_STORAGE_LOW" />
+260-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:96:17-83
+260-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:96:25-80
+261                <action android:name="android.intent.action.DEVICE_STORAGE_OK" />
+261-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:97:17-82
+261-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:97:25-79
+262            </intent-filter>
+263        </receiver>
+264        <receiver
+264-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:100:9-109:20
+265            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy"
+265-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:101:13-103
+266            android:directBootAware="false"
+266-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:102:13-44
+267            android:enabled="false"
+267-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:103:13-36
+268            android:exported="false" >
+268-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:104:13-37
+269            <intent-filter>
+269-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:106:13-108:29
+270                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+270-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:107:17-79
+270-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:107:25-76
+271            </intent-filter>
+272        </receiver>
+273        <receiver
+273-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:110:9-121:20
+274            android:name="androidx.work.impl.background.systemalarm.RescheduleReceiver"
+274-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:111:13-88
+275            android:directBootAware="false"
+275-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:112:13-44
+276            android:enabled="false"
+276-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:113:13-36
+277            android:exported="false" >
+277-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:114:13-37
+278            <intent-filter>
+278-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:116:13-120:29
+279                <action android:name="android.intent.action.BOOT_COMPLETED" />
+279-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:117:17-79
+279-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:117:25-76
+280                <action android:name="android.intent.action.TIME_SET" />
+280-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:118:17-73
+280-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:118:25-70
+281                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+281-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:119:17-81
+281-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:119:25-78
+282            </intent-filter>
+283        </receiver>
+284        <receiver
+284-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:122:9-131:20
+285            android:name="androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver"
+285-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:123:13-99
+286            android:directBootAware="false"
+286-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:124:13-44
+287            android:enabled="@bool/enable_system_alarm_service_default"
+287-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:125:13-72
+288            android:exported="false" >
+288-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:126:13-37
+289            <intent-filter>
+289-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:128:13-130:29
+290                <action android:name="androidx.work.impl.background.systemalarm.UpdateProxies" />
+290-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:129:17-98
+290-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:129:25-95
+291            </intent-filter>
+292        </receiver>
+293        <receiver
+293-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:132:9-142:20
+294            android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver"
+294-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:133:13-78
+295            android:directBootAware="false"
+295-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:134:13-44
+296            android:enabled="true"
+296-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:135:13-35
+297            android:exported="true"
+297-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:136:13-36
+298            android:permission="android.permission.DUMP" >
+298-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:137:13-57
+299            <intent-filter>
+299-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:139:13-141:29
+300                <action android:name="androidx.work.diagnostics.REQUEST_DIAGNOSTICS" />
+300-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:140:17-88
+300-->[androidx.work:work-runtime:2.9.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c18c592e033ff27ecdccc31964888ff1\transformed\work-runtime-2.9.0\AndroidManifest.xml:140:25-85
+301            </intent-filter>
+302        </receiver>
+303
+304        <provider
+304-->[com.google.firebase:firebase-common:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\1fdefc8ee6e4d918dbc379d408ed869f\transformed\firebase-common-20.4.2\AndroidManifest.xml:23:9-28:39
+305            android:name="com.google.firebase.provider.FirebaseInitProvider"
+305-->[com.google.firebase:firebase-common:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\1fdefc8ee6e4d918dbc379d408ed869f\transformed\firebase-common-20.4.2\AndroidManifest.xml:24:13-77
+306            android:authorities="org.perimeter.safety.firebaseinitprovider"
+306-->[com.google.firebase:firebase-common:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\1fdefc8ee6e4d918dbc379d408ed869f\transformed\firebase-common-20.4.2\AndroidManifest.xml:25:13-72
+307            android:directBootAware="true"
+307-->[com.google.firebase:firebase-common:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\1fdefc8ee6e4d918dbc379d408ed869f\transformed\firebase-common-20.4.2\AndroidManifest.xml:26:13-43
+308            android:exported="false"
+308-->[com.google.firebase:firebase-common:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\1fdefc8ee6e4d918dbc379d408ed869f\transformed\firebase-common-20.4.2\AndroidManifest.xml:27:13-37
+309            android:initOrder="100" />
+309-->[com.google.firebase:firebase-common:20.4.2] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\1fdefc8ee6e4d918dbc379d408ed869f\transformed\firebase-common-20.4.2\AndroidManifest.xml:28:13-36
+310
+311        <meta-data
+311-->[com.google.android.gms:play-services-basement:18.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\5a8c597febe29c781548f3d44118a4f7\transformed\play-services-basement-18.3.0\AndroidManifest.xml:21:9-23:69
+312            android:name="com.google.android.gms.version"
+312-->[com.google.android.gms:play-services-basement:18.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\5a8c597febe29c781548f3d44118a4f7\transformed\play-services-basement-18.3.0\AndroidManifest.xml:22:13-58
+313            android:value="@integer/google_play_services_version" />
+313-->[com.google.android.gms:play-services-basement:18.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\5a8c597febe29c781548f3d44118a4f7\transformed\play-services-basement-18.3.0\AndroidManifest.xml:23:13-66
+314
+315        <service
+315-->[androidx.room:room-runtime:2.5.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\ff710d0267d1445d6c2077e5591be130\transformed\room-runtime-2.5.0\AndroidManifest.xml:24:9-28:63
+316            android:name="androidx.room.MultiInstanceInvalidationService"
+316-->[androidx.room:room-runtime:2.5.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\ff710d0267d1445d6c2077e5591be130\transformed\room-runtime-2.5.0\AndroidManifest.xml:25:13-74
+317            android:directBootAware="true"
+317-->[androidx.room:room-runtime:2.5.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\ff710d0267d1445d6c2077e5591be130\transformed\room-runtime-2.5.0\AndroidManifest.xml:26:13-43
+318            android:exported="false" />
+318-->[androidx.room:room-runtime:2.5.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\ff710d0267d1445d6c2077e5591be130\transformed\room-runtime-2.5.0\AndroidManifest.xml:27:13-37
+319        <service
+319-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\99457912bd0832f4cf24ac8367feed79\transformed\transport-backend-cct-3.1.8\AndroidManifest.xml:28:9-34:19
+320            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+320-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\99457912bd0832f4cf24ac8367feed79\transformed\transport-backend-cct-3.1.8\AndroidManifest.xml:29:13-103
+321            android:exported="false" >
+321-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\99457912bd0832f4cf24ac8367feed79\transformed\transport-backend-cct-3.1.8\AndroidManifest.xml:30:13-37
+322            <meta-data
+322-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\99457912bd0832f4cf24ac8367feed79\transformed\transport-backend-cct-3.1.8\AndroidManifest.xml:31:13-33:39
+323                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+323-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\99457912bd0832f4cf24ac8367feed79\transformed\transport-backend-cct-3.1.8\AndroidManifest.xml:32:17-94
+324                android:value="cct" />
+324-->[com.google.android.datatransport:transport-backend-cct:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\99457912bd0832f4cf24ac8367feed79\transformed\transport-backend-cct-3.1.8\AndroidManifest.xml:33:17-36
+325        </service>
+326        <service
+326-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c531c3e555cc6205a6a3312db06e8eb2\transformed\transport-runtime-3.1.8\AndroidManifest.xml:26:9-30:19
+327            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+327-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c531c3e555cc6205a6a3312db06e8eb2\transformed\transport-runtime-3.1.8\AndroidManifest.xml:27:13-117
+328            android:exported="false"
+328-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c531c3e555cc6205a6a3312db06e8eb2\transformed\transport-runtime-3.1.8\AndroidManifest.xml:28:13-37
+329            android:permission="android.permission.BIND_JOB_SERVICE" >
+329-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c531c3e555cc6205a6a3312db06e8eb2\transformed\transport-runtime-3.1.8\AndroidManifest.xml:29:13-69
+330        </service>
+331
+332        <receiver
+332-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c531c3e555cc6205a6a3312db06e8eb2\transformed\transport-runtime-3.1.8\AndroidManifest.xml:32:9-34:40
+333            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+333-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c531c3e555cc6205a6a3312db06e8eb2\transformed\transport-runtime-3.1.8\AndroidManifest.xml:33:13-132
+334            android:exported="false" />
+334-->[com.google.android.datatransport:transport-runtime:3.1.8] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\c531c3e555cc6205a6a3312db06e8eb2\transformed\transport-runtime-3.1.8\AndroidManifest.xml:34:13-37
+335        <receiver
+335-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:34:9-52:20
+336            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+336-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:35:13-76
+337            android:directBootAware="false"
+337-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:36:13-44
+338            android:enabled="true"
+338-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:37:13-35
+339            android:exported="true"
+339-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:38:13-36
+340            android:permission="android.permission.DUMP" >
+340-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:39:13-57
+341            <intent-filter>
+341-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:40:13-42:29
+342                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+342-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:17-91
+342-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:25-88
+343            </intent-filter>
+344            <intent-filter>
+344-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:43:13-45:29
+345                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+345-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:17-85
+345-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:25-82
+346            </intent-filter>
+347            <intent-filter>
+347-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:46:13-48:29
+348                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+348-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:17-88
+348-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:25-85
+349            </intent-filter>
+350            <intent-filter>
+350-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:49:13-51:29
+351                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+351-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:17-95
+351-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Gauri Rajesh\.gradle\caches\transforms-3\3cac48c8d6957ff1545a2b5ce21e330c\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:25-92
+352            </intent-filter>
+353        </receiver>
+354    </application>
+355
+356</manifest>

@@ -25,3 +25,16 @@ class Notification(Base):
     
     is_read = Column(Boolean, default=False, index=True)
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
+
+class DeviceToken(Base):
+    __tablename__ = "device_tokens"
+
+    id = Column(String, primary_key=True, default=lambda: f"dt_{uuid.uuid4().hex[:8]}")
+    user_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
+    token = Column(String, nullable=False, unique=True, index=True)
+    platform = Column(String, default="android")  # android, ios, web
+    device_name = Column(String, nullable=True)
+    is_active = Column(Boolean, default=True, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+

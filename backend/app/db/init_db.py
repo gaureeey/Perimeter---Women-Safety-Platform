@@ -1,9 +1,12 @@
+
 from app.db.session import engine, Base, SessionLocal
 from app.models.user import User
 from app.models.admin_tracking import LoginHistory, UserPresence, AdminAuditLog
 from app.models.sos import SOSIncident, Responder
 from app.models.feed import FeedPost, Story
 from app.models.case import IncidentCase, TimelineEvent, LinkedPressArticle
+from app.models.notification import Notification, DeviceToken
+from app.models.location import UserLocation
 from app.models.social import (
     Follow, FollowRequest, PostLike, PostComment, PostShare, PostSave,
     StoryView, StoryPollVote, Reel, ReelLike,

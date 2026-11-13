@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent">#F43F5E</color>
+    <color name="bg_dark">#0F172A</color>
+    <color name="card_dark">#1E293B</color>
+    <color name="card_dark_stroke">#334155</color>
+    <color name="divider">#334155</color>
+    <color name="primary">#E11D48</color>
+    <color name="primary_dark">#BE123C</color>
+    <color name="primary_light">#FDA4AF</color>
+    <color name="sos_red">#DC2626</color>
+    <color name="sos_red_dark">#991B1B</color>
+    <color name="sos_red_light">#FEE2E2</color>
+    <color name="status_info">#3B82F6</color>
+    <color name="status_safe">#10B981</color>
+    <color name="status_warning">#F59E0B</color>
+    <color name="text_muted">#64748B</color>
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="white">#FFFFFF</color>
+    <string name="action_cancel_false_alarm">CANCEL FALSE ALARM (STAND DOWN)</string>
+    <string name="action_hold_sos">HOLD 2s FOR SOS</string>
+    <string name="action_register">Create Safety Account</string>
+    <string name="action_sign_in">Sign In</string>
+    <string name="action_stop_protection">STOP PROTECTION</string>
+    <string name="app_name">PERIMETER</string>
+    <string name="app_tagline">Next-Gen Women &amp; Community Safety Platform</string>
+    <string name="channel_emergency_desc">High-priority distress beacons and responder dispatches</string>
+    <string name="channel_emergency_name">PERIMETER Emergency Alerts</string>
+    <string name="channel_protection_desc">Persistent background accelerometer monitoring</string>
+    <string name="channel_protection_name">Safety Protection Session</string>
+    <string name="dispatch_active">Live Patrol Units &amp; Verified Volunteers Dispatched</string>
+    <string name="emergency_sos_activated">EMERGENCY SOS ACTIVATED</string>
+    <string name="prompt_email_or_badge">Email or Badge ID</string>
+    <string name="prompt_emergency_contact">Emergency Contact Phone</string>
+    <string name="prompt_full_name">Full Name</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_phone">Phone Number</string>
+    <string name="prompt_safe_zone">Safe Zone / Preferred Neighborhood</string>
+    <string name="protection_active">PERIMETER Protection Active</string>
+    <string name="protection_inactive">Protection Inactive</string>
+    <string name="protection_subtitle_active">Double-shake your phone anytime to trigger SOS</string>
+    <string name="protection_subtitle_inactive">Tap to enable double-shake emergency trigger</string>
+    <string name="stand_down_instruction">Hold for 3 seconds to cancel false alarm</string>
+    <string name="title_dashboard">Citizen Safety Dashboard</string>
+    <string name="title_emergency_sos">Emergency SOS</string>
+    <string name="title_emergency_tracking">Emergency Dispatch Tracking</string>
+    <string name="title_motion_protection">Motion Protection</string>
+    <string name="title_notifications">Notification Centre</string>
+    <string name="title_settings">Profile &amp; Settings</string>
+    <string name="title_sos_history">Emergency History</string>
+    <style name="Theme.Perimeter" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorSecondaryVariant">@color/primary_dark</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/bg_dark</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+    </style>
+    <style name="Theme.Perimeter.Emergency" parent="Theme.Perimeter">
+        <item name="android:statusBarColor">@color/sos_red_dark</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+    </style>
+    <style name="Theme.Perimeter.Splash" parent="Theme.Perimeter">
+        <item name="android:windowBackground">@color/bg_dark</item>
+        <item name="android:statusBarColor">@color/bg_dark</item>
+    </style>
+</resources>

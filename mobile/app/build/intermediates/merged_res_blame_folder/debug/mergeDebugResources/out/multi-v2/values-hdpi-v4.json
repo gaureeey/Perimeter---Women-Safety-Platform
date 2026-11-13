@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "org.perimeter.safety.app-mergeDebugResources-45:/values-hdpi-v4/values-hdpi-v4.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Gauri Rajesh\\.gradle\\caches\\transforms-3\\cbc9ea2ee499f968b3e9bfc047fd817c\\transformed\\appcompat-1.6.1\\res\\values-hdpi-v4\\values-hdpi-v4.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "6",
+                        "endColumns": "13",
+                        "endOffsets": "327"
+                    }
+                }
+            ]
+        }
+    ]
+}

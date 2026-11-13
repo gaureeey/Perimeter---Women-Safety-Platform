@@ -12,6 +12,7 @@ from app.models.crime import AreaSafetyScore, CrimeStatistic
 from app.models.sos import SOSIncident
 from app.services.safety_score import SafetyScoreService
 
+
 router = APIRouter(tags=["Safety Heatmap & Risk Scores"])
 
 @router.get("/heatmap")

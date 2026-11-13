@@ -1,0 +1,66 @@
+[
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\activity_profile_settings.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_profile_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\activity_splash.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_splash.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\item_sos_history.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\item_sos_history.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\activity_login.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_login.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\dialog_story_viewer.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\dialog_story_viewer.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\item_story_node.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\item_story_node.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\activity_notification_center.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_notification_center.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\activity_motion_protection.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_motion_protection.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\item_notification.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\item_notification.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\activity_sos_history.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_sos_history.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\activity_register.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_register.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\item_feed_post.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\item_feed_post.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\activity_emergency_sos.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_emergency_sos.xml"
+    },
+    {
+        "merged": "org.perimeter.safety.app-mergeDebugResources-46:/layout/activity_main.xml",
+        "source": "org.perimeter.safety.app-main-49:/layout/activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-mergeDebugResources-46:\\layout\\activity_emergency_tracking.xml",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_emergency_tracking.xml"
+    }
+]

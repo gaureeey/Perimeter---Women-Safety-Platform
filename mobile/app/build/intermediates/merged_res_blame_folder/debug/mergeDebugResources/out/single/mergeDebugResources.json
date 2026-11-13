@@ -1,0 +1,190 @@
+[
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_activity_register.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_register.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_sos_alert.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_sos_alert.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_bookmark.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_bookmark.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_circular_progress.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\circular_progress.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_activity_profile_settings.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_profile_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_stop.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_stop.xml"
+    },
+    {
+        "merged": "org.perimeter.safety.app-debug-47:/layout_activity_main.xml.flat",
+        "source": "org.perimeter.safety.app-main-49:/layout/activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\menu_bottom_nav_menu.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\menu\\bottom_nav_menu.xml"
+    },
+    {
+        "merged": "org.perimeter.safety.app-debug-47:/drawable_bg_story_avatar_circle.xml.flat",
+        "source": "org.perimeter.safety.app-main-49:/drawable/bg_story_avatar_circle.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_bg_sos_ring.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\bg_sos_ring.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_dialog_story_viewer.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\dialog_story_viewer.xml"
+    },
+    {
+        "merged": "org.perimeter.safety.app-debug-47:/drawable_ic_map_radar.xml.flat",
+        "source": "org.perimeter.safety.app-main-49:/drawable/ic_map_radar.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\xml_network_security_config.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\xml\\network_security_config.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_heart_filled.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_heart_filled.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_bg_circle_dark.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\bg_circle_dark.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_notifications.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_notifications.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_share.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_share.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_heart.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_heart.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_bg_story_avatar_circle.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\bg_story_avatar_circle.xml"
+    },
+    {
+        "merged": "org.perimeter.safety.app-debug-47:/color_nav_item_color.xml.flat",
+        "source": "org.perimeter.safety.app-main-49:/color/nav_item_color.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_activity_notification_center.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_notification_center.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_settings.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_item_sos_history.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\item_sos_history.xml"
+    },
+    {
+        "merged": "org.perimeter.safety.app-debug-47:/drawable_ic_channels_broadcast.xml.flat",
+        "source": "org.perimeter.safety.app-main-49:/drawable/ic_channels_broadcast.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_comment.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_comment.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\color_nav_item_color.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\color\\nav_item_color.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_bg_pill_dark.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\bg_pill_dark.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_shield_check.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_shield_check.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_item_story_node.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\item_story_node.xml"
+    },
+    {
+        "merged": "org.perimeter.safety.app-debug-47:/drawable_bg_pill_dark.xml.flat",
+        "source": "org.perimeter.safety.app-main-49:/drawable/bg_pill_dark.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_activity_emergency_tracking.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_emergency_tracking.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_person.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_person.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_activity_login.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_login.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_home.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_item_feed_post.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\item_feed_post.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_bg_story_ring.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\bg_story_ring.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_activity_emergency_sos.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_emergency_sos.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_item_notification.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\item_notification.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_activity_motion_protection.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_motion_protection.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_activity_splash.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_splash.xml"
+    },
+    {
+        "merged": "org.perimeter.safety.app-debug-47:/menu_bottom_nav_menu.xml.flat",
+        "source": "org.perimeter.safety.app-main-49:/menu/bottom_nav_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-debug-47:\\layout_activity_sos_history.xml.flat",
+        "source": "C:\\Users\\Gauri Rajesh\\.gradle\\daemon\\8.4\\org.perimeter.safety.app-main-49:\\layout\\activity_sos_history.xml"
+    }
+]

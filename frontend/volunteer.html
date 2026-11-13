@@ -1739,6 +1739,15 @@ function recenterMap() {
             if (!txt) { toast('Please type a safety notice to publish.', '⚠️'); return; }
 
             try {
+                // 1. Post to Verified Volunteer Escort Network Channel (chan_003)
+                try {
+                    await apiCall('/social/channels/chan_003/posts', 'POST', {
+                        title: 'Verified Volunteer Escort Notice',
+                        content: txt
+                    });
+                } catch (_) {}
+
+                // 2. Post to Community Feed
                 await apiCall('/feed/', 'POST', {
                     author_name: volName,
                     author_role: 'volunteer',

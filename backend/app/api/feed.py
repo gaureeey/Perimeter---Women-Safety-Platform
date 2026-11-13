@@ -135,13 +135,20 @@ def get_feed_posts(
     valid_user = current_user if isinstance(current_user, User) else None
     query = db.query(FeedPost)
 
-    if category == "POLICE":
+    cat = (category or "ALL").upper().strip()
+    if cat in ["POLICE", "POLICE_NOTICE"]:
         query = query.filter(or_(FeedPost.author_role == "police", FeedPost.tag == "POLICE_NOTICE"))
-    elif category == "ALERTS":
-        query = query.filter(FeedPost.tag.in_(["HAZARD_ALERT", "POLICE_NOTICE", "SAFE_ROUTE"]))
-    elif category == "HELP_REQUEST":
-        query = query.filter(FeedPost.tag == "HELP_REQUEST")
-    elif category == "FOLLOWING" and valid_user:
+    elif cat in ["ALERTS", "HAZARD_ALERT", "ALERT"]:
+        query = query.filter(FeedPost.tag.in_(["HAZARD_ALERT", "POLICE_NOTICE", "SOS_ALERT", "EMERGENCY"]))
+    elif cat in ["SAFE_ROUTE", "SAFE_ROUTES", "ROUTES", "SAFE"]:
+        query = query.filter(FeedPost.tag.in_(["SAFE_ROUTE", "SAFE_CORRIDOR", "VERIFIED_ROUTE", "LIT_CORRIDOR"]))
+    elif cat in ["VOLUNTEER", "VOLUNTEERS", "PATROL"]:
+        query = query.filter(or_(FeedPost.author_role == "volunteer", FeedPost.tag.in_(["PATROL_ACTIVE", "VOLUNTEER_PATROL", "COMMUNITY_UPDATE"])))
+    elif cat in ["JOURNALIST", "PRESS", "MEDIA"]:
+        query = query.filter(or_(FeedPost.author_role == "journalist", FeedPost.tag == "PRESS_REPORT"))
+    elif cat in ["HELP_REQUEST", "HELP", "DISCUSSIONS", "COMMUNITY"]:
+        query = query.filter(FeedPost.tag.in_(["HELP_REQUEST", "COMMUNITY_UPDATE"]))
+    elif cat == "FOLLOWING" and valid_user:
         following_ids = [f.following_id for f in db.query(Follow).filter(Follow.follower_id == valid_user.id).all()]
         following_users = db.query(User.name).filter(User.id.in_(following_ids)).all() if following_ids else []
         following_names = [u[0] for u in following_users]

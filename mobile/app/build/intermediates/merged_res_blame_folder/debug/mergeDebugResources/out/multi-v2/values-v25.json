@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "org.perimeter.safety.app-mergeDebugResources-45:/values-v25/values-v25.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Gauri Rajesh\\.gradle\\caches\\transforms-3\\cbc9ea2ee499f968b3e9bfc047fd817c\\transformed\\appcompat-1.6.1\\res\\values-v25\\values-v25.xml",
+                    "from": {
+                        "startLines": "2,3,4,6",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,126,209,308",
+                        "endLines": "2,3,5,7",
+                        "endColumns": "70,82,12,12",
+                        "endOffsets": "121,204,303,414"
+                    }
+                }
+            ]
+        }
+    ]
+}

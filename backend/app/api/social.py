@@ -1029,16 +1029,19 @@ def send_message(
 
 @router.get("/channels", response_model=List[ChannelResponse])
 def get_broadcast_channels(
-    current_user: User = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_optional_user),
     db: Session = Depends(get_db)
 ):
     channels = db.query(BroadcastChannel).order_by(BroadcastChannel.created_at.desc()).all()
     results = []
+    uid = current_user.id if isinstance(current_user, User) else None
     for ch in channels:
-        is_sub = db.query(ChannelMember).filter(
-            ChannelMember.channel_id == ch.id,
-            ChannelMember.user_id == current_user.id
-        ).first() is not None
+        is_sub = False
+        if uid:
+            is_sub = db.query(ChannelMember).filter(
+                ChannelMember.channel_id == ch.id,
+                ChannelMember.user_id == uid
+            ).first() is not None
 
         posts = db.query(ChannelPost).filter(ChannelPost.channel_id == ch.id).order_by(ChannelPost.created_at.desc()).limit(3).all()
         post_responses = [

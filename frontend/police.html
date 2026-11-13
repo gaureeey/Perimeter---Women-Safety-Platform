@@ -1123,6 +1123,41 @@ if (typeof updatePoliceMapIncidents === 'function') {
             }
         }
 
+        window.publishPoliceAdvisory = async function publishPoliceAdvisory() {
+            const input = document.getElementById('policeAdvisoryInput');
+            const text = input ? input.value.trim() : '';
+            if (!text) {
+                toast('Please enter advisory details before broadcasting.', '⚠️');
+                return;
+            }
+            const actor = policeName || currentPoliceUser?.name || 'Inspector K. Patil';
+            try {
+                // 1. Post to Official Police Broadcast Channel (chan_001)
+                try {
+                    await apiCall('/social/channels/chan_001/posts', 'POST', {
+                        title: 'Official City Police Safety Notice',
+                        content: text
+                    });
+                } catch (_) {}
+
+                // 2. Post to Community Feed
+                await apiCall('/feed/', 'POST', {
+                    author_name: actor,
+                    author_role: 'police',
+                    title: 'Official City Police Safety Notice',
+                    content: text,
+                    tag: 'POLICE_NOTICE',
+                    location_name: currentPoliceUser?.dynamic_field_2 || 'Central Police Precinct'
+                });
+
+                if (input) input.value = '';
+                toast('🚨 Official Police Notice broadcast to channel and feed!', '📢');
+                loadPoliceCommunityFeed();
+            } catch (e) {
+                toast(`Broadcast failed: ${e.message}`, '❌');
+            }
+        };
+
 var activeResolveCaseId = '';
 var activeResolveIncidentId = '';
 

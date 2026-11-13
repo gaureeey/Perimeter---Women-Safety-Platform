@@ -1326,6 +1326,7 @@
 
             <nav class="nav-tabs">
                 <button class="nav-tab-btn active" id="tab-feed" onclick="switchNavView('feed')">🏠 Feed</button>
+                <button class="nav-tab-btn" id="tab-routes" onclick="switchNavView('routes')">🗺️ Safe Routes & Heatmap</button>
                 <button class="nav-tab-btn" id="tab-explore" onclick="switchNavView('explore')">🔍 Explore</button>
                 <button class="nav-tab-btn" id="tab-reels" onclick="switchNavView('reels')">🎬 Reels</button>
                 <button class="nav-tab-btn" id="tab-messages" onclick="switchNavView('messages')">💬 Messages</button>
@@ -1399,9 +1400,11 @@
                     <div class="feed-filter-bar">
                         <button class="feed-filter-btn active" onclick="filterFeed(this, 'ALL')">All Updates</button>
                         <button class="feed-filter-btn" onclick="filterFeed(this, 'FOLLOWING')">Following</button>
-                        <button class="feed-filter-btn" onclick="filterFeed(this, 'ALERTS')">Safety Alerts</button>
-                        <button class="feed-filter-btn" onclick="filterFeed(this, 'POLICE')">Police Bulletins</button>
-                        <button class="feed-filter-btn" onclick="filterFeed(this, 'HELP_REQUEST')">Help Requests</button>
+                        <button class="feed-filter-btn" onclick="filterFeed(this, 'ALERTS')">🚨 Alerts</button>
+                        <button class="feed-filter-btn" onclick="filterFeed(this, 'SAFE_ROUTE')">🚶 Safe Routes</button>
+                        <button class="feed-filter-btn" onclick="filterFeed(this, 'POLICE')">👮 Police Bulletins</button>
+                        <button class="feed-filter-btn" onclick="filterFeed(this, 'VOLUNTEER')">🤝 Volunteer Escorts</button>
+                        <button class="feed-filter-btn" onclick="filterFeed(this, 'HELP_REQUEST')">🆘 Help Requests</button>
                     </div>
 
                     <!-- Feed Posts List -->
@@ -1437,6 +1440,83 @@
                         </div>
                     </div>
                 </aside>
+            </div>
+        </section>
+
+        <!-- ==================== SAFE ROUTES & HEATMAP VIEW ==================== -->
+        <section class="view-panel" id="view-routes">
+            <div style="background: white; border-radius: var(--radius-lg); padding: 24px; border: 1px solid var(--line); margin-bottom: 24px; box-shadow: var(--shadow-subtle);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
+                    <div>
+                        <div style="font-size: 11px; font-weight: 800; color: var(--coral); text-transform: uppercase; letter-spacing: .08em;">LIVE GEOLOCATION SAFETY RADAR</div>
+                        <h2 style="font-size: 24px; font-weight: 800; margin-top: 4px;">Safety Heatmap & Safe Route Corridors</h2>
+                        <p style="font-size: 13px; color: var(--gray); margin-top: 4px;">Dynamic multi-source risk estimation powered by live Perimeter platform incidents and official NCRB statistics.</p>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" class="btn-publish-post" style="padding: 8px 16px; font-size: 12px;" onclick="refreshDeviceLocationAndSafety()">📍 Detect My Location</button>
+                    </div>
+                </div>
+
+                <!-- Current Location & Live Safety Score Card -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                    <div style="background: var(--paper-2); padding: 18px; border-radius: 16px; border: 1px solid var(--line);">
+                        <div style="font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase;">Active Device Coordinates</div>
+                        <div id="radarCoordsText" style="font-size: 18px; font-weight: 800; margin: 6px 0; font-family: var(--mono); color: var(--ink);">19.0760° N, 72.8777° E</div>
+                        <div id="radarLocationStatus" style="font-size: 12px; color: var(--teal); font-weight: 600;">● GPS Signal Locked (Bandra West, Mumbai)</div>
+                    </div>
+                    <div id="safetyScoreCard" style="background: #FEF2F2; padding: 18px; border-radius: 16px; border: 1px solid #FECACA;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 11px; font-weight: 700; color: #991B1B; text-transform: uppercase;">Sector Safety Risk Score</div>
+                            <span id="scoreBadgePill" style="background: #EF4444; color: white; padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 700;">HIGH REPORTED RISK</span>
+                        </div>
+                        <div style="display: flex; align-items: baseline; gap: 8px; margin: 6px 0;">
+                            <span id="scoreValueText" style="font-size: 32px; font-weight: 800; color: #DC2626; font-family: var(--mono);">72.5</span>
+                            <span style="font-size: 14px; color: var(--gray);">/ 100 Risk Index</span>
+                        </div>
+                        <div id="scoreDetailsText" style="font-size: 12px; color: #4B5563;">7 active platform incidents reported in this sector.</div>
+                    </div>
+                </div>
+
+                <!-- Safe Route Corridor Evaluator -->
+                <div style="background: #F8FAFC; border: 1px solid var(--line); border-radius: 16px; padding: 20px; margin-bottom: 24px;">
+                    <div style="font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--ink); margin-bottom: 12px;">🚶 Evaluate Safe Travel Corridor</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 14px;">
+                        <div>
+                            <label style="font-size: 11px; font-weight: 700; color: var(--gray);">Starting Point (Origin)</label>
+                            <input type="text" id="routeOriginInput" class="search-input-big" value="19.0760, 72.8777 (Current GPS)" style="border-radius: 10px; margin-top: 4px; padding-left: 12px;" readonly>
+                        </div>
+                        <div>
+                            <label style="font-size: 11px; font-weight: 700; color: var(--gray);">Destination (Lat, Lng)</label>
+                            <input type="text" id="routeDestInput" class="search-input-big" value="19.0800, 72.8800" placeholder="19.0800, 72.8800" style="border-radius: 10px; margin-top: 4px; padding-left: 12px;">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 14px;">
+                        <span style="font-size: 11px; font-weight: 700; color: var(--gray); margin-right: 8px;">Quick Destination Presets:</span>
+                        <div style="display: inline-flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;">
+                            <button type="button" class="tag-pill" onclick="setRouteDestination(19.0800, 72.8800, 'Bandra Metro Station')">🚉 Bandra Metro</button>
+                            <button type="button" class="tag-pill" onclick="setRouteDestination(19.0657, 72.8685, 'BKC Transit Hub')">🏢 BKC Hub</button>
+                            <button type="button" class="tag-pill" onclick="setRouteDestination(19.1136, 72.8697, 'Andheri West Corridor')">📍 Andheri West</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-publish-post" style="padding: 10px 20px; font-size: 13px;" onclick="calculateSafeRoutes()">Calculate & Compare Corridors →</button>
+                </div>
+
+                <!-- Safe Route Comparison Results -->
+                <div id="routeResultsContainer" style="display: none; margin-bottom: 24px;">
+                    <div style="font-size: 14px; font-weight: 800; margin-bottom: 12px;">Candidate Travel Corridors:</div>
+                    <div id="routesCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;"></div>
+                </div>
+
+                <!-- Heatmap Incidents & Hotspots Table -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div style="font-size: 14px; font-weight: 800;">Verified Platform Incidents & Risk Hotspots:</div>
+                        <span style="font-size: 11px; color: var(--gray);">Multi-source NCRB & Perimeter audit</span>
+                    </div>
+                    <div id="heatmapIncidentsTableContainer" style="border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: white;">
+                        <div style="padding: 20px; text-align: center; color: var(--gray);">Loading safety hotspots... ⏳</div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1649,10 +1729,10 @@
                     <div style="font-size: 12px; color: var(--gray); margin-top: 4px;">📍 <span id="profileLocation">Bandra West, Mumbai</span></div>
 
                     <div class="profile-stats-row">
-                        <div class="stat-badge"><span class="num" id="statPostsCount">0</span><span class="lbl">Posts</span></div>
-                        <div class="stat-badge"><span class="num" id="statFollowersCount">0</span><span class="lbl">Followers</span></div>
-                        <div class="stat-badge"><span class="num" id="statFollowingCount">0</span><span class="lbl">Following</span></div>
-                        <div class="stat-badge"><span class="num" id="statCasesCount">0</span><span class="lbl">Cases Filed</span></div>
+                        <div class="stat-badge" style="cursor:pointer;" onclick="switchProfileActivity(document.querySelector('[onclick*=\'my-posts\']'), 'my-posts')"><span class="num" id="statPostsCount">0</span><span class="lbl">Posts</span></div>
+                        <div class="stat-badge" style="cursor:pointer;" onclick="switchProfileActivity(document.querySelector('[onclick*=\'my-followers\']'), 'my-followers')"><span class="num" id="statFollowersCount">0</span><span class="lbl">Followers</span></div>
+                        <div class="stat-badge" style="cursor:pointer;" onclick="switchProfileActivity(document.querySelector('[onclick*=\'my-following\']'), 'my-following')"><span class="num" id="statFollowingCount">0</span><span class="lbl">Following</span></div>
+                        <div class="stat-badge" style="cursor:pointer;" onclick="switchProfileActivity(document.querySelector('[onclick*=\'my-cases\']'), 'my-cases')"><span class="num" id="statCasesCount">0</span><span class="lbl">Cases Filed</span></div>
                     </div>
                 </div>
             </div>
@@ -1711,6 +1791,14 @@
             <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 14px;">Publish 24H Safety Story</h3>
             <textarea id="storyCaptionInput" class="create-post-input" placeholder="What's your safety status right now? (e.g. Walking home via Linking Road safe corridor)"></textarea>
             
+            <div style="margin: 12px 0; display: flex; align-items: center; gap: 10px;">
+                <label class="tag-pill" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                    📷 Attach Photo
+                    <input id="storyPhotoInput" type="file" accept="image/*" style="display: none;" onchange="handleStoryPhotoSelected(this)">
+                </label>
+                <span id="attachedStoryMediaIndicator" style="display: none; color: var(--teal); font-weight: 700; font-size: 12px;">✓ Photo Attached</span>
+            </div>
+
             <div style="margin: 14px 0;">
                 <label style="font-size: 11.5px; font-weight: 700; text-transform: uppercase; color: var(--coral);">Optional Interactive Poll:</label>
                 <input type="text" id="storyPollQuestion" class="search-input-big" placeholder="Poll Question (e.g. Is your street lit tonight?)" style="border-radius: 8px; margin-top: 4px; padding-left: 12px; margin-bottom: 8px;">
@@ -1834,7 +1922,8 @@
             if (targetView) targetView.classList.add('active');
             if (targetTab) targetTab.classList.add('active');
 
-            if (viewName === 'explore') loadExploreUsers('');
+            if (viewName === 'routes') loadSafeRoutesAndHeatmapView();
+            else if (viewName === 'explore') loadExploreUsers('');
             else if (viewName === 'reels') loadReels();
             else if (viewName === 'messages') loadConversations();
             else if (viewName === 'channels') loadChannelsView();
@@ -1870,6 +1959,23 @@
             } catch (err) {
                 input.value = '';
                 showToast(err.message || 'Photo upload failed.', '❌');
+            }
+        }
+
+        let attachedStoryMediaUrl = null;
+        async function handleStoryPhotoSelected(input) {
+            const file = input.files?.[0];
+            if (!file) return;
+            try {
+                showToast('Uploading story photo…', '📷');
+                const result = await SocialAPI.uploadMedia(file, 'story');
+                attachedStoryMediaUrl = result.url;
+                const ind = document.getElementById('attachedStoryMediaIndicator');
+                if (ind) ind.style.display = 'inline';
+                showToast('Photo attached to story.', '✅');
+            } catch (err) {
+                input.value = '';
+                showToast(err.message || 'Story photo upload failed.', '❌');
             }
         }
 
@@ -2129,6 +2235,7 @@
                 await SocialAPI.createStory({
                     caption: caption,
                     tag: 'SAFE_STATUS',
+                    media_url: attachedStoryMediaUrl,
                     poll_question: pollQ || null,
                     poll_option_a: pollA || null,
                     poll_option_b: pollB || null
@@ -2136,6 +2243,9 @@
 
                 closeModal('createStoryModal');
                 document.getElementById('storyCaptionInput').value = '';
+                attachedStoryMediaUrl = null;
+                const ind = document.getElementById('attachedStoryMediaIndicator');
+                if (ind) ind.style.display = 'none';
                 showToast('24H Safety Story published!', '🎉');
                 loadStories();
             } catch (err) {
@@ -2616,31 +2726,40 @@
                     `).join('');
                 }
                 else if (activityType === 'my-following') {
-                    const users = await SocialAPI.getFollowing(currentUser.id);
+                    const targetId = currentUser?.id || currentUser?.user_id || 'usr_001';
+                    const users = await SocialAPI.getFollowing(targetId);
                     if (!users || users.length === 0) {
                         content.innerHTML = '<div style="padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line); text-align: center; color: var(--gray);">You are not following anyone yet. Visit Explore to connect!</div>';
                         return;
                     }
                     content.innerHTML = `<div class="user-grid">${users.map(u => `
                         <div class="user-card">
-                            <div class="user-card-avatar">${u.avatar}</div>
-                            <div style="font-weight: 800;">${u.name}</div>
-                            <div style="font-size: 12px; color: var(--gray);">${u.username}</div>
+                            <div class="user-card-avatar">${u.avatar || 'U'}</div>
+                            <div style="font-weight: 800; font-size: 15px;">${u.name}</div>
+                            <div style="font-size: 12px; color: var(--gray); font-family: var(--mono);">${u.username}</div>
+                            <div style="font-size: 11px; color: var(--coral); font-weight: 700; margin-top: 4px; text-transform: uppercase;">${u.badge_title || u.role}</div>
+                            <div style="font-size: 12px; color: #475569; margin: 6px 0;">${u.bio || 'Community Member'}</div>
                             <button class="btn-follow following" onclick="toggleFollowUser('${u.id}', this)">Following</button>
                         </div>
                     `).join('')}</div>`;
                 }
                 else if (activityType === 'my-followers') {
-                    const users = await SocialAPI.getFollowers(currentUser.id);
+                    const targetId = currentUser?.id || currentUser?.user_id || 'usr_001';
+                    const users = await SocialAPI.getFollowers(targetId);
                     if (!users || users.length === 0) {
-                        content.innerHTML = '<div style="padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line); text-align: center; color: var(--gray);">No followers yet.</div>';
+                        content.innerHTML = '<div style="padding: 40px; background: white; border-radius: 16px; border: 1px solid var(--line); text-align: center; color: var(--gray);">No followers yet. Share updates on Feed to build your network!</div>';
                         return;
                     }
                     content.innerHTML = `<div class="user-grid">${users.map(u => `
                         <div class="user-card">
-                            <div class="user-card-avatar">${u.avatar}</div>
-                            <div style="font-weight: 800;">${u.name}</div>
-                            <div style="font-size: 12px; color: var(--gray);">${u.username}</div>
+                            <div class="user-card-avatar">${u.avatar || 'U'}</div>
+                            <div style="font-weight: 800; font-size: 15px;">${u.name}</div>
+                            <div style="font-size: 12px; color: var(--gray); font-family: var(--mono);">${u.username}</div>
+                            <div style="font-size: 11px; color: var(--teal); font-weight: 700; margin-top: 4px; text-transform: uppercase;">${u.badge_title || u.role}</div>
+                            <div style="font-size: 12px; color: #475569; margin: 6px 0;">${u.bio || 'Community Member'}</div>
+                            <button class="btn-follow ${u.is_following ? 'following' : ''}" onclick="toggleFollowUser('${u.id}', this)">
+                                ${u.is_following ? 'Following' : '+ Follow Back'}
+                            </button>
                         </div>
                     `).join('')}</div>`;
                 }
@@ -2678,6 +2797,182 @@
                 switchProfileActivity(null, 'follow-requests');
             } catch (err) {
                 showToast(err.message, '❌');
+            }
+        }
+
+        /* ------------------ SAFE ROUTES & HEATMAP RADAR ------------------ */
+
+        let currentRadarLat = 19.0760;
+        let currentRadarLng = 72.8777;
+
+        function setRouteDestination(lat, lng, label) {
+            document.getElementById('routeDestInput').value = `${lat}, ${lng}`;
+            showToast(`Destination set to ${label}`, '📍');
+        }
+
+        async function refreshDeviceLocationAndSafety() {
+            if (navigator.geolocation) {
+                showToast('Acquiring high-accuracy GPS…', '🛰️');
+                navigator.geolocation.getCurrentPosition(
+                    async (pos) => {
+                        currentRadarLat = pos.coords.latitude;
+                        currentRadarLng = pos.coords.longitude;
+                        const coordsEl = document.getElementById('radarCoordsText');
+                        const originEl = document.getElementById('routeOriginInput');
+                        const statusEl = document.getElementById('radarLocationStatus');
+                        if (coordsEl) coordsEl.textContent = `${currentRadarLat.toFixed(4)}° N, ${currentRadarLng.toFixed(4)}° E`;
+                        if (originEl) originEl.value = `${currentRadarLat.toFixed(4)}, ${currentRadarLng.toFixed(4)} (Current GPS)`;
+                        if (statusEl) statusEl.textContent = `● High-Accuracy GPS Locked (±${Math.round(pos.coords.accuracy)}m)`;
+                        await updateSafetyScoreRadar(currentRadarLat, currentRadarLng);
+                    },
+                    async (err) => {
+                        console.warn('GPS notice:', err.message);
+                        const statusEl = document.getElementById('radarLocationStatus');
+                        if (statusEl) statusEl.textContent = `● Using Sector Gateway Baseline (Bandra West)`;
+                        await updateSafetyScoreRadar(currentRadarLat, currentRadarLng);
+                    },
+                    { enableHighAccuracy: true, timeout: 6000 }
+                );
+            } else {
+                await updateSafetyScoreRadar(currentRadarLat, currentRadarLng);
+            }
+        }
+
+        async function updateSafetyScoreRadar(lat, lng) {
+            try {
+                const score = await SafetyAPI.getSafetyScore(lat, lng);
+                const card = document.getElementById('safetyScoreCard');
+                const badge = document.getElementById('scoreBadgePill');
+                const val = document.getElementById('scoreValueText');
+                const det = document.getElementById('scoreDetailsText');
+
+                if (val) val.textContent = score.risk_score;
+                if (badge) {
+                    badge.textContent = score.risk_label || score.risk_level;
+                    badge.style.background = score.color_hex || '#EF4444';
+                }
+                if (det) det.textContent = `${score.incident_count} active platform incidents in this sector. Baseline NCRB crime index: ${score.ncrb_baseline_score}.`;
+                
+                if (card && val) {
+                    if (score.risk_score <= 40) {
+                        card.style.background = '#ECFDF5';
+                        card.style.borderColor = '#A7F3D0';
+                        val.style.color = '#059669';
+                    } else if (score.risk_score <= 65) {
+                        card.style.background = '#FFFBEB';
+                        card.style.borderColor = '#FDE68A';
+                        val.style.color = '#D97706';
+                    } else {
+                        card.style.background = '#FEF2F2';
+                        card.style.borderColor = '#FECACA';
+                        val.style.color = '#DC2626';
+                    }
+                }
+            } catch (e) {
+                console.warn('Safety score fetch error:', e.message);
+            }
+        }
+
+        async function loadSafeRoutesAndHeatmapView() {
+            await refreshDeviceLocationAndSafety();
+            await loadHeatmapIncidentsTable();
+        }
+
+        async function loadHeatmapIncidentsTable() {
+            const container = document.getElementById('heatmapIncidentsTableContainer');
+            if (!container) return;
+            try {
+                const data = await SafetyAPI.getHeatmap('Mumbai');
+                const incidents = data.incidents || [];
+                if (incidents.length === 0) {
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--gray);">No active risk incidents reported. Area is currently secure! 🛡️</div>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                            <thead>
+                                <tr style="background: var(--paper-2); text-align: left; border-bottom: 1px solid var(--line);">
+                                    <th style="padding: 10px 14px;">Incident ID</th>
+                                    <th style="padding: 10px 14px;">Trigger Type</th>
+                                    <th style="padding: 10px 14px;">Severity</th>
+                                    <th style="padding: 10px 14px;">Status</th>
+                                    <th style="padding: 10px 14px;">Location / Address</th>
+                                    <th style="padding: 10px 14px;">Coordinates</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${incidents.map(inc => `
+                                    <tr style="border-bottom: 1px solid var(--line);">
+                                        <td style="padding: 10px 14px; font-family: var(--mono); font-weight: 700; color: var(--coral);">${inc.incident_id}</td>
+                                        <td style="padding: 10px 14px;">${inc.type}</td>
+                                        <td style="padding: 10px 14px;">
+                                            <span style="background: ${inc.severity === 'CRITICAL' ? '#EF4444' : '#F59E0B'}; color: white; padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 700;">${inc.severity}</span>
+                                        </td>
+                                        <td style="padding: 10px 14px; font-weight: 600;">${inc.status}</td>
+                                        <td style="padding: 10px 14px; color: #475569;">${inc.address}</td>
+                                        <td style="padding: 10px 14px; font-family: var(--mono); font-size: 11.5px;">${inc.latitude}, ${inc.longitude}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (err) {
+                container.innerHTML = `<div style="padding: 20px; color: #DC2626;">Failed to load heatmap incidents: ${err.message}</div>`;
+            }
+        }
+
+        async function calculateSafeRoutes() {
+            const destStr = document.getElementById('routeDestInput').value.trim();
+            if (!destStr) {
+                showToast('Please specify a destination.', '⚠️');
+                return;
+            }
+            const parts = destStr.split(',').map(s => parseFloat(s.trim()));
+            if (parts.length < 2 || isNaN(parts[0]) || isNaN(parts[1])) {
+                showToast('Please enter destination as: Latitude, Longitude (e.g. 19.0800, 72.8800)', '⚠️');
+                return;
+            }
+
+            const toLat = parts[0];
+            const toLng = parts[1];
+            const container = document.getElementById('routeResultsContainer');
+            const grid = document.getElementById('routesCardsGrid');
+            if (container) container.style.display = 'block';
+            if (grid) grid.innerHTML = '<div style="color: var(--gray); padding: 20px;">Analyzing street lighting, responder geofences, and safety corridors… ⏳</div>';
+
+            try {
+                const res = await SafetyAPI.getSafeRoutes(currentRadarLat, currentRadarLng, toLat, toLng);
+                const routes = res.routes || [];
+                if (!grid) return;
+                if (routes.length === 0) {
+                    grid.innerHTML = '<div style="padding: 20px; color: var(--gray);">No route options found.</div>';
+                    return;
+                }
+
+                grid.innerHTML = routes.map((r, i) => `
+                    <div style="border: 2px solid ${r.is_recommended_safety ? '#10B981' : '#E2E8F0'}; border-radius: 16px; padding: 18px; background: ${r.is_recommended_safety ? '#F0FDF4' : 'white'};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div style="font-size: 16px; font-weight: 800; color: var(--ink);">${r.name}</div>
+                            <span style="background: ${r.color_hex}; color: white; padding: 3px 8px; border-radius: 100px; font-size: 11px; font-weight: 700;">
+                                ${r.is_recommended_safety ? '🛡️ RECOMMENDED SAFE CORRIDOR' : '⚡ FASTEST TRANSIT'}
+                            </span>
+                        </div>
+                        <div style="font-size: 13px; color: #475569; margin-bottom: 12px;">${r.description}</div>
+                        <div style="display: flex; gap: 16px; font-size: 13px; margin-bottom: 12px; font-family: var(--mono); flex-wrap: wrap;">
+                            <div>📏 <b>${r.distance_km} km</b></div>
+                            <div>⏱️ <b>~${r.duration_mins} mins</b></div>
+                            <div>🛡️ Risk Index: <b style="color: ${r.color_hex};">${r.safety_risk_score} / 100</b></div>
+                        </div>
+                        <div style="font-size: 11.5px; color: var(--gray); background: rgba(0,0,0,0.03); padding: 8px 12px; border-radius: 8px;">
+                            <b>Sample Waypoints:</b> ${r.sample_waypoints ? r.sample_waypoints.slice(0, 3).join(' → ') + '…' : 'Calculated'}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                if (grid) grid.innerHTML = `<div style="padding: 16px; color: #DC2626;">Failed to calculate corridors: ${err.message}</div>`;
             }
         }
 

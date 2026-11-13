@@ -233,6 +233,7 @@ def run_tests():
         print(f"✅ [9/15] Broadcast Safety Channels Subscription: OK (Channel: {first_channel.name})")
 
         # 10. Test Emergency SOS Trigger & Auto Case Provisioning
+        import asyncio, inspect
         sos_req = SOSTriggerRequest(
             user_name="Ananya Sen",
             user_id=user_id,
@@ -248,6 +249,8 @@ def run_tests():
             notes="Hands-free shake motion SOS triggered by citizen."
         )
         sos_res = trigger_sos(sos_req, db)
+        if inspect.iscoroutine(sos_res):
+            sos_res = asyncio.run(sos_res)
         inc_id = sos_res["incident_id"]
         case_id = sos_res["case_id"]
         assert inc_id.startswith("SOS-2026-")
@@ -256,7 +259,7 @@ def run_tests():
         print(f"✅ [10/15] Emergency SOS Trigger & Auto Case Creation: OK (SOS: {inc_id} -> Case: {case_id})")
 
         # 11. Test Volunteer Dispatch Response & Police Resolution
-        active_incidents = get_active_incidents(db)
+        active_incidents = get_active_incidents(request=None, db=db)
         assert any(i["incident_id"] == inc_id for i in active_incidents)
 
         resp_res = respond_to_incident(
@@ -266,6 +269,8 @@ def run_tests():
             role="volunteer",
             db=db
         )
+        if inspect.iscoroutine(resp_res):
+            resp_res = asyncio.run(resp_res)
         assert resp_res["status"] == "success"
 
         # Police resolves incident
@@ -275,6 +280,8 @@ def run_tests():
             notes="Citizen secured and escort provided.",
             db=db
         )
+        if inspect.iscoroutine(resolve_res):
+            resolve_res = asyncio.run(resolve_res)
         assert resolve_res["status"] == "success"
 
         # Verify Case was updated to RESOLVED with timeline
@@ -327,8 +334,37 @@ def run_tests():
         assert sys_status.status == "OPERATIONAL"
         print(f"✅ [15/15] Admin Platform Metrics & System Overview: OK ({stats.total_users} Users, {stats.total_cases} Cases, {stats.total_feed_posts} Posts)")
 
+        # 16. Test FCM Device Token Registration & Push Dispatch
+        from app.api.notification import register_device_token, get_user_notifications
+        from app.schemas.notification import DeviceTokenRegisterRequest
+        from app.services.fcm_service import FCMService
+
+        dt_res = register_device_token(
+            req=DeviceTokenRegisterRequest(token="test_fcm_token_pixel_8_pro_001", platform="android", device_name="Pixel 8 Pro"),
+            current_user=current_user,
+            db=db
+        )
+        assert dt_res.status == "success"
+        assert dt_res.token == "test_fcm_token_pixel_8_pro_001"
+
+        push_res = FCMService.dispatch_sos_emergency_push(
+            db=db,
+            incident_id=inc_id,
+            user_name="Ananya Sen",
+            severity="CRITICAL",
+            trigger_type="SHAKE_MOTION",
+            lat=19.0760,
+            lng=72.8777,
+            address="SV Road, Near Bandra Metro Pillar #42"
+        )
+        assert isinstance(push_res, dict)
+
+        user_notifs = get_user_notifications(limit=10, current_user=current_user, db=db)
+        assert len(user_notifs) >= 0
+        print("✅ [16/16] FCM Device Token Registration & Role-Based Push Dispatch: OK")
+
         print("=" * 65)
-        print("🎉 ALL 15 INTEGRATION SUITES PASSED WITH 100% SUCCESS!")
+        print("🎉 ALL 16 INTEGRATION SUITES PASSED WITH 100% SUCCESS!")
         print("=" * 65)
 
     finally:

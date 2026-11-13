@@ -18,6 +18,10 @@ from app.api.case import router as case_router
 from app.api.admin import router as admin_router
 from app.api.social import router as social_router
 from app.api.media import router as media_router
+from app.api.location import router as location_router
+from app.api.notification import router as notification_router
+from app.api.heatmap import router as heatmap_router
+from app.api.routes import router as routes_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -54,6 +58,12 @@ app.include_router(admin_router, prefix=settings.API_V1_STR)
 app.include_router(admin_router)
 app.include_router(social_router, prefix=settings.API_V1_STR)
 app.include_router(media_router, prefix=settings.API_V1_STR)
+app.include_router(location_router, prefix=settings.API_V1_STR)
+app.include_router(notification_router, prefix=settings.API_V1_STR)
+app.include_router(heatmap_router, prefix=settings.API_V1_STR)
+app.include_router(heatmap_router)
+app.include_router(routes_router, prefix=settings.API_V1_STR)
+app.include_router(routes_router)
 
 MEDIA_DIR = Path(__file__).resolve().parents[1] / "uploads"
 MEDIA_DIR.mkdir(parents=True, exist_ok=True)

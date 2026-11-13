@@ -412,3 +412,21 @@ const SocialAPI = {
         return await apiCall(`/sos/${encodeURIComponent(incidentId)}/resolve?${params.toString()}`, 'POST');
     }
 };
+
+/* -------------------------------------------------------------
+   SAFETY HEATMAP & SAFE ROUTES API
+------------------------------------------------------------- */
+const SafetyAPI = {
+    async getHeatmap(city = 'Mumbai') {
+        return await apiCall(`/heatmap?city=${encodeURIComponent(city)}`);
+    },
+    async getSafetyScore(lat, lng) {
+        return await apiCall(`/safety-score?lat=${lat}&lng=${lng}`);
+    },
+    async getSafeRoutes(fromLat, fromLng, toLat, toLng) {
+        return await apiCall(`/safe-routes?from_lat=${fromLat}&from_lng=${fromLng}&to_lat=${toLat}&to_lng=${toLng}`);
+    }
+};
+
+window.SocialAPI = SocialAPI;
+window.SafetyAPI = SafetyAPI;
